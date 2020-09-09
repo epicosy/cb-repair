@@ -1,0 +1,423 @@
+Working:
+  AIS-Lite
+  ASCII_Content_Server
+  ASL6parse
+  A_Game_of_Chance
+  Accel
+  Audio_Visualizer
+  BIRC
+  Barcoder
+  BitBlaster
+  Bloomy_Sunday
+  Blubber
+  Board_Game
+  BudgIT
+  CGC_Board
+  CGC_File_System
+  CGC_Image_Parser
+  CGC_Planet_Markup_Language_Parser
+  CGC_Symbol_Viewer_CSV
+  CGC_Video_Format_Parser_and_Viewer
+  CLOUDCOMPUTE
+  CML
+  CNMP
+  COLLIDEOSCOPE
+  CTTP
+  CableGrind
+  CableGrindLlama
+  Casino_Games
+  Cereal_Mixup__A_Cereal_Vending_Machine_Controller
+  Character_Statistics
+  Checkmate
+  Childs_Game
+  Cromulence_All_Service
+  DFARS_Sample_Service
+  Diary_Parser
+  Differ
+  Diophantine_Password_Wallet
+  Dive_Logger
+  Divelogger2
+  Document_Rendering_Engine
+  Dungeon_Master
+  ECM_TCM_Simulator
+  Eddy
+  Email_System_2
+  Enslavednode_chat
+  EternalPass
+  FASTLANE
+  FISHYXML
+  FSK_BBS
+  FSK_Messaging_Service
+  FUN
+  FablesReport
+  FaceMag
+  Facilities_Access_Control_System
+  FailAV
+  FileSys
+  Filesystem_Command_Shell
+  Finicky_File_Folder
+  Flash_File_System
+  Flight_Routes
+  Fortress
+  GPS_Tracker
+  GREYMATTER
+  Game_Night
+  Glue
+  GreatView
+  Gridder
+  Griswold
+  Grit
+  H20FlowInc
+  HIGHCOO
+  HackMan
+  Headscratch
+  Hug_Game
+  KKVS
+  KTY_Pretty_Printer
+  Kaprica_Go
+  Kaprica_Script_Interpreter
+  LAN_Simulator
+  LMS
+  Loud_Square_Instant_Messaging_Protocol_LSIMP
+  LulzChat
+  Matchmaker
+  Mathematical_Solver
+  Matrix_Math_Calculator
+  Message_Service
+  Messaging
+  Minimalistic_Memo_Manager_3M
+  Modern_Family_Tree
+  Monster_Game
+  Mount_Filemore
+  Movie_Rental_Service
+  Movie_Rental_Service_Redux
+  Multi_Arena_Pursuit_Simulator
+  Multi_User_Calendar
+  Multipass
+  Music_Store_Client
+  Network_File_System_v3
+  Neural_House
+  No_Paper._Not_Ever._NOPE
+  OTPSim
+  OUTLAW
+  OUTLAW_3
+  On_Sale
+  One_Amp
+  One_Vote
+  Order_Up
+  Overflow_Parking
+  PCM_Message_decoder
+  PKK_Steganography
+  PRU
+  Packet_Receiver
+  Palindrome2
+  Particle_Simulator
+  Personal_Fitness_Manager
+  Pipelined
+  Printer
+  QUIETSQUARE
+  QuadtreeConways
+  Query_Calculator
+  RAM_based_filesystem
+  REDPILL
+  REMATCH_1--Hat_Trick--Morris_Worm
+  REMATCH_3--Address_Resolution_Service--SQL_Slammer
+  REMATCH_4--CGCRPC_Server--MS08-067
+  REMATCH_5--File_Explorer--LNK_Bug
+  REMATCH_6--Secure_Server--Heartbleed
+  Recipe_Database
+  Resort_Modeller
+  SAuth
+  SCUBA_Dive_Logging
+  SFTSCBSISS
+  SIGSEGV
+  SLUR_reference_implementation
+  SOLFEDGE
+  SPIFFS
+  Sad_Face_Template_Engine_SFTE
+  Scrum_Database
+  Secure_Compression
+  Sensr
+  Shortest_Path_Tree_Calculator
+  ShoutCTF
+  Simple_Stack_Machine
+  Single-Sign-On
+  Sorter
+  Space_Attackers
+  Square_Rabbit
+  Stock_Exchange_Simulator
+  Street_map_service
+  String_Info_Calculator
+  TAINTEDLOVE
+  TVS
+  Tennis_Ball_Motion_Calculator
+  Terrible_Ticket_Tracker
+  TextSearch
+  The_Longest_Road
+  Thermal_Controller_v2
+  Thermal_Controller_v3
+  User_Manager
+  ValveChecks
+  Virtual_Machine
+  WhackJack
+  WordCompletion
+  XStore
+  anagram_game
+  basic_emulator
+  basic_messaging
+  chess_mimic
+  cotton_swab_arithmetic
+  cyber_blogger
+  expression_database
+  greeter
+  hawaii_sets
+  humaninterface
+  middleout
+  middleware_handshake
+  netstorage
+  online_job_application
+  online_job_application2
+  pizza_ordering_system
+  root64_and_parcour
+  router_simulator
+  simpleOCR
+  simplenote
+  stack_vm
+  stream_vm
+  stream_vm2
+  tribute
+  university_enrollment
+  vFilter
+  virtual_pet
+
+
+OSError: 
+  * libXXXX_000XX.so: cannot open shared object file: No such file or directory:
+    - 3D_Image_Toolkit
+        Traceback (most recent call last):
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+            main()
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 226, in main
+            graph.walk(current_id, total)
+          File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 231, in walk
+            response = node()
+          File "poller/for-release//machine.py", line 45, in start
+            self.dll = CDLL('../../build/challenges/3D_Image_Toolkit/libCROMU_00078.so')
+          File "/usr/lib/python2.7/ctypes/__init__.py", line 366, in __init__
+            self._handle = _dlopen(self._name, mode)
+        OSError: ../../build/challenges/3D_Image_Toolkit/libCROMU_00078.so: cannot open shared object file: No such file or directory
+    - Carbonate
+    - Charter
+    - Corinth
+    - Estadio
+    - Lazybox
+    - Material_Temperature_Simulation
+    - Mixology
+    - Network_File_System
+    - Network_Queuing_Simulator
+    - PTaaS
+    - REMATCH_2--Mail_Server--Crackaddr
+    - Recipe_and_Pantry_Manager
+    - Water_Treatment_Facility_Simulator
+    - payroll
+
+  * [Errno 2] No such file or directory
+    - Image_Compressor
+      Traceback (most recent call last):
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+          main()
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 226, in main
+          graph.walk(current_id, total)
+        File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 231, in walk
+          response = node()
+        File "poller/for-testing//machine.py", line 56, in end
+          p = Popen(['bin/KPRCA_00003'], stdin=PIPE, stdout=PIPE)
+        File "/usr/lib/python2.7/subprocess.py", line 394, in __init__
+          errread, errwrite)
+        File "/usr/lib/python2.7/subprocess.py", line 1047, in _execute_child
+          raise child_exception
+      OSError: [Errno 2] No such file or directory
+    - RRPN
+        File "poller/for-release//machine.py", line 27, in doit
+            process = subprocess.Popen(['./bin/KPRCA_00002'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    - 
+
+
+RuntimeWarning: overflow encountered in X:
+  - Azurad
+      poller/for-release//machine.py:75: RuntimeWarning: overflow encountered in uint_scalars
+        self.state['r'][dst] = self.state['r'][a] * self.state['r'][b]
+      poller/for-release//machine.py:59: RuntimeWarning: overflow encountered in uint_scalars
+        self.state['r'][dst] = self.state['r'][a] + self.state['r'][b]
+      poller/for-release//machine.py:96: RuntimeWarning: overflow encountered in long_scalars
+        x *= self.state['r'][end]
+      poller/for-release//machine.py:67: RuntimeWarning: overflow encountered in uint_scalars
+        self.state['r'][dst] = self.state['r'][a] - self.state['r'][b]
+  - LazyCalc
+      poller/for-release//machine.py:64: RuntimeWarning: overflow encountered in int_scalars
+        self.result = self.arg1 - self.arg2
+  - Pattern_Finder
+      poller/for-release//machine.py:109: RuntimeWarning: overflow encountered in uint_scalars
+        h = ((h << np.uint8(5)) + h) + c
+  - Snail_Mail
+      /cb-repair/cb-multios/challenges/Snail_Mail/support/snailmail.py:228: RuntimeWarning: overflow encountered in ubyte_scalars
+        s_hash[i % 4] += np.uint8(ord(self.subject[i]))
+      /cb-repair/cb-multios/challenges/Snail_Mail/support/snailmail.py:231: RuntimeWarning: overflow encountered in ubyte_scalars
+        b_hash[j % 4] += np.uint8(ord(self.body[j]))
+  - Venture_Calculator
+      poller/for-release//machine.py:185: RuntimeWarning: overflow encountered in int_scalars
+        r = int32(r * int32(v))
+      poller/for-release//machine.py:132: RuntimeWarning: overflow encountered in int_scalars
+        self.state['calc'].push(int32(oper(v1, v2)))
+      poller/for-release//machine.py:130: RuntimeWarning: overflow encountered in int_scalars
+        self.state['calc'].push(int32(oper(v2, v1)))
+      poller/for-release//machine.py:240: RuntimeWarning: overflow encountered in int_scalars
+        s = int32(int32(s) + int32(v))
+      poller/for-release//machine.py:265: RuntimeWarning: overflow encountered in int_scalars
+        s = int32(int32(s) + int32(v))
+
+
+AssertionError: 
+  * node X was never executed:
+    - CGC_Hangman_Game
+        Traceback (most recent call last):
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+            main()
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 264, in main
+            graph.plot(args.output)
+          File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 337, in plot
+            "executed" % node.func_name
+        AssertionError: node bad_password was never executed
+    - Pac_for_Edges
+        AssertionError: node win was never executed
+    - TFTTP
+        AssertionError: node frag_bad was never executed
+    - yolodex
+        AssertionError: node badcommand was never executed
+
+
+  * polls must send data to the server
+    - HeartThrob
+        Traceback (most recent call last):
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+            main()
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 227, in main
+            xml = machine.xml(args.store_seed)
+          File "/cb-repair/cb-multios/tools/generate-polls/generator/actions.py", line 290, in xml
+            assert self._sent, 'polls must send data to the server'
+        AssertionError: polls must send data to the server
+        Traceback (most recent call last):
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+            main()
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 227, in main
+            xml = machine.xml(args.store_seed)
+          File "/cb-repair/cb-multios/tools/generate-polls/generator/actions.py", line 290, in xml
+            assert self._sent, 'polls must send data to the server'
+        AssertionError: polls must send data to the server
+    - Palindrome
+    - Tick-A-Tack
+    - commerce_webscale
+    - reallystream
+
+  * polls must match or assign content from the server
+    - HighFrequencyTradingAlgo
+        Traceback (most recent call last):
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+            main()
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 227, in main
+            xml = machine.xml(args.store_seed)
+          File "/cb-repair/cb-multios/tools/generate-polls/generator/actions.py", line 289, in xml
+            assert self._matched, 'polls must match or assign content from the server'
+        AssertionError: polls must match or assign content from the server
+    - INSULATR
+    - NarfAgainShell
+    - NarfRPN
+    - Packet_Analyzer
+    - Parking_Permit_Management_System_PPMS
+    - String_Storage_and_Retrieval
+    - TIACA
+    - UTF-late
+    - Vector_Graphics_2
+    - Vector_Graphics_Format
+    - electronictrading
+    - matrices_for_sale
+    - simple_integer_calculator
+
+  * X was not traversed
+    - Multicast_Chat_Server
+        Traceback (most recent call last):
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+            main()
+          File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 264, in main
+            graph.plot(args.output)
+          File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 359, in plot
+            sub_node.func_name)
+        AssertionError: EdgesubscribeHigh->subscribeIncremental was not traversed
+    - Rejistar
+        AssertionError: EdgereenrollCert->quit was not traversed
+
+    - Sample_Shipgame
+        AssertionError: Edgesetup_input->end was not traversed
+    - Shipgame
+        AssertionError: Edgesay_hi_bad->say_bye was not traversed
+
+
+struct.error: 'I' format requires 0 <= number <= 4294967295
+  - Multipass2
+      Traceback (most recent call last):
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+          main()
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 226, in main
+          graph.walk(current_id, total)
+        File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 231, in walk
+          response = node()
+        File "poller/for-release//machine.py", line 309, in recharge
+          msg = self.state['mp'].pack_packet_head(msg_head) + self.state['mp'].pack_packet_data_recharge(msg_recharge)
+        File "/cb-repair/cb-multios/challenges/Multipass2/support/multipasssupport.py", line 520, in pack_packet_data_recharge
+          recharge_data['vendor_location']
+      struct.error: 'I' format requires 0 <= number <= 4294967295
+      Traceback (most recent call last):
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+          main()
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 226, in main
+          graph.walk(current_id, total)
+        File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 231, in walk
+          response = node()
+        File "poller/for-testing//machine.py", line 304, in recharge
+          msg = self.state['mp'].pack_packet_head(msg_head) + self.state['mp'].pack_packet_data_recharge(msg_recharge)
+        File "/cb-repair/cb-multios/challenges/Multipass2/support/multipasssupport.py", line 520, in pack_packet_data_recharge
+          recharge_data['vendor_location']
+      struct.error: 'I' format requires 0 <= number <= 4294967295
+  - Multipass3
+
+
+OverflowError: signed integer is greater than maximum
+  - NoHiC
+      Traceback (most recent call last):
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+          main()
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 226, in main
+          graph.walk(current_id, total)
+        File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 231, in walk
+          response = node()
+        File "poller/for-release//machine.py", line 58, in start
+          self.state['m'] = MathSupport(list_type=self.LIST_TYPE, list_size=self.LIST_SIZE)
+        File "/cb-repair/cb-multios/challenges/NoHiC/support/mathsupport.py", line 61, in __init__
+          self._gen_list(list_size)
+        File "/cb-repair/cb-multios/challenges/NoHiC/support/mathsupport.py", line 90, in _gen_list
+          self.INT_LIST.append(np.int_(val))
+      OverflowError: signed integer is greater than maximum
+      Traceback (most recent call last):
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 267, in <module>
+          main()
+        File "/cb-repair/cb-multios/tools/generate-polls/generate-polls", line 226, in main
+          graph.walk(current_id, total)
+        File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 231, in walk
+          response = node()
+        File "poller/for-testing//machine.py", line 60, in start
+          self.state['m'] = MathSupport(list_type=self.LIST_TYPE, list_size=self.LIST_SIZE)
+        File "/cb-repair/cb-multios/challenges/NoHiC/support/mathsupport.py", line 61, in __init__
+          self._gen_list(list_size)
+        File "/cb-repair/cb-multios/challenges/NoHiC/support/mathsupport.py", line 90, in _gen_list
+          self.INT_LIST.append(np.int_(val))
+      OverflowError: signed integer is less than minimum

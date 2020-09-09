@@ -1,0 +1,34 @@
+Checking out BitBlaster to /tmp/test.
+Command: /tmp/test/compile.sh BitBlaster /home/epicosy/thesis/implementation/repair/SecureThemAll2/benchmark/cb-multios/build/include src
+Creating build directory
+Creating Makefiles
+-- The C compiler identification is Clang 9.0.0
+-- The CXX compiler identification is Clang 9.0.0
+-- Check for working C compiler: /usr/bin/clang
+-- Check for working C compiler: /usr/bin/clang -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/clang++
+-- Check for working CXX compiler: /usr/bin/clang++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- The ASM compiler identification is Clang
+-- Found assembler: /usr/bin/clang
+-- Configuring incomplete, errors occurred!
+See also "/home/epicosy/thesis/implementation/repair/SecureThemAll2/benchmark/cb-multios/BitBlaster/CMakeFiles/CMakeOutput.log".
+See also "/home/epicosy/thesis/implementation/repair/SecureThemAll2/benchmark/cb-multios/BitBlaster/CMakeFiles/CMakeError.log".
+Checking out BitBlaster to /tmp/test.
+Command: /tmp/test/compile.sh BitBlaster /home/epicosy/thesis/implementation/repair/SecureThemAll2/benchmark/cb-multios/build/include src
+Creating build directory
+Creating Makefiles
+-- Configuring incomplete, errors occurred!
+See also "/home/epicosy/thesis/implementation/repair/SecureThemAll2/benchmark/cb-multios/BitBlaster/CMakeFiles/CMakeOutput.log".
+See also "/home/epicosy/thesis/implementation/repair/SecureThemAll2/benchmark/cb-multios/BitBlaster/CMakeFiles/CMakeError.log".
+Checking out BitBlaster to /tmp/test.
+Command: /tmp/test/compile.sh BitBlaster /home/epicosy/thesis/implementation/repair/SecureThemAll2/benchmark/cb-multios/build/include src
+Creating build directory
+Creating Makefiles
