@@ -11,24 +11,23 @@ from input_parser import add_operation
 class Compile(Operation):
     def __init__(self, name: str,
                  inst_files: List[str],
-                 fix_file: str,
+                 fix_file: List[str],
                  **kwargs):
         super().__init__(name, **kwargs)
         self._set_build_paths()
         self.commands_path = self.build_root / Path('compile_commands.json')
         self.compile_script = self.working_dir / Path("compile.sh")
         self.inst_files = inst_files
-        self.fix = fix_file
+        self.fixes = fix_file
         self.log(str(self))
 
-        if self.fix and len(self.inst_files) > 1:
-            exit(1)
+        if len(self.fixes) != len(self.inst_files):
+            raise ValueError("The files with changes can not be mapped. Uneven number of files.")
 
     def __call__(self):
         self.status(f"Compiling {self.challenge.name}.")
 
         if self.inst_files:
-
             link_file = self.cmake / Path("link.txt")
 
             # compile the preprocessed file to object
@@ -41,8 +40,8 @@ class Compile(Operation):
             # creating object files
             for source_file, cpp_file in mapping.items():
 
-                if self.fix:
-                    cpp_file = self.fix
+                if self.fixes:
+                    cpp_file = self.fixes.pop(0)
 
                 compile_command = self.get_compile_command(source_file, cpp_file)
 
@@ -80,15 +79,15 @@ class Compile(Operation):
         if self.inst_files:
             compile_cmd_str += f" --inst_files {' '.join(self.inst_files)}"
 
-        if self.fix:
-            compile_cmd_str += f" --fix_file {self.fix}"
+        if self.fixes:
+            compile_cmd_str += f" --fix_file {self.fixes}"
 
         return super().__str__() + compile_cmd_str + "\n"
 
 
 def compile_args(input_parser):
     input_parser.add_argument('-ifs', '--inst_files', nargs='+', help='Instrumented files to compile.', default=None)
-    input_parser.add_argument('-ff', '--fix_file', type=str, default=None,
+    input_parser.add_argument('-ff', '--fix_file', nargs='+', default=None,
                               help='The file with changes applied by the repair tool.')
 
 

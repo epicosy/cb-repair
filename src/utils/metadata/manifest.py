@@ -52,6 +52,7 @@ class Manifest:
             for short_file_path in self.vuln_files.keys():
                 of.write(short_file_path + "\n")
 
+    # TODO: this might fail in cases where the header files have files associated
     def map_instrumented_files(self, instrumented_files: List[str]) -> Dict[(str, str)]:
         mapping = {}
 
