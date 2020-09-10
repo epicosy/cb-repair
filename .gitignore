@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Generated Polls
+lib/polls/
+
 # Distribution / packaging
 .Python
 build/
