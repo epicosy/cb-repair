@@ -9,8 +9,7 @@ RUN pip install xlsxwriter pycrypto defusedxml pyyaml matplotlib
 WORKDIR /cb-repair
 COPY . ./
 
-#RUN git clone https://github.com/trailofbits/cb-multios.git
-RUN "./lib/genpolls.sh"; exit 0
-
+RUN python3 "./src/cb_repair.py -cn BitBlaster"; exit 0
 RUN python3 "./src/unit_test.py" # Fails because core dumps need to be eanbled
+
 ENTRYPOINT "./cb-repair/src/cb_repair.py"

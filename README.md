@@ -31,6 +31,8 @@ More about [CGC corpus](http://www.lungetech.com/cgc-corpus/about/),
 * The benchmark was tested on Linux OS with kernel release 5.3.0-64-generic, version #58-Ubuntu SMP and x86_64
 architecture.
 * The benchmark is supposed to work on other Linux distributions.
+* Make sure the scripts ```src/cb-repair.py, src/operations/checkout.py, src/operations/compile.py, 
+src/operations/test.py, tools/generate-polls/generate-polls, tools/compile.sh``` are executable.
 
 
 ## Getting Started
