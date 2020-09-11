@@ -2,14 +2,13 @@
 
 import argparse
 import re
-from typing import List, Union
-from operation import Operation
+from typing import List
 from setting import Setting
 
 parser = argparse.ArgumentParser(prog="cb-repair",
                                  description='CGC Benchmark plugin for automatic program repair tools.')
 challenge_parser = argparse.ArgumentParser(add_help=False)
-challenge_parser.add_argument('-cn', '--challenge_name', type=str, help='The challenge name.')
+challenge_parser.add_argument('-cn', '--challenge_name', type=str, help='The challenge name.', required=False)
 challenge_parser.add_argument('-v', '--verbose', help='Verbose output.', action='store_true')
 challenge_parser.add_argument('-l', '--log_file', type=str, default=None,
                               help='Log file to write the results to.')
@@ -17,7 +16,7 @@ challenge_parser.add_argument('-l', '--log_file', type=str, default=None,
 subparsers = parser.add_subparsers()
 
 
-def add_operation(name: str, operation: Operation, description: str):
+def add_operation(name: str, operation: Setting, description: str):
     operation_parser = subparsers.add_parser(name=name, help=description, parents=[challenge_parser])
     operation_parser.add_argument('-wd', '--working_directory', type=str, help='The working directory.')
     operation_parser.add_argument('-pf', '--prefix', type=str, default=None,
@@ -50,8 +49,8 @@ def parse_unknown(regex: str, unknown: str) -> dict:
     return dict()
 
 
-def run(unknown: List[str], setting: Union[Operation, Setting], **kwargs):
-    if "regex" in kwargs and unknown:
+def run(unknown: List[str], setting: Setting, **kwargs):
+    if "regex" in kwargs and kwargs["regex"] and unknown:
         unk_args = ' '.join(unknown)
         parsed_unk = parse_unknown(kwargs["regex"], unk_args)
         kwargs.pop("regex")

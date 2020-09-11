@@ -4,36 +4,47 @@ from os import listdir
 from pathlib import Path
 from typing import List
 
-from operation import Operation
+from context import Context
 from utils.parse import parse_results
 from input_parser import add_operation
 
 
-class Test(Operation):
+class Test(Context):
     def __init__(self,
-                 name: str,
                  tests: List[str],
                  out_file: str,
                  port: str,
+                 pos_tests: bool,
+                 neg_tests: bool,
                  exit_fail: bool,
                  write_fail: bool,
                  **kwargs):
-        super().__init__(name, **kwargs)
+        super().__init__(**kwargs)
         self._set_build_paths()
         self.port = port
         self.exit_fail = exit_fail
         self.write_fail = write_fail
         self.out_file = Path(out_file) if out_file is not None else out_file
-        self.tests = tests
+        self.challenge.load_pos_tests()
+        self.challenge.load_neg_tests(self.build)
+
+        if tests:
+            self.tests = tests
+        elif pos_tests:
+            self.tests = self.challenge.pos_tests.keys()
+        elif neg_tests:
+            self.tests = self.challenge.neg_tests.keys()
+        else:
+            self.tests = list(self.challenge.pos_tests.keys()) + list(self.challenge.neg_tests.keys())
+
         self.log(str(self))
 
     def __call__(self):
         failed = False
         tests_result = {}
-        self.challenge.load_pos_tests()
-        self.challenge.load_neg_tests(self.build)
         # TODO: Change this, cb-test.py accepts more challenges at once,
         #       might influence how results are processed
+        self.status(f"Running {len(self.tests)} tests.\n")
 
         for test in self.tests:
             self.test_file, self.is_pov = self.challenge.get_test(test)
@@ -75,7 +86,7 @@ class Test(Operation):
         cb_cmd = [str(self.get_tools().test),
                   '--directory', str(self.build),
                   '--xml', str(self.test_file),
-                  '--concurrent', '4',
+                  '--concurrent', '1',
                   "--debug",
                   '--timeout', self.configuration.tests_timeout,
                   '--negotiate_seed', '--cb'] + bin_names
@@ -108,7 +119,12 @@ class Test(Operation):
 
 
 def test_args(input_parser):
-    input_parser.add_argument('-tn', '--tests', type=str, nargs='+', help='Name of the test')
+    g = input_parser.add_mutually_exclusive_group(required=False)
+    g.add_argument('-pt', '--pos_tests', action='store_true', required=False,
+                   help='Run all positive tests against the challenge.')
+    g.add_argument('-nt', '--neg_tests', action='store_true', required=False,
+                   help='Run all negative tests against the challenge.')
+    g.add_argument('-tn', '--tests', type=str, nargs='+', help='Name of the test', required=False)
     input_parser.add_argument('-of', '--out_file', type=str, help='The file where tests results are written to.')
     input_parser.add_argument('-wf', '--write_fail', action='store_true',
                               help='Flag for writing the failed test to the specified out_file.')

@@ -33,7 +33,10 @@ architecture.
 * The benchmark is supposed to work on other Linux distributions.
 * Make sure the scripts ```src/cb-repair.py, src/operations/checkout.py, src/operations/compile.py, 
 src/operations/test.py, tools/generate-polls/generate-polls, tools/compile.sh``` are executable.
-
+* To run on Docker, core dumps need to be enabled. 
+* Polls generation needs to be performed only once.
+* Some positive tests timeout with 10 seconds limit. A check for that will be added.
+* Some negative tests don't core. A check for that will be added.
 
 ## Getting Started
 
@@ -67,6 +70,9 @@ Run the ```init.sh``` script in the root folder.
 #### 3) Configure the project
 In case you find necessary, some configurations can be changed in the ```src/config.py``` script.
 
+#### 4) Generating polls (Optional)
+Generate polls for all challenges by running the script ```genpolls.sh``` 
+
 
 ## Usage
 
@@ -79,6 +85,8 @@ compilation.
 This following explains the baseline usage. For more advanced usages check the readme under operations.
 
 #### Generating Polls
+This step can be skipped if polls were generated in the setup.
+
 The default number of traversals through the state graph per round is 100. That will generate 100 polls, it can be 
 changed by supplying the ```-n``` option followed by the respective number of traversals.
 

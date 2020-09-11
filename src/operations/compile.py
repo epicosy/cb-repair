@@ -4,16 +4,16 @@ from json import loads
 from pathlib import Path
 from typing import List
 
-from operation import Operation
+from context import Context
 from input_parser import add_operation
 
 
-class Compile(Operation):
-    def __init__(self, name: str,
+class Compile(Context):
+    def __init__(self,
                  inst_files: List[str],
                  fix_file: List[str],
                  **kwargs):
-        super().__init__(name, **kwargs)
+        super().__init__(**kwargs)
         self._set_build_paths()
         self.commands_path = self.build_root / Path('compile_commands.json')
         self.compile_script = self.working_dir / Path("compile.sh")
@@ -21,7 +21,7 @@ class Compile(Operation):
         self.fixes = fix_file
         self.log(str(self))
 
-        if len(self.fixes) != len(self.inst_files):
+        if self.fixes and self.inst_files and len(self.fixes) != len(self.inst_files):
             raise ValueError("The files with changes can not be mapped. Uneven number of files.")
 
     def __call__(self):

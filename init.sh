@@ -6,10 +6,10 @@ do_version_check() {
 
     [ "$1" == "$2" ] && return 10
 
-    ver1front=`echo $1 | cut -d "." -f -1`
-    ver1back=`echo $1 | cut -d "." -f 2-`
-    ver2front=`echo $2 | cut -d "." -f -1`
-    ver2back=`echo $2 | cut -d "." -f 2-`
+    ver1front=$(echo "$1" | cut -d "." -f -1)
+    ver1back=$(echo "$1" | cut -d "." -f 2-)
+    ver2front=$(echo "$2" | cut -d "." -f -1)
+    ver2back=$(echo "$2" | cut -d "." -f 2-)
 
     if [ "$ver1front" != "$1" ] || [ "$ver2front" != "$2" ]; then
         [ "$ver1front" -ne "$ver2front" ] && return 9
@@ -26,25 +26,24 @@ do_version_check() {
 echo "Installing cb-repair dependencies"
 apt-get install libc6-dev libc6-dev-i386 gcc-multilib g++-multilib clang cmake python python3.7
 
-
-which clang > /dev/null
+command -v clang > /dev/null
 [[ $? -eq 1 ]] && echo "[Error] clang not installed" && exit 1 ;
 
-which cmake > /dev/null
+command -v cmake > /dev/null
 [[ $? -eq 1 ]] && echo "[Error] cmake not installed" && exit 1 ;
 
-which python > /dev/null
+command -v python > /dev/null
 [[ $? -eq 1 ]] && echo "[Error] python not installed" && exit 1
 
-python_version=`python -c 'import platform; print(platform.python_version())'`
+python_version=$(python -c 'import platform; print(platform.python_version())')
 
 do_version_check "$python_version" "2.7"
 [[ $? -eq 9 ]] && echo "[Error] Python version >= 2.7" && exit 1 ;
 
-which python3 > /dev/null
+command -v python3 > /dev/null
 [[ $? -eq 1 ]] && echo "[Error] python3 not installed" && exit 1 ;
 
-python3_version=`python3 -c 'import platform; print(platform.python_version())'`
+python3_version=$(python3 -c 'import platform; print(platform.python_version())')
 
 do_version_check "$python3_version" "3.7"
 [[ $? -eq 9 ]] && echo "[Error] python3 version >= 3.7" && exit 1 ;

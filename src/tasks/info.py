@@ -5,9 +5,8 @@ from input_parser import add_task
 
 
 class Info(Setting):
-    def __init__(self, name: str, task: str, **kwargs):
+    def __init__(self, task: str, **kwargs):
         super().__init__(**kwargs)
-        self.name = name
         self.task = task
 
     def __call__(self):

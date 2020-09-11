@@ -39,20 +39,22 @@ class Challenge:
         return Path(tests[test]), is_pov
 
     def load_pos_tests(self):
-        tests = self.paths.get_polls()
-        len_tests = len(tests)
-        tests.sort()
-        # Map cases to tests names where p is for positive test cases
-        tests_id = [f"p{n}" for n in range(1, len_tests + 1)]
-        self.pos_tests = dict(zip(tests_id, tests))
+        if self.pos_tests == {}:
+            tests = self.paths.get_polls()
+            len_tests = len(tests)
+            tests.sort()
+            # Map cases to tests names where p is for positive test cases
+            tests_id = [f"p{n}" for n in range(1, len_tests + 1)]
+            self.pos_tests = dict(zip(tests_id, tests))
 
     def load_neg_tests(self, povs_path: Path):
-        neg_tests = [str(file) for file in povs_path.iterdir() if file.suffix == ".pov"]
-        len_tests = len(neg_tests)
-        neg_tests.sort()
-        # Map cases to tests names where p is for positive test cases
-        tests_id = [f"n{n}" for n in range(1, len_tests + 1)]
-        self.neg_tests = dict(zip(tests_id, neg_tests))
+        if self.neg_tests == {}:
+            neg_tests = [str(file) for file in povs_path.iterdir() if file.suffix == ".pov"]
+            len_tests = len(neg_tests)
+            neg_tests.sort()
+            # Map cases to tests names where p is for positive test cases
+            tests_id = [f"n{n}" for n in range(1, len_tests + 1)]
+            self.neg_tests = dict(zip(tests_id, neg_tests))
 
     def info(self):
         with self.paths.info.open(mode="r") as f:

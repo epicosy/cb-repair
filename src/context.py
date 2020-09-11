@@ -25,3 +25,7 @@ class Context(Setting):
         self.build_root = self.working_dir / Path("build")
         self.build = self.build_root / Path(self.challenge.name)
         self.cmake = self.build / Path("CMakeFiles", f"{self.challenge.name}.dir")
+
+    def __str__(self):
+        prefix_cmd = (f' -pf ' + self.prefix) if self.prefix is not None else ""
+        return f"{self.name} -wd {self.working_dir} -cn {self.challenge.name}" + prefix_cmd

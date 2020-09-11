@@ -4,18 +4,17 @@ import shutil
 from pathlib import Path
 
 from input_parser import add_operation
-from operation import Operation
+from context import Context
 from utils.streams import copytree
 from utils.exceptions import NotEmptyDirectory
 
 
-class Checkout(Operation):
+class Checkout(Context):
     def __init__(self,
-                 name: str,
                  source: bool = False,
                  remove_patches: bool = False,
                  **kwargs):
-        super().__init__(name, **kwargs)
+        super().__init__(**kwargs)
         self.src = source
         self.no_patch = remove_patches
         self.compile_script = self.working_dir / Path("compile.sh")

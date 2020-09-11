@@ -121,7 +121,8 @@ Runs tests on a checked-out and compiled challenge.
 
 ### Synopsis
 cb-repair test [-h] [-cn CHALLENGE_NAME] [-v] [-l LOG_FILE] [-wd WORKING_DIRECTORY] [-pf PREFIX] [-r REGEX]
-[-tn TESTS [TESTS ...]] [-of OUT_FILE] [-wf] [-ef] [-pn PORT]
+[-pt | -nt | -tn TESTS [TESTS ...]] [-of OUT_FILE] [-wf] [-ef] [-pn PORT]
+
 
 ### Description 
 
@@ -129,9 +130,16 @@ This script executes a test or test suite on a checked-out challenge and reports
 It also writes all failing test cases to the file out_file and writes.
 
 ### Options
+The options ```tests, pos_tests and neg_tests``` are mutually exclusive.
 
 --tests *TESTS [TESTS ...]*
 :   Name of the test to be executed.
+
+--pos_tests
+:   Run all positive tests against the challenge.
+
+--neg_tests
+:Run all negative tests against the challenge.
 
 --out_file *OUT_FILE*
 :   The file where tests results are written to.
@@ -147,6 +155,19 @@ It also writes all failing test cases to the file out_file and writes.
 
 ### Example Uses
 
+The following tests the previous compiled challenge BitBlaster, under ```/tmp/BitBlaster_0``` path on all tests.
+
+``` console
+$ cb_repair.py compile -cn BitBlaster -wd /tmp/BitBlaster_0
+```
+
+The following tests the previous compiled challenge BitBlaster, under ```/tmp/BitBlaster_0``` path on all positive tests.
+
+``` console
+$ cb_repair.py compile -cn BitBlaster -wd /tmp/BitBlaster_0 --pos_tests
+```
+
+
 The following tests the previous compiled challenge BitBlaster, under ```/tmp/BitBlaster_0``` path on p1 test which maps
 to the ```GEN_00000_00000.xml``` poll.
 
@@ -161,7 +182,7 @@ to the ```pov_1.pov``` pov.
 $ cb_repair.py compile -cn BitBlaster -wd /tmp/BitBlaster_0 -tn n1
 ```
 
-The following does the aforementioned, and writes to the file ```results.txt``` the tests' results.
+The following tests p1, n1, and writes to the file ```results.txt``` the tests' results.
 
 ``` console
 $ cb_repair.py compile -cn BitBlaster -wd /tmp/BitBlaster_0 -tn p1 n1 --out_file results.txt
