@@ -42,7 +42,7 @@ def add_base(name: str, base: Base, description: str):
     return base_parser
 
 
-def parse_unknown(regex: str, unknown: List[str]) -> dict:
+def parse_unknown(regex: str, unknown: List[str], **kwargs) -> dict:
     if regex and unknown:
         unk_str = ' '.join(unknown)
 
@@ -59,7 +59,7 @@ def parse_unknown(regex: str, unknown: List[str]) -> dict:
 
 def run(base: Base, **kwargs):
     if "regex" in kwargs:
-        parsed_unk = parse_unknown(kwargs["regex"], **kwargs)
+        parsed_unk = parse_unknown(**kwargs)
         kwargs.update(parsed_unk)
 
     base = base(**kwargs)
