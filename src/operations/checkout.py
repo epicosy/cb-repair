@@ -11,11 +11,9 @@ from utils.exceptions import NotEmptyDirectory
 
 class Checkout(Context):
     def __init__(self,
-                 source: bool = False,
                  remove_patches: bool = False,
                  **kwargs):
         super().__init__(**kwargs)
-        self.src = source
         self.no_patch = remove_patches
         self.compile_script = self.working_dir / Path("compile.sh")
 
@@ -25,8 +23,11 @@ class Checkout(Context):
         self._mkdir()
         self._checkout_files()
 
+        manifest = self.challenge.get_manifest(self.source)
+        manifest.write()
+
         if self.no_patch:
-            self._remove_patches()
+            manifest.remove_patches()
 
     def _mkdir(self):
         if self.working_dir.exists():
@@ -57,10 +58,6 @@ class Checkout(Context):
 
         # Copy compile.sh script
         shutil.copy2(src=tools.compile, dst=self.working_dir)
-
-    def _remove_patches(self):
-        manifest = self.challenge.get_manifest(self.source)
-        manifest.remove_patches()
 
 
 def checkout_args(input_parser):

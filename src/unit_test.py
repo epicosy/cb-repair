@@ -71,7 +71,9 @@ class TestOperations(unittest.TestCase):
                         write_fail=True,
                         tests=["p1"],
                         out_file=self.working_dir + "/result_p1.txt",
-                        verbose=True)
+                        verbose=True,
+                        pos_tests=None,
+                        neg_tests=None)
 
         with self.assertRaises(SystemExit) as se:
             self.opr()
@@ -94,7 +96,9 @@ class TestOperations(unittest.TestCase):
                         tests=["n1"],
                         out_file=self.working_dir + "/result_n1.txt",
                         write_fail=True,
-                        verbose=True)
+                        verbose=True,
+                        pos_tests=None,
+                        neg_tests=None)
 
         with self.assertRaises(SystemExit) as se:
             self.opr()
@@ -122,7 +126,7 @@ if __name__ == "__main__":
         with open("unit_tests_results.txt", "a") as res:
             res.write(f"Challenge: {chal}\n")
             res.write(f"\t--Tests Run: {str(results.testsRun)}\n")
-            res.write(f"\t--Failures: {str(results.failures)}\n")
-            res.write(f"\t--Errors: {str(results.errors)}\n")
+            res.write(f"\t--Failures: {len(results.failures)} {str(results.failures)}\n")
+            res.write(f"\t--Errors: {len(results.errors)} {str(results.errors)}\n")
 
         break

@@ -135,5 +135,5 @@ def test_args(input_parser):
                                If PORT is not provided, a random port will be used.')
 
 
-t_parser = add_operation("test", Test, 'Runs specified test against challenge binary.')
+t_parser = add_operation("test", Test, 'Runs specified tests against challenge binary.')
 test_args(t_parser)

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+
+import shutil
 from pathlib import Path
 
 from setting import Setting
 from input_parser import add_task
 from utils.streams import copytree
-import shutil
+
 
 class GenPolls(Setting):
     def __init__(self, count: int, **kwargs):
@@ -54,5 +56,7 @@ def gen_polls_args(input_parser):
                               help='Number of traversals through the state graph per round')
 
 
-info_parser = add_task("genpolls", GenPolls, 'Query information about the benchmark challenges.')
+info_parser = add_task("genpolls", GenPolls, description='For a given challenge, generates polls which are'
+                                                         'deterministic iterations of a non-deterministic state '
+                                                         'graph. These are used as positive tests.')
 gen_polls_args(info_parser)
