@@ -29,7 +29,7 @@ class Base:
         return self.configuration.tools
 
     def log(self, msg: str):
-        if self.log_file is not None:
+        if self.log_file and msg:
             with self.log_file.open(mode="a") as lf:
                 lf.write(msg)
 

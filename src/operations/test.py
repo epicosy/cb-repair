@@ -86,7 +86,7 @@ class Test(Context):
         cb_cmd = [str(self.get_tools().test),
                   '--directory', str(self.build),
                   '--xml', str(self.test_file),
-                  '--concurrent', '1',
+                  '--concurrent', '4',
                   "--debug",
                   '--timeout', self.configuration.tests_timeout,
                   '--negotiate_seed', '--cb'] + bin_names

@@ -32,9 +32,9 @@ class Compile(Context):
 
             # compile the preprocessed file to object
             with self.commands_path.open(mode="r") as json_file:
-                compile_commands = loads(json_file.read())
+                self.compile_commands = loads(json_file.read())
 
-            manifest = self.challenge.get_manifest(self.working_dir)
+            manifest = self.challenge.get_manifest(self.source)
             mapping = manifest.map_instrumented_files(self.inst_files)
 
             # creating object files
