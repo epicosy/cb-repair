@@ -87,7 +87,6 @@ class Test(Context):
                   '--directory', str(self.build),
                   '--xml', str(self.test_file),
                   '--concurrent', '4',
-                  "--debug",
                   '--timeout', self.configuration.tests_timeout,
                   '--negotiate_seed', '--cb'] + bin_names
 
