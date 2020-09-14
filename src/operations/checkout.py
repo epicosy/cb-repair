@@ -5,8 +5,8 @@ from pathlib import Path
 
 from input_parser import add_operation
 from context import Context
-from utils.streams import copytree
 from utils.exceptions import NotEmptyDirectory
+from distutils.dir_util import copy_tree
 
 
 class Checkout(Context):
@@ -41,12 +41,12 @@ class Checkout(Context):
         self.status(f"Copying files to {self.working_dir}.")
         # Copy challenge source files
         self.source.mkdir()
-        copytree(src=self.challenge.paths.source, dst=self.source)
+        copy_tree(src=str(self.challenge.paths.source), dst=str(self.source))
 
         # Copy include libraries
-        (self.working_dir / Path("include")).mkdir()
-        copytree(src=self.get_lib_paths().root / Path("include"),
-                 dst=self.working_dir / Path("include"))
+        include_dest = self.working_dir / Path("include")
+        include_dest.mkdir()
+        copy_tree(src=str(self.get_lib_paths().root / Path("include")), dst=str(include_dest))
         tools = self.get_tools()
         # Copy CMakeLists.txt
         cmake_file = tools.cmake_file_no_patch if self.no_patch else tools.cmake_file

@@ -11,21 +11,26 @@ from input_parser import add_operation
 class Compile(Context):
     def __init__(self,
                  inst_files: List[str],
-                 fix_file: List[str],
+                 fix_files: List[str],
                  **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()
         self.commands_path = self.build_root / Path('compile_commands.json')
         self.compile_script = self.working_dir / Path("compile.sh")
         self.inst_files = inst_files
-        self.fixes = fix_file
+        self.fixes = fix_files
+
+        if self.fixes and not isinstance(self.fixes, list):
+            self.fixes = [self.fixes]
+
         self.log(str(self))
 
         if self.fixes and self.inst_files and len(self.fixes) != len(self.inst_files):
-            raise ValueError("The files with changes can not be mapped. Uneven number of files.")
+            raise ValueError(f"The files with changes [{fix_files}] can not be mapped. Uneven number of files " +
+                             f"[{inst_files}].")
 
     def __call__(self):
-        self.status(f"Compiling {self.challenge.name}.")
+        self.status(f"Compiling {self.challenge.name}.\n")
 
         if self.inst_files:
             link_file = self.cmake / Path("link.txt")
@@ -62,6 +67,8 @@ class Compile(Context):
                              exit_err=True)
 
     def get_compile_command(self, manifest_file: str, instrumented_file: str):
+        if self.prefix:
+            instrumented_file = str(self.prefix / Path(instrumented_file))
         for command_entry in self.compile_commands:
             if command_entry["file"].endswith(manifest_file) and "-DPATCHED" not in command_entry["command"]:
                 command = command_entry["command"]
@@ -87,7 +94,7 @@ class Compile(Context):
 
 def compile_args(input_parser):
     input_parser.add_argument('-ifs', '--inst_files', nargs='+', help='Instrumented files to compile.', default=None)
-    input_parser.add_argument('-ff', '--fix_file', nargs='+', default=None,
+    input_parser.add_argument('-ff', '--fix_files', nargs='+', default=None,
                               help='The file with changes applied by the repair tool.')
 
 

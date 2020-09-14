@@ -2,7 +2,7 @@
 
 import argparse
 import re
-from typing import List
+from typing import List, Dict, Any
 from base import Base
 
 parser = argparse.ArgumentParser(prog="cb-repair",
@@ -20,7 +20,7 @@ def add_operation(name: str, operation: Base, description: str):
     operation_parser = add_task(name, operation, description)
     operation_parser.add_argument('-wd', '--working_directory', type=str, help='The working directory.')
     operation_parser.add_argument('-pf', '--prefix', type=str, default=None,
-                                  help='Path prefix for extra compile and test files from the unknown arguments')
+                                  help='Path prefix for extra compile and test files for the unknown arguments')
     operation_parser.add_argument('-r', '--regex', type=str, default=None,
                                   help='File containing the regular expression to parse unknown arguments into known')
 
@@ -42,28 +42,43 @@ def add_base(name: str, base: Base, description: str):
     return base_parser
 
 
-def parse_unknown(regex: str, unknown: List[str], **kwargs) -> dict:
+def parse_unknown(regex: str, unknown: List[str], **kwargs) -> Dict[str, Any]:
     if regex and unknown:
-        unk_str = ' '.join(unknown)
+        args_matches = {}
 
         with open(regex, "r") as f:
             exp = f.readline()
-            exp = exp.split("\n")[0]
-            match = re.match(exp, unk_str)
+            exp = exp.splitlines()[0]
 
-        if match:
-            return match.groupdict()
+            for arg in unknown:
+                match = re.match(exp, arg)
 
-    return dict()
+                if match:
+                    for key, value in match.groupdict().items():
+                        if key in args_matches:
+                            if isinstance(args_matches[key], list):
+                                args_matches[key].append(value)
+                            else:
+                                args_matches[key] = [args_matches[key], value]
+                        else:
+                            args_matches[key] = value
+
+            kwargs.update(args_matches)
+            return kwargs
+
+    return kwargs
 
 
 def run(base: Base, **kwargs):
-    if "regex" in kwargs:
-        parsed_unk = parse_unknown(**kwargs)
-        kwargs.update(parsed_unk)
-
-    base = base(**kwargs)
-    base()
+    try:
+        if "regex" in kwargs:
+            kwargs = parse_unknown(**kwargs)
+        base = base(**kwargs)
+        base()
+    except Exception as e:
+        with open("exception.log", "a") as ex:
+            ex.write(str(e) + "\n")
+        base.log(f"{base.name}: some error happened: \n{e}\n")
 
 
 import tasks.catalog

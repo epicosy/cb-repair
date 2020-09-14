@@ -5,7 +5,7 @@ from pathlib import Path
 
 from setting import Setting
 from input_parser import add_task
-from utils.streams import copytree
+from distutils.dir_util import copy_tree
 
 
 class GenPolls(Setting):
@@ -45,7 +45,7 @@ class GenPolls(Setting):
                     self.status(f"No scripts for generating polls for {self.challenge.name}.\n")
                     self.status(f"Coping pre-generated polls for {self.challenge.name}.\n")
                     self.out_dir.mkdir(parents=True, exist_ok=True)
-                    copytree(src=polldir, dst=self.out_dir)
+                    copy_tree(src=polldir, dst=self.out_dir)
 
     def __str__(self):
         return super().__str__() + f" -n {self.count}\n"

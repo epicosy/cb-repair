@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 
-import os
-import shutil
 import sys
 from typing import NoReturn
+
 
 def print_err(*args, **kwargs):
     print(args, file=sys.stderr, **kwargs)
 
 
 # from https://stackoverflow.com/a/27871113
-def progress(count, total, suffix=''):
+def progress(count, total, suffix='') -> NoReturn:
     bar_len = 40
     filled_len = int(round(bar_len * count / float(total)))
 
@@ -24,14 +23,3 @@ def progress(count, total, suffix=''):
 
     sys.stdout.write(string)
     sys.stdout.flush()
-
-
-# from https://stackoverflow.com/a/12514470
-def copytree(src: str, dst: str, symlinks: bool = False, ignore=None) -> NoReturn:
-    for item in os.listdir(src):
-        s = os.path.join(src, item)
-        d = os.path.join(dst, item)
-        if os.path.isdir(s):
-            shutil.copytree(s, d, symlinks, ignore)
-        else:
-            shutil.copy2(s, d)

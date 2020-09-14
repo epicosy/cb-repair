@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-
+from argparse import Namespace
 from os import listdir
 from pathlib import Path
 from typing import List
 
 from context import Context
 from utils.parse import parse_results
+from utils.coverage import Coverage
 from input_parser import add_operation
 
 
@@ -18,13 +19,18 @@ class Test(Context):
                  neg_tests: bool,
                  exit_fail: bool,
                  write_fail: bool,
+                 cov_dir: str,
+                 cov_out_dir: str,
+                 cov_suffix: str,
+                 rename_suffix: str,
                  **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()
         self.port = port
         self.exit_fail = exit_fail
         self.write_fail = write_fail
-        self.out_file = Path(out_file) if out_file is not None else out_file
+        self.out_file = Path(out_file) if out_file else out_file
+        self.coverage = Coverage(cov_dir if cov_dir else self.cmake, cov_out_dir, cov_suffix, rename_suffix)
         self.challenge.load_pos_tests()
         self.challenge.load_neg_tests(self.build)
 
@@ -55,6 +61,7 @@ class Test(Context):
                                         timeout=int(self.configuration.tests_timeout),
                                         exit_err=True)
 
+            self.coverage()
             total, passed = parse_results(out, self.is_pov)
             tests_result[test] = passed
 
@@ -101,9 +108,10 @@ class Test(Context):
     def write_results(self, results: dict):
         out_file = self.add_prefix(self.out_file)
 
-        with out_file.open(mode="a") as of:
-            for k, v in results.items():
-                of.write(f"{k} {v}\n")
+        if not out_file.is_dir():
+            with out_file.open(mode="a") as of:
+                for k, v in results.items():
+                    of.write(f"{k} {v}\n")
 
     def __str__(self):
         test_cmd_str = " --tests " + ' '.join(self.tests)
@@ -118,12 +126,21 @@ class Test(Context):
 
 
 def test_args(input_parser):
+    # Tests group
     g = input_parser.add_mutually_exclusive_group(required=False)
     g.add_argument('-pt', '--pos_tests', action='store_true', required=False,
                    help='Run all positive tests against the challenge.')
     g.add_argument('-nt', '--neg_tests', action='store_true', required=False,
                    help='Run all negative tests against the challenge.')
     g.add_argument('-tn', '--tests', type=str, nargs='+', help='Name of the test', required=False)
+    # Coverage group
+    g = input_parser.add_argument_group(title="coverage", description="None")
+    g.add_argument('-cd', '--cov_dir', type=str, help='The dir where the coverage files are generated.', default=None)
+    g.add_argument('-cod', '--cov_out_dir', type=str, help='The dir where the coverage files are output.', default=None)
+    g.add_argument('-cs', '--cov_suffix', type=str, help='The suffix of the coverage files generated.', default=".path")
+    g.add_argument('-rs', '--rename_suffix', type=str, default=".path",
+                   help='Rename the suffix to a specific one when outputting files')
+
     input_parser.add_argument('-of', '--out_file', type=str, help='The file where tests results are written to.')
     input_parser.add_argument('-wf', '--write_fail', action='store_true',
                               help='Flag for writing the failed test to the specified out_file.')
