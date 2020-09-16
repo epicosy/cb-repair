@@ -33,8 +33,6 @@ class GenPolls(Setting):
                 state_graph = polldir / Path("state-graph.yaml")
 
                 if state_machine_script.exists() and state_graph.exists():
-                    print(state_machine_script)
-                    print(state_graph)
                     self.out_dir.mkdir(parents=True, exist_ok=True)
                     cmd_str = f"python -B {self.get_tools().gen_polls} --count {self.count} " \
                               f"--store_seed --depth 1048575 {state_machine_script} {state_graph} {self.out_dir}"

@@ -18,7 +18,7 @@ subparsers = parser.add_subparsers()
 
 def add_operation(name: str, operation: Base, description: str):
     operation_parser = add_task(name, operation, description)
-    operation_parser.add_argument('-wd', '--working_directory', type=str, help='The working directory.')
+    operation_parser.add_argument('-wd', '--working_directory', type=str, help='The working directory.', required=True)
     operation_parser.add_argument('-pf', '--prefix', type=str, default=None,
                                   help='Path prefix for extra compile and test files for the unknown arguments')
     operation_parser.add_argument('-r', '--regex', type=str, default=None,
@@ -78,10 +78,11 @@ def run(base: Base, **kwargs):
     except Exception as e:
         with open("exception.log", "a") as ex:
             ex.write(str(e) + "\n")
-        base.log(f"{base.name}: some error happened: \n{e}\n")
+            print(e)
 
 
 import tasks.catalog
+import tasks.check
 import tasks.genpolls
 import operations.info
 import operations.compile

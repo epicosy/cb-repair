@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-from argparse import Namespace
+
 from os import listdir
 from pathlib import Path
-from typing import List
+from typing import List, AnyStr, NoReturn
 
 from context import Context
 from utils.parse import parse_results
@@ -12,21 +12,14 @@ from input_parser import add_operation
 
 class Test(Context):
     def __init__(self,
-                 tests: List[str],
-                 out_file: str,
-                 port: str,
-                 pos_tests: bool,
-                 neg_tests: bool,
-                 exit_fail: bool,
-                 write_fail: bool,
-                 cov_dir: str,
-                 cov_out_dir: str,
-                 cov_suffix: str,
-                 rename_suffix: str,
+                 tests: List[AnyStr] = None, out_file: str = None, port: str = None, pos_tests: bool = False,
+                 neg_tests: bool = False, exit_fail: bool = False, write_fail: bool = False, neg_pov: bool = True,
+                 cov_dir: str = None, cov_out_dir: str = None, cov_suffix: str = ".path", rename_suffix: str = ".path",
                  **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()
         self.port = port
+        self.neg_pov = neg_pov
         self.exit_fail = exit_fail
         self.write_fail = write_fail
         self.out_file = Path(out_file) if out_file else out_file
@@ -37,15 +30,18 @@ class Test(Context):
         if tests:
             self.tests = tests
         elif pos_tests:
-            self.tests = self.challenge.pos_tests.keys()
+            if not self._load_checks("pos_checks.txt"):
+                self.tests = self.challenge.pos_tests.keys()
         elif neg_tests:
-            self.tests = self.challenge.neg_tests.keys()
+            if not self._load_checks("neg_checks.txt"):
+                self.tests = self.challenge.neg_tests.keys()
         else:
-            self.tests = list(self.challenge.pos_tests.keys()) + list(self.challenge.neg_tests.keys())
+            if not self._load_checks("checks.txt"):
+                self.tests = list(self.challenge.pos_tests.keys()) + list(self.challenge.neg_tests.keys())
 
         self.log(str(self))
 
-    def __call__(self):
+    def __call__(self, save: bool = False):
         failed = False
         tests_result = {}
         # TODO: Change this, cb-test.py accepts more challenges at once,
@@ -59,14 +55,20 @@ class Test(Context):
                                         msg=f"Testing {self.challenge.name} on {self.test_file.name}\n",
                                         cmd_cwd=str(self.get_tools().root),
                                         timeout=int(self.configuration.tests_timeout),
-                                        exit_err=True)
+                                        exit_err=False)
             if err:
                 print(err)
+
             self.coverage()
-            total, passed = parse_results(out, self.is_pov)
+            total, passed = parse_results(out)
+
+            # Negative tests should fail
+            if self.is_pov and self.neg_pov and passed == '1':
+                passed = '0'
+
             tests_result[test] = passed
 
-            if passed == '0':
+            if passed != '1':
                 if not self.write_fail:
                     tests_result.pop(test)
 
@@ -76,6 +78,9 @@ class Test(Context):
 
         if self.out_file is not None:
             self.write_results(tests_result)
+
+        if save:
+            return tests_result
 
         if failed:
             exit(1)
@@ -115,6 +120,22 @@ class Test(Context):
                 for k, v in results.items():
                     of.write(f"{k} {v}\n")
 
+    def _load_checks(self, file_name: str) -> bool:
+        path_tests = self.source / Path(file_name)
+
+        if path_tests.exists():
+            with path_tests.open(mode="r") as t:
+                self.tests = t.read().split()
+
+            if not self.tests:
+                self.status(f"No checked tests.\n")
+                return False
+
+            self.status(f"Loaded checked tests {' '.join(self.tests)}.\n")
+            return True
+
+        return False
+
     def __str__(self):
         test_cmd_str = " --tests " + ' '.join(self.tests)
 
@@ -146,6 +167,8 @@ def test_args(input_parser):
     input_parser.add_argument('-of', '--out_file', type=str, help='The file where tests results are written to.')
     input_parser.add_argument('-wf', '--write_fail', action='store_true',
                               help='Flag for writing the failed test to the specified out_file.')
+    input_parser.add_argument('-np', '--neg_pov', action='store_true',
+                              help='Flag for reversing the passed result if is a negative test.')
     input_parser.add_argument('-ef', '--exit_fail', action='store_true',
                               help='Flag that makes program exit with error when a test fails.')
     input_parser.add_argument('-pn', '--port', type=str, default=None,

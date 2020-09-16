@@ -52,7 +52,7 @@ class TestOperations(unittest.TestCase):
                            working_directory=self.working_dir,
                            challenge_name=self.challenge,
                            inst_files=None,
-                           fix_file=None)
+                           fix_files=None)
 
         self.opr()
         self.assertTrue(self.opr.build.exists())

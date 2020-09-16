@@ -37,6 +37,7 @@ src/operations/test.py, tools/generate-polls/generate-polls, tools/compile.sh```
 * Polls generation needs to be performed only once.
 * Some positive tests timeout with 10 seconds limit. A check for that will be added.
 * Some negative tests don't core. A check for that will be added.
+* The challenge A_Game_of_Chance fails when tested.
 
 ## Getting Started
 

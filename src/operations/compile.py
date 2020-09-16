@@ -10,8 +10,8 @@ from input_parser import add_operation
 
 class Compile(Context):
     def __init__(self,
-                 inst_files: List[str],
-                 fix_files: List[str],
+                 inst_files: List[str] = None,
+                 fix_files: List[str] = None,
                  **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()

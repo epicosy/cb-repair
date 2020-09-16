@@ -53,6 +53,9 @@ class LibPaths:
     def get_challenges(self):
         return [challenge.name for challenge in self.challenges.iterdir() if challenge.is_dir()]
 
+    def get_polls_path(self, challenge_name: str):
+        return self.polls / Path(challenge_name, 'poller')
+
     def get_challenge_paths(self, challenge_name):
         source = self.challenges / Path(challenge_name)
         readme = source / Path("README.md")
