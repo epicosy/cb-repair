@@ -267,6 +267,8 @@ class Runner(object):
         logging.debug('launching %s', ' '.join(cmd))
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
+        logging.debug('pid %d', process.pid)
+
         stdout, stderr = process.communicate()
         if len(stderr):
             for line in stderr.split('\n'):

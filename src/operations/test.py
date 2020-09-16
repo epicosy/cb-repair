@@ -60,7 +60,8 @@ class Test(Context):
                                         cmd_cwd=str(self.get_tools().root),
                                         timeout=int(self.configuration.tests_timeout),
                                         exit_err=True)
-
+            if err:
+                print(err)
             self.coverage()
             total, passed = parse_results(out, self.is_pov)
             tests_result[test] = passed
@@ -94,6 +95,7 @@ class Test(Context):
                   '--directory', str(self.build),
                   '--xml', str(self.test_file),
                   '--concurrent', '4',
+                  '--debug',
                   '--timeout', self.configuration.tests_timeout,
                   '--negotiate_seed', '--cb'] + bin_names
 

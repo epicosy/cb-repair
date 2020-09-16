@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
+import re
 import os
+
+pid_pattern = r"^# pid (\d{4,7})$"
 
 
 def parse_results(output: str, is_pov: bool):
@@ -14,9 +17,13 @@ def parse_results(output: str, is_pov: bool):
     # If the test failed to run, consider it failed
     if 'TOTAL TESTS' not in output:
         print('\nWARNING: there was an error running a test')
-        print(output)
-        # FIX: find the root cause for this quick fix and implement better solution
-        #os.system("killall -9 cb-replay.py")
+        for line in output.splitlines():
+            match = re.match(pid_pattern, line)
+
+            if match:
+                # FIX: find the root cause for this quick fix and implement better solution
+                os.system(f"kill {match.group(1)}")
+                print(f"Killed process {match.group(1)}")
 
         return '0', '0'
 
