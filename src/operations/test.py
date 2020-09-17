@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+import psutil
 from os import listdir
 from pathlib import Path
-from typing import List, AnyStr, NoReturn
+from typing import List, AnyStr
 
 from context import Context
-from utils.parse import parse_results
+from utils.parse import parse_results, kill_process
 from utils.coverage import Coverage
 from input_parser import add_operation
 
@@ -61,7 +62,8 @@ class Test(Context):
 
             self.coverage()
             total, passed = parse_results(out)
-
+            if passed == '2':
+                self._kill_error_process()
             # Negative tests should fail
             if self.is_pov and self.neg_pov and passed == '1':
                 passed = '0'
@@ -135,6 +137,23 @@ class Test(Context):
             return True
 
         return False
+
+    def _kill_error_process(self):
+        """
+        Get a list of all the PIDs of a all the running process whose name contains
+        the given string processName
+        """
+        # Iterate over the all the running process
+
+        for proc in psutil.process_iter():
+            try:
+                proc_info = proc.as_dict(attrs=['pid', 'name', 'create_time'])
+                # Check if process name contains the given name string.
+                if self.challenge.name in proc_info['name']:
+                    self.status(f"Killing {self.challenge.name} process with pid {proc_info['pid']}.\n")
+                    kill_process(proc_info['pid'])
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
 
     def __str__(self):
         test_cmd_str = " --tests " + ' '.join(self.tests)

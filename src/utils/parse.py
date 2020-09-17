@@ -5,10 +5,12 @@ import os
 pid_pattern = r"^# pid (\d{4,7})$"
 
 
-def kill_process(pid: str):
+def kill_process(pid: str, msg: str = None):
     # FIX: find the root cause for this quick fix and implement better solution
     os.system(f"kill {pid}")
-    print(f"Killed process {pid}")
+
+    if msg:
+        print(msg)
 
 
 def parse_results(output: str):
@@ -24,7 +26,7 @@ def parse_results(output: str):
         for line in output.splitlines():
             match = re.match(pid_pattern, line)
             if match:
-                kill_process(match.group(1))
+                kill_process(match.group(1), f"Killed process {match.group(1)}")
 
         return '2', '2'
 
