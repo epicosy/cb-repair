@@ -126,7 +126,8 @@ if __name__ == "__main__":
         with open("unit_tests_results.txt", "a") as res:
             res.write(f"Challenge: {chal}\n")
             res.write(f"\t--Tests Run: {str(results.testsRun)}\n")
-            res.write(f"\t--Failures: {len(results.failures)} {str(results.failures)}\n")
+            failures = "\n\t--".join([str(r) for r in results.failures])
+            res.write(f"\t--Failures: {len(results.failures)} {failures}\n")
             res.write(f"\t--Errors: {len(results.errors)} {str(results.errors)}\n")
 
         break

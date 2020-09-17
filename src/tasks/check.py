@@ -7,9 +7,9 @@ from typing import List, AnyStr
 from base import Base
 from input_parser import add_base
 from .genpolls import GenPolls
-from operations.checkout import Checkout
-from operations.compile import Compile
-from operations.test import Test
+import operations.checkout as checkout
+import operations.compile as compile
+import operations.test as test
 
 
 class Check(Base):
@@ -66,7 +66,7 @@ class Check(Base):
                 for k, v in old.items():
                     if k not in self.results:
                         self.results[k] = v
- 
+
         with out_path.open("w+") as res:
             json.dump(self.results, res, indent=2)
 
@@ -76,22 +76,22 @@ class Check(Base):
                             count=self.count)
         genpolls()
 
-        checkout = Checkout(name="checkout", configs=self.configuration, working_directory=working_dir,
-                            challenge_name=challenge_name)
-        checkout()
-        compile = Compile(name="compile", configs=self.configuration, working_directory=working_dir,
-                          challenge_name=challenge_name, inst_files=None, fix_files=None)
-        compile()
+        checkout_cmd = checkout.Checkout(name="checkout", configs=self.configuration, working_directory=working_dir,
+                                         challenge_name=challenge_name)
+        checkout_cmd()
+        compile_cmd = compile.Compile(name="compile", configs=self.configuration, working_directory=working_dir,
+                                      challenge_name=challenge_name, inst_files=None, fix_files=None)
+        compile_cmd()
         tests = None
 
         for timeout in self.timeouts:
             self.configuration.tests_timeout = timeout
             self.results[challenge_name]["timeout"] = []
 
-            test = Test(name="test", configs=self.configuration, working_directory=working_dir,
-                        challenge_name=challenge_name, tests=tests, write_fail=True, neg_pov=False)
+            test_cmd = test.Test(name="test", configs=self.configuration, working_directory=working_dir,
+                                 challenge_name=challenge_name, tests=tests, write_fail=True, neg_pov=False)
 
-            results = test(save=True)
+            results = test_cmd(save=True)
 
             for key, value in results.items():
                 self.results[challenge_name][self.tests_map[value]].append(key)
@@ -101,7 +101,7 @@ class Check(Base):
             if not tests:
                 break
 
-        #os.system(f"rm -rf {working_dir}")
+        # os.system(f"rm -rf {working_dir}")
 
     def __str__(self):
         pass
