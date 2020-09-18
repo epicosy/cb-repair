@@ -1,7 +1,6 @@
 AIS-Lite
 ASCII_Content_Server
 ASL6parse
-A_Game_of_Chance
 Accel
 Audio_Visualizer
 BIRC

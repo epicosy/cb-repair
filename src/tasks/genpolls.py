@@ -43,7 +43,7 @@ class GenPolls(Setting):
                     self.status(f"No scripts for generating polls for {self.challenge.name}.\n")
                     self.status(f"Coping pre-generated polls for {self.challenge.name}.\n")
                     self.out_dir.mkdir(parents=True, exist_ok=True)
-                    copy_tree(src=polldir, dst=self.out_dir)
+                    copy_tree(src=str(polldir), dst=str(self.out_dir))
 
     def __str__(self):
         return super().__str__() + f" -n {self.count}\n"

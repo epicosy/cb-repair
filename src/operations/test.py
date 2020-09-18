@@ -141,8 +141,9 @@ class Test(Context):
     def _kill_error_process(self):
         """
         Get a list of all the PIDs of a all the running process whose name contains
-        the given string processName
+        the given string processName and kill the process
         """
+        # based on https://thispointer.com/python-check-if-a-process-is-running-by-name-and-find-its-process-id-pid/
         # Iterate over the all the running process
 
         for proc in psutil.process_iter():
