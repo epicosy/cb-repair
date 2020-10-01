@@ -65,8 +65,11 @@ class Test(Context):
             if passed == '2':
                 self._kill_error_process()
             # Negative tests should fail
-            if self.is_pov and self.neg_pov and passed == '1':
-                passed = '0'
+            if self.is_pov and self.neg_pov:
+                if passed == '1':
+                    passed = '0'
+                else:
+                    passed = '1'
 
             tests_result[test] = passed
 

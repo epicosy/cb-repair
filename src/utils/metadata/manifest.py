@@ -45,23 +45,29 @@ class Manifest:
         for file in self.vuln_files.values():
             file.remove_patch()
 
-    def write(self, out_file: Path = None) -> NoReturn:
+    def write(self, out_file: Path = None, vuln_lines: bool = False) -> NoReturn:
         out = out_file if out_file else self.root / Path("manifest.txt")
 
         with out.open(mode="w") as of:
-            for short_file_path in self.vuln_files.keys():
-                of.write(short_file_path + "\n")
+            for short_file_path, vuln_file in self.vuln_files.items():
+                if vuln_lines:
+                    file_vuln_lines = vuln_file.get_vuln_lines()
+                    of.write(f"{short_file_path} {' '.join(file_vuln_lines)}\n")
+                else:
+                    of.write(short_file_path + "\n")
 
     # TODO: this might fail in cases where the header files have files associated
-    def map_instrumented_files(self, instrumented_files: List[str]) -> Dict[(str, str)]:
+    def map_instrumented_files(self, instrumented_files: List[str], cpp_files: bool) -> Dict[(str, str)]:
         mapping = {}
-
-        for short_path, file in self.vuln_files.items():
+        
+        for short_path, file in self.source_files.items():
             if file.path.suffix == "h":
                 continue
-            cpp_file = short_path.replace('.c', '.i')
+            if cpp_files:
+                short_path = short_path.replace('.c', '.i')
+            print(short_path)
             for inst_file in instrumented_files:
-                if cpp_file in inst_file:
+                if short_path in inst_file:
                     mapping[short_path] = inst_file
                     break
 

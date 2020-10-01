@@ -12,9 +12,11 @@ from distutils.dir_util import copy_tree
 class Checkout(Context):
     def __init__(self,
                  remove_patches: bool = False,
+                 vuln_lines: bool = False,
                  **kwargs):
         super().__init__(**kwargs)
         self.no_patch = remove_patches
+        self.vuln_lines = vuln_lines
         self.compile_script = self.working_dir / Path("compile.sh")
 
     def __call__(self):
@@ -24,10 +26,11 @@ class Checkout(Context):
         self._checkout_files()
 
         manifest = self.challenge.get_manifest(self.source)
-        manifest.write()
 
         if self.no_patch:
             manifest.remove_patches()
+
+        manifest.write(vuln_lines=self.vuln_lines)
 
     def _mkdir(self):
         if self.working_dir.exists():
@@ -63,6 +66,8 @@ class Checkout(Context):
 def checkout_args(input_parser):
     input_parser.add_argument('-rp', '--remove_patches', action='store_true',
                               help='Remove the patches and respective definitions from the source code.')
+    input_parser.add_argument('-vl', '--vuln_lines', action='store_true',
+                              help='Adds the vulnerable lines to the manifest.')
 
 
 co_parser = add_operation("checkout", Checkout, 'Checks out challenge to working directory.')

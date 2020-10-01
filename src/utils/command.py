@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 import subprocess
+
+from sys import stderr
 from typing import IO, Union, AnyStr, Tuple
 from pathlib import Path
+
 from .streams import print_err
 
 
@@ -34,7 +37,7 @@ class Command:
             print(out)
 
             if err:
-                print(err)
+                print(err, file=stderr)
 
         if self.file:
             self._write(out)
@@ -53,17 +56,21 @@ class Command:
             out += decoded
 
             if self.verbose:
-                print(decoded)
+                print(decoded, end='')
 
             if self.file:
                 self._write(decoded)
 
+        proc.wait(timeout=1)
         if proc.returncode and proc.returncode != 0:
             proc.kill()
             err = proc.stderr.read().decode()
+            
+            if not err:
+                err = f"Return code: {proc.returncode}"
 
             if self.verbose:
-                print(err)
+                print(err, file=stderr)
 
             if self.file and err:
                 self._write(err)
@@ -98,7 +105,6 @@ class Command:
                 out, err = self._exec(proc)
 
             if exit_err and err:
-                print_err(err)
                 exit(proc.returncode)
 
             proc.wait(timeout=1)

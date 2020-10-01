@@ -70,15 +70,12 @@ def parse_unknown(regex: str, unknown: List[str], **kwargs) -> Dict[str, Any]:
 
 
 def run(base: Base, **kwargs):
-    try:
-        if "regex" in kwargs:
-            kwargs = parse_unknown(**kwargs)
-        base = base(**kwargs)
-        base()
-    except Exception as e:
-        with open("exception.log", "a") as ex:
-            ex.write(str(e) + "\n")
-            print(e)
+
+    if "regex" in kwargs:
+        kwargs = parse_unknown(**kwargs)
+    base = base(**kwargs)
+    base()
+
 
 
 import tasks.catalog

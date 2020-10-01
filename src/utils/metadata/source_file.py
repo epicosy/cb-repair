@@ -19,7 +19,7 @@ class SourceFile:
 			self.lines = file.readlines()
 
 		self.total_lines = len(self.lines)
-
+		self.removed = False
 		self.vuln_lines = 0
 		self.patch_lines = 0
 
@@ -68,34 +68,41 @@ class SourceFile:
 					else:
 						self.vuln_lines += 1
 
-	def transform(self):
-		for snippet in self.snippets:
-			patch_size = snippet.change - snippet.start
-			vuln_size = snippet.end - snippet.change
-
-			for i in range(1, patch_size):
-				self.lines[snippet.start+i] = f"+{self.lines[snippet.start+i]}"
-
-			for i in range(1, vuln_size):
-				self.lines[snippet.change+i] = f"-{self.lines[snippet.change+i]}"
-
-		return self.lines
-
 	def remove_patch(self):
 		# copy of lines
+		if self.removed:
+			return
+
 		aux_lines = self.lines.copy()
+		total_removed = 0
 
 		for snippet in self.snippets:
 			if snippet.change is not None:
 				patch_size = snippet.change - snippet.start
 				aux_lines[snippet.change] = None
+				snippet.change -= (total_removed + patch_size)
 			else:
 				patch_size = snippet.end - snippet.start
 
 			for i in range(patch_size):
+				total_removed += 1
 				aux_lines[snippet.start + i] = None
-
 			aux_lines[snippet.end] = None
+			snippet.start -= total_removed
+			snippet.end -= total_removed
+
+			total_removed += 1
 
 		with self.path.open(mode="w") as new_file:
 			new_file.writelines(list(filter(None, aux_lines)))
+
+		self.removed = True
+
+	def get_vuln_lines(self):
+		vuln_lines = []
+
+		for snippet in self.snippets:
+			vuln_range = snippet.vuln_range()
+			vuln_lines.extend([str(l) for l in vuln_range])
+
+		return vuln_lines

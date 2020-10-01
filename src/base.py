@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import sys
+
+from typing import TextIO
 from pathlib import Path
 from config import Configuration
 
@@ -33,8 +36,8 @@ class Base:
             with self.log_file.open(mode="a") as lf:
                 lf.write(msg)
 
-    def status(self, message: str):
-        print(message)
+    def status(self, message: str, file: TextIO = sys.stdout):
+        print(message, file=file)
         self.log(message)
 
     def __str__(self):
