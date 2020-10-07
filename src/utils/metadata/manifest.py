@@ -45,14 +45,15 @@ class Manifest:
         for file in self.vuln_files.values():
             file.remove_patch()
 
-    def write(self, out_file: Path = None, vuln_lines: bool = False) -> NoReturn:
+    def write(self, out_file: Path = None, hunks: bool = False) -> NoReturn:
         out = out_file if out_file else self.root / Path("manifest.txt")
 
         with out.open(mode="w") as of:
             for short_file_path, vuln_file in self.vuln_files.items():
-                if vuln_lines:
-                    file_vuln_lines = vuln_file.get_vuln_lines()
-                    of.write(f"{short_file_path} {' '.join(file_vuln_lines)}\n")
+                if hunks:
+                    # file_path:hunk_start,hunk_end;hunk_start,hunk_end;
+                    vuln_hunks = vuln_file.get_vuln_hunks()
+                    of.write(f"{short_file_path}:{vuln_hunks}\n")
                 else:
                     of.write(short_file_path + "\n")
 
@@ -65,7 +66,7 @@ class Manifest:
                 continue
             if cpp_files:
                 short_path = short_path.replace('.c', '.i')
-            print(short_path)
+
             for inst_file in instrumented_files:
                 if short_path in inst_file:
                     mapping[short_path] = inst_file
