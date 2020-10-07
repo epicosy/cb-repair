@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import List
 from sys import stderr
 
-
 from context import Context
 from input_parser import add_operation
 
@@ -45,11 +44,11 @@ class Compile(Context):
 
             manifest = self.challenge.get_manifest(self.source)
             mapping = manifest.map_instrumented_files(self.inst_files, cpp_files=self.cpp_files)
-            
+
             if not mapping:
-              self.status(f"Could not map fix files {self.fixes} with source files.\n",  file=stderr)
-              exit(1)
-            
+                self.status(f"Could not map fix files {self.fixes} with source files.\n", file=stderr)
+                exit(1)
+
             # creating object files
             for source_file, cpp_file in mapping.items():
 
@@ -57,8 +56,8 @@ class Compile(Context):
                     cpp_file = self.fixes.pop(0)
 
                 if not Path(cpp_file).exists():
-                	self.status(f"File {cpp_file} not found.\n",  file=stderr)
-                	exit(1)
+                    self.status(f"File {cpp_file} not found.\n", file=stderr)
+                    exit(1)
 
                 compile_command = self.get_compile_command(source_file, cpp_file)
 
@@ -106,7 +105,7 @@ class Compile(Context):
 
 def compile_args(input_parser):
     input_parser.add_argument('-ifs', '--inst_files', nargs='+', help='Instrumented files to compile.', default=None)
-    input_parser.add_argument('-cpp', '--cpp_files', action='store_true', required=False, 
+    input_parser.add_argument('-cpp', '--cpp_files', action='store_true', required=False,
                               help='Instrumented files are preprocessed.')
     input_parser.add_argument('-ffs', '--fix_files', nargs='+', default=None,
                               help='The file with changes applied by the repair tool.')

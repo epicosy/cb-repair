@@ -10,6 +10,10 @@ CHANGE = "#else"
 END = "#endif"
 
 
+def line_indentation(line: str):
+	return line[0:line.find(line.lstrip())] + "\n"
+
+
 class SourceFile:
 	def __init__(self, file_path: Path):
 		self.path = file_path
@@ -74,35 +78,41 @@ class SourceFile:
 			return
 
 		aux_lines = self.lines.copy()
-		total_removed = 0
+		shift = 0
 
 		for snippet in self.snippets:
 			if snippet.change is not None:
-				patch_size = snippet.change - snippet.start
+				patch_size = snippet.change - (snippet.start + 1)
 				aux_lines[snippet.change] = None
-				snippet.change -= (total_removed + patch_size)
+				snippet.change -= (patch_size + 1 + shift)
 			else:
-				patch_size = snippet.end - snippet.start
-
-			for i in range(patch_size):
-				total_removed += 1
-				aux_lines[snippet.start + i] = None
+				patch_size = snippet.end - (snippet.start + 1)
+			# maintain the indentation for the start
+			aux_lines[snippet.start] = line_indentation(aux_lines[snippet.start+1])
+			aux_lines[snippet.start+1: snippet.start+1+patch_size] = [None] * patch_size
 			aux_lines[snippet.end] = None
-			snippet.start -= total_removed
-			snippet.end -= total_removed
-
-			total_removed += 1
+			snippet.start -= shift
+			snippet.end -= (shift + patch_size + 1)
+			shift += (patch_size + 1)
+			print(snippet.start, snippet.change, snippet.end)
 
 		with self.path.open(mode="w") as new_file:
-			new_file.writelines(list(filter(None, aux_lines)))
-
+			new_file.writelines(filter(None, aux_lines))
 		self.removed = True
 
-	def get_vuln_lines(self):
-		vuln_lines = []
+	def get_vuln_hunks(self) -> str:
+		vuln_hunks = ""
 
 		for snippet in self.snippets:
-			vuln_range = snippet.vuln_range()
-			vuln_lines.extend([str(l) for l in vuln_range])
+			if snippet.change:
+				if snippet.start == snippet.end:
+					vuln_hunks += f"{snippet.change+1},{snippet.end+1};"
+				else:
+					vuln_hunks += f"{snippet.change+1},{snippet.end};"
+			else:
+				if snippet.start == snippet.end:
+					vuln_hunks += f"{snippet.start+1},{snippet.end+1};"
+				else:
+					vuln_hunks += f"{snippet.start+1},{snippet.end};"
 
-		return vuln_lines
+		return vuln_hunks
