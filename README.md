@@ -1,13 +1,12 @@
 # cb-repair
-An infrastructure that extends a collection of 154 vulnerable programs in C code into a benchmark for automatic program 
+An infrastructure that extends a collection of 70 vulnerable programs in C code into a benchmark for automatic program 
 repair tools. The programs were selected out of 250 applications initially designed for DARPA's Cyber Grand Challenge 
 (CGC). 
 
 The applications were purposely built to challenge vulnerability identification and remediation systems, known as 
 Challenge Binaries (CB). The CBs were developed for DECREE OS, a custom Linux-derived OS, and subsequently, most of 
 the CBs were modified by Trail of Bits to work on Linux, OS X, and Windows. This repository is an extension over 
-Trail of Bits' work. The CBs were purposely selected to facilitate the generation of their test suite, composed by polls 
-and POVs (part of CBs require the shared objects created during the build in order to generate the polls). 
+Trail of Bits' work. 
 
 The infrastructure extends the provided tools and build system, and was designed to make the CBs compatible and 
 reproducible for comparative studies and research techniques in automatic patch generation. The similar available 
@@ -35,9 +34,6 @@ architecture.
 src/operations/test.py, tools/generate-polls/generate-polls, tools/compile.sh``` are executable.
 * To run on Docker, core dumps need to be enabled. 
 * Polls generation needs to be performed only once.
-* Some positive tests timeout with 10 seconds limit. A check for that will be added.
-* Some negative tests don't core. A check for that will be added.
-* The challenge A_Game_of_Chance fails when tested.
 
 ## Getting Started
 
@@ -121,6 +117,178 @@ The following tests the previous compiled challenge BitBlaster, under ```/tmp/Bi
 ``` console
 $ cb_repair.py compile -cn BitBlaster -wd /tmp/BitBlaster_0 -tn p1 p5 p9 n1
 ```
+
+## Challenges
+From the 202 original linux working challenges, 70 of them were purposely selected to facilitate the generation of 
+their test suite, composed by polls and POVs. Part of the removed CBs require for the generation of polls, the shared 
+objects created during the build. During the generation of polls, other CBs have been removed for various 
+problematic reasons, which can be found in the file '''gen_polls-result.txt'''. Furthermore, challenges that have 
+vulnerabilities spawn across multiple files and challenges that don't have any POVs working have been removed as well. 
+
+<table>
+<thead>
+	<tr>
+		<th> Raise error during poll generation (52) </th>
+		<th> Multiple files (31) </th>
+		<th> POVs not working (56) </th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>
+		    <ul>
+                <li>3D_Image_Toolkit</li>
+                <li>Carbonate</li>
+                <li>Charter</li>
+                <li>Corinth</li>
+                <li>Estadio</li>
+                <li>Lazybox</li>
+                <li>Material_Temperature_Simulation</li>
+                <li>Mixology</li>
+                <li>Network_File_System</li>
+                <li>Network_Queuing_Simulator</li>
+                <li>PTaaS</li>
+                <li>REMATCH_2--Mail_Server--Crackaddr</li>
+                <li>Recipe_and_Pantry_Manager</li>
+                <li>Water_Treatment_Facility_Simulator</li>
+                <li>payroll</li>
+                <li>Image_Compressor</li>
+                <li>RRPN</li>
+                <li>Azurad</li>
+                <li>LazyCalc</li>
+                <li>Pattern_Finder</li>
+                <li>Snail_Mail</li>
+                <li>Venture_Calculator</li>
+                <li>CGC_Hangman_Game</li>
+                <li>Pac_for_Edges</li>
+                <li>TFTTP</li>
+                <li>yolodex</li>
+                <li>HeartThrob</li>
+                <li>Palindrome</li>
+                <li>Tick-A-Tack</li>
+                <li>commerce_webscale</li>
+                <li>reallystream</li>
+                <li>HighFrequencyTradingAlgo</li>
+                <li>INSULATR</li>
+                <li>NarfAgainShell</li>
+                <li>NarfRPN</li>
+                <li>Packet_Analyzer</li>
+                <li>Parking_Permit_Management_System_PPMS</li>
+                <li>String_Storage_and_Retrieval</li>
+                <li>TIACA</li>
+                <li>UTF-late</li>
+                <li>Vector_Graphics_2</li>
+                <li>Vector_Graphics_Format</li>
+                <li>electronictrading</li>
+                <li>matrices_for_sale</li>
+                <li>simple_integer_calculator</li>
+                <li>Multicast_Chat_Server</li>
+                <li>Rejistar</li>
+                <li>Sample_Shipgame</li>
+                <li>Shipgame</li>
+                <li>Multipass2</li>
+                <li>Multipass3</li>
+                <li>NoHiC</li>
+            </ul>
+		</td>
+		<td>
+            <ul>
+                <li>ASCII_Content_Server</li>
+                <li>Accel</li>
+                <li>BIRC</li>
+                <li>CGC_Board</li>
+                <li>CGC_Image_Parser</li>
+                <li>CGC_Planet_Markup_Language_Parser</li>
+                <li>COLLIDEOSCOPE</li>
+                <li>CableGrind</li>
+                <li>Childs_Game</li>
+                <li>Cromulence_All_Service</li>
+                <li>Dungeon_Master</li>
+                <li>FISHYXML</li>
+                <li>Game_Night</li>
+                <li>H20FlowInc</li>
+                <li>KTY_Pretty_Printer</li>
+                <li>Kaprica_Script_Interpreter</li>
+                <li>Matchmaker</li>
+                <li>Music_Store_Client</li>
+                <li>Order_Up</li>
+                <li>PKK_Steganography</li>
+                <li>Packet_Receiver</li>
+                <li>REMATCH_1--Hat_Trick--Morris_Worm</li>
+                <li>Recipe_Database</li>
+                <li>SCUBA_Dive_Logging</li>
+                <li>WhackJack</li>
+                <li>cyber_blogger</li>
+                <li>greeter</li>
+                <li>pizza_ordering_system</li>
+                <li>simpleOCR</li>
+                <li>stack_vm</li>
+                <li>university_enrollment</li>
+            </ul>
+        </td>
+		<td>
+		    <ul>
+                <li>BIRC</li>
+                <li>Barcoder</li>
+                <li>Bloomy_Sunday</li>
+                <li>Board_Game</li>
+                <li>CLOUDCOMPUTE</li>
+                <li>CNMP</li>
+                <li>Character_Statistics</li>
+                <li>Checkmate</li>
+                <li>Differ</li>
+                <li>ECM_TCM_Simulator</li>
+                <li>Enslavednode_chat</li>
+                <li>EternalPass</li>
+                <li>FASTLANE</li>
+                <li>FaceMag</li>
+                <li>Facilities_Access_Control_System</li>
+                <li>FailAV</li>
+                <li>Finicky_File_Folder</li>
+                <li>Flash_File_System</li>
+                <li>Fortress</li>
+                <li>GREYMATTER</li>
+                <li>Hug_Game</li>
+                <li>Kaprica_Go</li>
+                <li>Messaging</li>
+                <li>Monster_Game</li>
+                <li>Mount_Filemore</li>
+                <li>Multi_Arena_Pursuit_Simulator</li>
+                <li>Multi_User_Calendar</li>
+                <li>Network_File_System_v3</li>
+                <li>Neural_House</li>
+                <li>OTPSim</li>
+                <li>OUTLAW</li>
+                <li>On_Sale</li>
+                <li>One_Amp</li>
+                <li>One_Vote</li>
+                <li>Order_Up</li>
+                <li>Overflow_Parking</li>
+                <li>PRU</li>
+                <li>Personal_Fitness_Manager</li>
+                <li>Query_Calculator</li>
+                <li>REMATCH_1--Hat_Trick--Morris_Worm</li>
+                <li>REMATCH_3--Address_Resolution_Service--SQL_Slammer</li>
+                <li>REMATCH_4--CGCRPC_Server--MS08-067</li>
+                <li>REMATCH_5--File_Explorer--LNK_Bug</li>
+                <li>REMATCH_6--Secure_Server--Heartbleed</li>
+                <li>Secure_Compression</li>
+                <li>Shortest_Path_Tree_Calculator</li>
+                <li>String_Info_Calculator</li>
+                <li>Terrible_Ticket_Tracker</li>
+                <li>Thermal_Controller_v2</li>
+                <li>User_Manager</li>
+                <li>Virtual_Machine</li>
+                <li>WhackJack</li>
+                <li>anagram_game</li>
+                <li>middleout</li>
+                <li>tribute</li>
+                <li>vFilter</li>
+            </ul>
+        </td>
+	</tr>
+</tbody>
+</table>
 
 ## Roadmap
 

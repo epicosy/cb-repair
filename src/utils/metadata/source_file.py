@@ -87,8 +87,12 @@ class SourceFile:
 				snippet.change -= (patch_size + 1 + shift)
 			else:
 				patch_size = snippet.end - (snippet.start + 1)
-			# maintain the indentation for the start
-			aux_lines[snippet.start] = line_indentation(aux_lines[snippet.start+1])
+
+			if patch_size != 0:
+				aux_lines[snippet.start] = line_indentation(aux_lines[snippet.start+1])
+			else:
+				aux_lines[snippet.start] = None
+
 			aux_lines[snippet.start+1: snippet.start+1+patch_size] = [None] * patch_size
 			aux_lines[snippet.end] = None
 			snippet.start -= shift

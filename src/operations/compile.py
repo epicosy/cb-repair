@@ -46,7 +46,8 @@ class Compile(Context):
             mapping = manifest.map_instrumented_files(self.inst_files, cpp_files=self.cpp_files)
 
             if not mapping:
-                self.status(f"Could not map fix files {self.fixes} with source files.\n", file=stderr)
+                self.status(f"Could not map fix files {self.fixes} with source files.\n",
+                            file=stderr)
                 exit(1)
 
             # creating object files
@@ -60,7 +61,7 @@ class Compile(Context):
                     exit(1)
 
                 compile_command = self.get_compile_command(source_file, cpp_file)
-
+                print(compile_command)
                 super().__call__(cmd_str=compile_command,
                                  msg=f"Creating object file for {cpp_file}.\n",
                                  cmd_cwd=str(self.build),
@@ -89,7 +90,8 @@ class Compile(Context):
 
                 return modified_command
 
-        return None
+        self.status(f"Could not find compile command.\n", file=stderr)
+        exit(1)
 
     def __str__(self):
         compile_cmd_str = ""

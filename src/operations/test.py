@@ -93,7 +93,7 @@ class Test(Context):
 
     def _cmd_str(self):
         # Collect the names of binaries to be tested
-        cb_dirs = [el for el in listdir(str(self.build)) if el.startswith('cb_')]
+        cb_dirs = [el for el in listdir(str(self.source)) if el.startswith('cb_')]
 
         if len(cb_dirs) > 0:
             # There are multiple binaries in this challenge

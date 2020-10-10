@@ -61,14 +61,16 @@ class Manifest:
     def map_instrumented_files(self, instrumented_files: List[str], cpp_files: bool) -> Dict[(str, str)]:
         mapping = {}
         
-        for short_path, file in self.source_files.items():
+        for short_path, file in self.vuln_files.items():
             if file.path.suffix == "h":
                 continue
             if cpp_files:
                 short_path = short_path.replace('.c', '.i')
-
+            print(short_path)
             for inst_file in instrumented_files:
                 if short_path in inst_file:
+                    if cpp_files:
+                        short_path = short_path.replace('.i', '.c')
                     mapping[short_path] = inst_file
                     break
 

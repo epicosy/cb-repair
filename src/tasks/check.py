@@ -85,6 +85,7 @@ class Check(Base):
         tests = None
 
         for timeout in self.timeouts:
+            self.status(f"Testing with timeout {timeout}.\n")
             self.configuration.tests_timeout = timeout
             self.results[challenge_name]["timeout"] = []
 
