@@ -124,13 +124,14 @@ From the 202 original linux working challenges, 70 of them were purposely select
 their test suite, composed by polls and POVs. Part of the removed CBs require for the generation of polls, the shared 
 objects created during the build. During the generation of polls, other CBs have been removed for various 
 problematic reasons, which can be found in the file '''gen_polls-result.txt'''. Furthermore, challenges that have 
-vulnerabilities spawn across multiple files and challenges that don't have any POVs working have been removed as well. 
+vulnerabilities spawn across multiple files (header files are included) and challenges that don't have any POVs 
+working have been removed as well. 
 
 <table>
 <thead>
 	<tr>
 		<th> Raise error during poll generation (52) </th>
-		<th> Multiple files (31) </th>
+		<th> Multiple files (32) </th>
 		<th> POVs not working (56) </th>
 	</tr>
 </thead>
@@ -218,6 +219,7 @@ vulnerabilities spawn across multiple files and challenges that don't have any P
                 <li>REMATCH_1--Hat_Trick--Morris_Worm</li>
                 <li>Recipe_Database</li>
                 <li>SCUBA_Dive_Logging</li>
+                <li>Sorter</li>
                 <li>WhackJack</li>
                 <li>cyber_blogger</li>
                 <li>greeter</li>
