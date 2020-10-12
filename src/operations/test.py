@@ -62,6 +62,7 @@ class Test(Context):
 
             self.coverage()
             total, passed = parse_results(out)
+
             if passed == '2':
                 self._kill_error_process()
             # Negative tests should fail
@@ -104,7 +105,7 @@ class Test(Context):
         cb_cmd = [str(self.get_tools().test),
                   '--directory', str(self.build),
                   '--xml', str(self.test_file),
-                  '--concurrent', '4',
+                  '--concurrent', '1',
                   '--debug',
                   '--timeout', self.configuration.tests_timeout,
                   '--negotiate_seed', '--cb'] + bin_names

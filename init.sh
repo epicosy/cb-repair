@@ -24,7 +24,7 @@ do_version_check() {
 }
 
 echo "Installing cb-repair dependencies"
-apt-get install libc6-dev libc6-dev-i386 gcc-multilib g++-multilib clang cmake python python3.7
+apt-get install libc6-dev libc6-dev-i386 gcc-multilib g++-multilib gdb clang cmake python python3.7
 
 command -v clang > /dev/null
 [[ $? -eq 1 ]] && echo "[Error] clang not installed" && exit 1 ;
@@ -48,5 +48,7 @@ python3_version=$(python3 -c 'import platform; print(platform.python_version())'
 do_version_check "$python3_version" "3.7"
 [[ $? -eq 9 ]] && echo "[Error] python3 version >= 3.7" && exit 1 ;
 
-
 echo "Dependencies successfully installed"
+
+echo "Enabling core dump generated when a process crashes for type 1 POVs."
+ulimit -c unlimited

@@ -45,6 +45,7 @@ Install the necessary dependencies before running the project.
 
 ##### Software:
 * [Python (2.7)](https://www.python.org/)
+    - psutil
 * [Python (=>3.7)](https://www.python.org/)
 
 ##### Linux Packages:
@@ -289,6 +290,15 @@ vulnerabilities spawn across multiple files and challenges that don't have any P
 	</tr>
 </tbody>
 </table>
+
+### Challenges with no state machine script
+
+* basic_messaging
+* CGC_File_System
+* CGC_Video_Format_Parser_and_Viewer
+* hawaii_sets
+* Message_Service
+* Particle_Simulator
 
 ## Roadmap
 

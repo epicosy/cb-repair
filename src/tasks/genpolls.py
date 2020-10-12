@@ -26,11 +26,11 @@ class GenPolls(Setting):
 
         polls_dir.mkdir(parents=True, exist_ok=True)
 
-        for polldir in poller.iterdir():
-            if polldir.is_dir():
-                self.out_dir = polls_dir / Path(polldir.name)
-                state_machine_script = polldir / Path("machine.py")
-                state_graph = polldir / Path("state-graph.yaml")
+        for poll_dir in poller.iterdir():
+            if poll_dir.is_dir():
+                self.out_dir = polls_dir / Path(poll_dir.name)
+                state_machine_script = poll_dir / Path("machine.py")
+                state_graph = poll_dir / Path("state-graph.yaml")
 
                 if state_machine_script.exists() and state_graph.exists():
                     self.out_dir.mkdir(parents=True, exist_ok=True)
@@ -39,11 +39,18 @@ class GenPolls(Setting):
 
                     super().__call__(cmd_str=cmd_str,
                                      msg=f"Generating polls for {self.challenge.name}.\n")
-                elif any(polldir.iterdir()):
+                    break
+                elif any(poll_dir.iterdir()):
                     self.status(f"No scripts for generating polls for {self.challenge.name}.\n")
                     self.status(f"Coping pre-generated polls for {self.challenge.name}.\n")
                     self.out_dir.mkdir(parents=True, exist_ok=True)
-                    copy_tree(src=str(polldir), dst=str(self.out_dir))
+                    polls = [poll for poll in poll_dir.iterdir() if poll.suffix == ".xml"]
+                    polls.sort()
+                    polls = polls[:self.count] if len(polls) > self.count else polls
+                    for poll in polls:
+                        shutil.copy(str(poll), self.out_dir)
+                    #copy_tree(src=str(polldir), dst=str(self.out_dir))
+                    break
 
     def __str__(self):
         return super().__str__() + f" -n {self.count}\n"
