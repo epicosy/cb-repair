@@ -38,4 +38,4 @@ configuration = Configuration(root=Path(ROOT_DIR),
                               src=Path(ROOT_DIR) / Path(SOURCE_DIR),
                               lib_paths=lib_paths,
                               tools=tools,
-                              tests_timeout="10")
+                              tests_timeout="60")
