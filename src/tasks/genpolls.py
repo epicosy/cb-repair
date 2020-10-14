@@ -5,11 +5,10 @@ from pathlib import Path
 
 from setting import Setting
 from input_parser import add_task
-from distutils.dir_util import copy_tree
 
 
 class GenPolls(Setting):
-    def __init__(self, count: int, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.count = count
         assert self.count > 0
@@ -49,7 +48,6 @@ class GenPolls(Setting):
                     polls = polls[:self.count] if len(polls) > self.count else polls
                     for poll in polls:
                         shutil.copy(str(poll), self.out_dir)
-                    #copy_tree(src=str(polldir), dst=str(self.out_dir))
                     break
 
     def __str__(self):
@@ -61,7 +59,7 @@ def gen_polls_args(input_parser):
                               help='Number of traversals through the state graph per round')
 
 
-info_parser = add_task("genpolls", GenPolls, description='For a given challenge, generates polls which are'
+info_parser = add_task("manifest", GenPolls, description='For a given challenge, generates polls which are'
                                                          'deterministic iterations of a non-deterministic state '
                                                          'graph. These are used as positive tests.')
 gen_polls_args(info_parser)

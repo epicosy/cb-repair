@@ -70,7 +70,6 @@ def parse_unknown(regex: str, unknown: List[str], **kwargs) -> Dict[str, Any]:
 
 
 def run(base: Base, **kwargs):
-
     if "regex" in kwargs:
         kwargs = parse_unknown(**kwargs)
     base = base(**kwargs)
@@ -81,6 +80,7 @@ def run(base: Base, **kwargs):
 import tasks.catalog
 import tasks.check
 import tasks.genpolls
+import tasks.manifest
 import operations.info
 import operations.compile
 import operations.checkout
