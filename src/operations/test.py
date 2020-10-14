@@ -31,14 +31,15 @@ class Test(Context):
         if tests:
             self.tests = tests
         elif pos_tests:
-            if not self._load_checks("pos_checks.txt"):
-                self.tests = self.challenge.pos_tests.keys()
+            # TODO: Fix when loading checked tests if those were generated
+            # if not self._load_checks("pos_checks.txt"):
+            self.tests = self.challenge.pos_tests.keys()
         elif neg_tests:
-            if not self._load_checks("neg_checks.txt"):
-                self.tests = self.challenge.neg_tests.keys()
+            # if not self._load_checks("neg_checks.txt"):
+            self.tests = self.challenge.neg_tests.keys()
         else:
-            if not self._load_checks("checks.txt"):
-                self.tests = list(self.challenge.pos_tests.keys()) + list(self.challenge.neg_tests.keys())
+            # if not self._load_checks("checks.txt"):
+            self.tests = list(self.challenge.pos_tests.keys()) + list(self.challenge.neg_tests.keys())
 
         self.log(str(self))
 
