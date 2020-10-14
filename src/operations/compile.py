@@ -55,6 +55,8 @@ class Compile(Context):
 
                 if self.fixes:
                     cpp_file = self.fixes.pop(0)
+                    if self.prefix:
+                        cpp_file = str(self.prefix / Path(cpp_file))
 
                 if not Path(cpp_file).exists():
                     self.status(f"File {cpp_file} not found.\n", file=stderr)
@@ -79,8 +81,6 @@ class Compile(Context):
                              exit_err=True)
 
     def get_compile_command(self, manifest_file: str, instrumented_file: str):
-        if self.prefix:
-            instrumented_file = str(self.prefix / Path(instrumented_file))
         for command_entry in self.compile_commands:
             if command_entry["file"].endswith(manifest_file) and "-DPATCHED" not in command_entry["command"]:
                 command = command_entry["command"]
