@@ -61,7 +61,7 @@ class Command:
             if self.file:
                 self._write(decoded)
 
-        proc.wait(timeout=1)
+        proc.wait(timeout=3)
         if proc.returncode and proc.returncode != 0:
             proc.kill()
             err = proc.stderr.read().decode()

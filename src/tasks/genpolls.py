@@ -8,7 +8,7 @@ from input_parser import add_task
 
 
 class GenPolls(Setting):
-    def __init__(self, **kwargs):
+    def __init__(self, count: int, **kwargs):
         super().__init__(**kwargs)
         self.count = count
         assert self.count > 0
@@ -59,7 +59,7 @@ def gen_polls_args(input_parser):
                               help='Number of traversals through the state graph per round')
 
 
-info_parser = add_task("manifest", GenPolls, description='For a given challenge, generates polls which are'
+info_parser = add_task("genpolls", GenPolls, description='For a given challenge, generates polls which are'
                                                          'deterministic iterations of a non-deterministic state '
                                                          'graph. These are used as positive tests.')
 gen_polls_args(info_parser)

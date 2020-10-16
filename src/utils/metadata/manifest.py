@@ -57,21 +57,26 @@ class Manifest:
                 else:
                     of.write(short_file_path + "\n")
 
-    # TODO: this might fail in cases where the header files have files associated
-    def map_instrumented_files(self, instrumented_files: List[str], cpp_files: bool) -> Dict[(str, str)]:
-        mapping = {}
-        
-        for short_path, file in self.vuln_files.items():
-            if file.path.suffix == "h":
-                continue
-            if cpp_files:
-                short_path = short_path.replace('.c', '.i')
-            print(short_path)
-            for inst_file in instrumented_files:
-                if short_path in inst_file:
-                    if cpp_files:
-                        short_path = short_path.replace('.i', '.c')
-                    mapping[short_path] = inst_file
-                    break
 
-        return mapping
+# TODO: this might fail in cases where the header files have files associated
+def map_instrumented_files(instrumented_files: List[str], cpp_files: bool, manifest_path: Path) -> Dict[(str, str)]:
+    mapping = {}
+
+    with manifest_path.open(mode="r") as mp:
+        manifest_files = mp.read().splitlines()
+        manifest_files = [mf.split(":")[0] for mf in manifest_files]
+
+    for short_path in manifest_files:
+        if short_path.endswith(".h"):
+            continue
+        if cpp_files:
+            short_path = short_path.replace('.c', '.i')
+
+        for inst_file in instrumented_files:
+            if short_path in inst_file:
+                if cpp_files:
+                    short_path = short_path.replace('.i', '.c')
+                mapping[short_path] = inst_file
+                break
+
+    return mapping

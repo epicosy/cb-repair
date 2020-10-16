@@ -7,6 +7,7 @@ from sys import stderr
 
 from context import Context
 from input_parser import add_operation
+from utils.metadata.manifest import map_instrumented_files
 
 
 class Compile(Context):
@@ -42,8 +43,8 @@ class Compile(Context):
             with self.commands_path.open(mode="r") as json_file:
                 self.compile_commands = loads(json_file.read())
 
-            manifest = self.challenge.get_manifest(self.source)
-            mapping = manifest.map_instrumented_files(self.inst_files, cpp_files=self.cpp_files)
+            mapping = map_instrumented_files(self.inst_files, cpp_files=self.cpp_files,
+                                             manifest_path=self.source / Path('manifest.txt'))
 
             if not mapping:
                 self.status(f"Could not map fix files {self.fixes} with source files.\n",
