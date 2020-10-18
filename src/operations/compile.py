@@ -20,6 +20,8 @@ class Compile(Context):
         self._set_build_paths()
         self.commands_path = self.build_root / Path('compile_commands.json')
         self.compile_script = self.working_dir / Path("compile.sh")
+        self.stats = self.working_dir / Path("stats", "compile.txt")
+        self.stats.parent.mkdir(parents=True, exist_ok=True)
         self.inst_files = inst_files
         self.fixes = fix_files
         self.cpp_files = cpp_files
@@ -49,6 +51,7 @@ class Compile(Context):
             if not mapping:
                 self.status(f"Could not map fix files {self.fixes} with source files.\n",
                             file=stderr)
+                self.outcome(1)
                 exit(1)
 
             # creating object files
@@ -61,25 +64,38 @@ class Compile(Context):
 
                 if not Path(cpp_file).exists():
                     self.status(f"File {cpp_file} not found.\n", file=stderr)
+                    self.outcome(1)
                     exit(1)
 
                 compile_command = self.get_compile_command(source_file, cpp_file)
-                print(compile_command)
-                super().__call__(cmd_str=compile_command,
-                                 msg=f"Creating object file for {cpp_file}.\n",
-                                 cmd_cwd=str(self.build),
-                                 exit_err=True)
+                out, err = super().__call__(cmd_str=compile_command,
+                                            msg=f"Creating object file for {cpp_file}.\n",
+                                            cmd_cwd=str(self.build),
+                                            exit_err=False)
+                if err:
+                    self.outcome(1)
+                    exit(1)
 
             # links objects into executable
-            super().__call__(cmd_str=f"cmake -E cmake_link_script {link_file} {self.challenge.name}",
-                             msg="Linking object files into executable.\n",
-                             cmd_cwd=str(self.build),
-                             exit_err=True
-                             )
+            out, err = super().__call__(cmd_str=f"cmake -E cmake_link_script {link_file} {self.challenge.name}",
+                                        msg="Linking object files into executable.\n",
+                                        cmd_cwd=str(self.build),
+                                        exit_err=False
+                                        )
+            if err:
+                self.outcome(1)
+                exit(1)
+            else:
+                self.outcome(0)
         else:
-            super().__call__(cmd_str=f"{self.compile_script} {self.challenge.name}",
-                             cmd_cwd=self.working_dir,
-                             exit_err=True)
+            out, err = super().__call__(cmd_str=f"{self.compile_script} {self.challenge.name}",
+                                        cmd_cwd=self.working_dir,
+                                        exit_err=False)
+            if err:
+                self.outcome(1)
+                exit(1)
+            else:
+                self.outcome(0)
 
     def get_compile_command(self, manifest_file: str, instrumented_file: str):
         for command_entry in self.compile_commands:
@@ -92,7 +108,12 @@ class Compile(Context):
                 return modified_command
 
         self.status(f"Could not find compile command.\n", file=stderr)
+        self.outcome(1)
         exit(1)
+
+    def outcome(self, result: int):
+        with self.stats.open(mode="a") as s:
+            s.write(f"{result}\n")
 
     def __str__(self):
         compile_cmd_str = ""

@@ -12,11 +12,12 @@ class Tools:
     compile: Path
     test: Path
     gen_polls: Path
+    scores: Path
 
     def validate(self):
         return self.root.exists() and self.cmake_file.exists() \
                and self.cmake_file_no_patch.exists() and self.compile.exists() \
-               and self.gen_polls.exists() and self.test.exists()
+               and self.gen_polls.exists() and self.test.exists() and self.scores.exists()
 
 
 @dataclass

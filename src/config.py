@@ -32,10 +32,11 @@ tools = Tools(root=tools_path,
               cmake_file_no_patch=tools_path / Path("CMakeListsNoPatch.txt"),
               compile=tools_path / Path("compile.sh"),
               test=tools_path / Path("cb-test.py"),
-              gen_polls=tools_path / Path("generate-polls", "generate-polls"))
+              gen_polls=tools_path / Path("generate-polls", "generate-polls"),
+              scores=tools_path / Path('cwe_scores.pkl'))
 
 configuration = Configuration(root=Path(ROOT_DIR),
                               src=Path(ROOT_DIR) / Path(SOURCE_DIR),
                               lib_paths=lib_paths,
                               tools=tools,
-                              tests_timeout="60")
+                              tests_timeout="10")

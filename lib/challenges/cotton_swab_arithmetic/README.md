@@ -47,12 +47,12 @@ Invalid bytecode provides CRSs with an arbitrary, relative RW primitive across t
 
 ### CWE classification
 
-20: Improper Input Validation
-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
-125: Out-of-Bounds Read
-367: Time-of-Chceck Time-of-Use (TOCTOU)
-476: NULL Pointer Dereference
-787: Out-of-Bounds Write
+CWE-20: Improper Input Validation
+CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer
+CWE-125: Out-of-Bounds Read
+CWE-367: Time-of-Chceck Time-of-Use (TOCTOU)
+CWE-476: NULL Pointer Dereference
+CWE-787: Out-of-Bounds Write
 
 ## Challenges
 

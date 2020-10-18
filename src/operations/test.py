@@ -27,6 +27,8 @@ class Test(Context):
         self.coverage = Coverage(cov_dir if cov_dir else self.cmake, cov_out_dir, cov_suffix, rename_suffix)
         self.challenge.load_pos_tests()
         self.challenge.load_neg_tests(self.build)
+        self.stats = self.working_dir / Path("stats", "tests.txt")
+        self.stats.parent.mkdir(parents=True, exist_ok=True)
 
         if tests:
             self.tests = tests
@@ -63,6 +65,8 @@ class Test(Context):
 
             self.coverage()
             total, passed = parse_results(out)
+
+            self.outcome(test, passed)
 
             if passed == '2':
                 self._kill_error_process()
@@ -160,6 +164,10 @@ class Test(Context):
                     kill_process(proc_info['pid'])
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass
+
+    def outcome(self, test: str, result: str):
+        with self.stats.open(mode="a") as s:
+            s.write(f"{test} {result}\n")
 
     def __str__(self):
         test_cmd_str = " --tests " + ' '.join(self.tests)

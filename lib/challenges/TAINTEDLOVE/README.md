@@ -50,12 +50,12 @@ Note: Added '-Wno-int-to-void-pointer-cast' to the CFLAGS in the Makefile becaus
 
 ### CWE classification
 
-120: Buffer Overflow
-121: Stack-Based Buffer Overflow
-122: Heap-Based Buffer Overflow
-125: Out-of-Bounds Read
-787: Out-of-Bounds Write
-476: NULL Pointer Dereference
+CWE-120: Buffer Overflow
+CWE-121: Stack-Based Buffer Overflow
+CWE-122: Heap-Based Buffer Overflow
+CWE-125: Out-of-Bounds Read
+CWE-787: Out-of-Bounds Write
+CWE-476: NULL Pointer Dereference
 
 ## Challenges
 
