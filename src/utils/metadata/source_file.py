@@ -35,17 +35,6 @@ class SourceFile:
 	def has_snippets(self):
 		return len(self) > 0
 
-	def get_change(self):
-		patch, vuln = [], []
-
-		for snippet in self.snippets:
-			patch.append(snippet.patch_range())
-
-			if snippet.change:
-				vuln.append(snippet.vuln_range())
-
-		return patch, vuln
-
 	def extract_snippets(self):
 		snippet = None
 
@@ -98,11 +87,21 @@ class SourceFile:
 			snippet.start -= shift
 			snippet.end -= (shift + patch_size + 1)
 			shift += (patch_size + 1)
-			print(snippet.start, snippet.change, snippet.end)
 
 		with self.path.open(mode="w") as new_file:
 			new_file.writelines(filter(None, aux_lines))
 		self.removed = True
+
+	def get_patches(self):
+		patches = []
+
+		for snippet in self.snippets:
+			if snippet.change is not None:
+				patches.append(''.join(self.lines[snippet.start+1:snippet.change]))
+			else:
+				patches.append(''.join(self.lines[snippet.start+1:snippet.end]))
+
+		return ''.join(patches)
 
 	def get_vuln_hunks(self) -> str:
 		vuln_hunks = ""

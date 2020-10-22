@@ -45,6 +45,14 @@ class Manifest:
         for file in self.vuln_files.values():
             file.remove_patch()
 
+    def get_patches(self):
+        patches = []
+
+        for file in self.vuln_files.values():
+            patches.append(file.get_patches())
+
+        return ''.join(patches)
+
     def write(self, out_file: Path = None, hunks: bool = False) -> NoReturn:
         out = out_file if out_file else self.root / Path("manifest.txt")
 

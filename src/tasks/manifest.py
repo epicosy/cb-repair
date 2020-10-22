@@ -13,9 +13,6 @@ class Manifest(Setting):
         vuln_files = manifest.vuln_files.keys()
         print('\n'.join(vuln_files))
 
-    def __str__(self):
-        pass
-
 
 def manifest_args(input_parser):
     pass
