@@ -1,0 +1,276 @@
+Challenge: CGC_Symbol_Viewer_CSV
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: chess_mimic
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Scrum_Database
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Casino_Games
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: FSK_BBS
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n2 1\' != \'n2 0\'\n- n2 1\n?    ^\n+ n2 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: BitBlaster
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: AIS-Lite
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: FUN
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Divelogger2
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: SFTSCBSISS
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: SPIFFS
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Diophantine_Password_Wallet
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Movie_Rental_Service_Redux
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: HackMan
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: CGC_File_System
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: FablesReport
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: TextSearch
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n2 1\' != \'n2 0\'\n- n2 1\n?    ^\n+ n2 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: Square_Rabbit
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: FSK_Messaging_Service
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: ASL6parse
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n1 1\' != \'n1 0\'\n- n1 1\n?    ^\n+ n1 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: middleware_handshake
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: SLUR_reference_implementation
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: ValveChecks
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n1 1\' != \'n1 0\'\n- n1 1\n?    ^\n+ n1 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: Dive_Logger
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: root64_and_parcour
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Particle_Simulator
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Space_Attackers
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: SOLFEDGE
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Loud_Square_Instant_Messaging_Protocol_LSIMP
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: humaninterface
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: stream_vm
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: simplenote
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: stream_vm2
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Stock_Exchange_Simulator
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: XStore
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Mathematical_Solver
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Audio_Visualizer
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Gridder
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: basic_messaging
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Sad_Face_Template_Engine_SFTE
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: expression_database
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Simple_Stack_Machine
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: online_job_application2
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Email_System_2
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: BudgIT
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Message_Service
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: FileSys
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: cotton_swab_arithmetic
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: hawaii_sets
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: The_Longest_Road
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: RAM_based_filesystem
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Movie_Rental_Service
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: router_simulator
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n2 1\' != \'n2 0\'\n- n2 1\n?    ^\n+ n2 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: Street_map_service
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: WordCompletion
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Single-Sign-On
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: HIGHCOO
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Griswold
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n3 1\' != \'n3 0\'\n- n3 1\n?    ^\n+ n3 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: ShoutCTF
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: QuadtreeConways
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: TAINTEDLOVE
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n1 1\' != \'n1 0\'\n- n1 1\n?    ^\n+ n1 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: netstorage
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Grit
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: PCM_Message_decoder
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n1 1\' != \'n1 0\'\n- n1 1\n?    ^\n+ n1 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: CGC_Video_Format_Parser_and_Viewer
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: basic_emulator
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: LMS
+	--Tests Run: 3
+	--Failures: 0 
+	--Errors: 0 []
+Challenge: Filesystem_Command_Shell
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n1 1\' != \'n1 0\'\n- n1 1\n?    ^\n+ n1 0\n?    ^\n\n')
+	--Errors: 0 []
+Challenge: Diary_Parser
+	--Tests Run: 3
+	--Failures: 1 (<__main__.TestOperations testMethod=test_pov>, 'Traceback (most recent call last):\n  File "./src/unit_test.py", line 113, in test_pov\n    self.assertEqual(result, f"n{i+1} 0")\nAssertionError: \'n2 1\' != \'n2 0\'\n- n2 1\n?    ^\n+ n2 0\n?    ^\n\n')
+	--Errors: 0 []
