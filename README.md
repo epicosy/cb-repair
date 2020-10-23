@@ -302,6 +302,21 @@ working have been removed as well.
 * Message_Service
 * Particle_Simulator
 
+
+### Challenges with POVs removed
+The timeout used was 60 seconds and most of the removed POVs did not core.
+
+| challenge name           | POVs removed |
+|--------------------------|--------------|
+| ASL6Parse                | 1,3          |
+| Diary_Parser             | 2            |
+| FSK_BBS                  | 2,3          |
+| Griswold                 | 3            |
+| TAINTEDLOVE              | 1            |
+| TextSearch               | 2            |
+| ValveChecks              | 1            |
+| router_simulator         | 2            |
+
 ## Roadmap
 
 See the [open issues](https://github.com/epicosy/cb-repair/issues) for a list of proposed features (and known issues).
