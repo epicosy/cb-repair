@@ -20,7 +20,7 @@ class Info(Context):
             self.challenge.load_pos_tests()
 
             if self.build.exists():
-                self.challenge.load_neg_tests(self.build)
+                self.challenge.load_neg_tests(self.build, excluded=self.metadata['excluded_neg_tests'])
                 print(len(self.challenge.pos_tests), len(self.challenge.neg_tests))
             else:
                 pov_dirs = [pd for pd in self.source.iterdir() if pd.match("pov*")]

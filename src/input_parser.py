@@ -76,13 +76,14 @@ def run(base: Base, **kwargs):
     base()
 
 
-
 import tasks.catalog
 import tasks.check
+import tasks.init
 import tasks.genpolls
 import tasks.manifest
 import tasks.score
 import tasks.patch
+import tasks.clean
 import operations.info
 import operations.compile
 import operations.checkout

@@ -12,36 +12,38 @@ from distutils.dir_util import copy_tree
 class Checkout(Context):
     def __init__(self,
                  remove_patches: bool = False,
-                 vuln_hunks: bool = False,
                  **kwargs):
         super().__init__(**kwargs)
         self.no_patch = remove_patches
-        self.vuln_hunks = vuln_hunks
         self.compile_script = self.working_dir / Path("compile.sh")
 
     def __call__(self):
         # Make working directory
-        self.status(f"Checking out {self.challenge.name} to {self.working_dir}.\n")
-        self._mkdir()
-        self._checkout_files()
+        self.status(f"Checking out {self.challenge.name} to {self.working_dir}.")
 
-        manifest = self.challenge.get_manifest(self.source)
+        try:
+            self._mkdir()
+            self.challenge.get_manifest_file()
+            self._checkout_files()
 
-        if self.no_patch:
-            manifest.remove_patches()
-
-        manifest.write(hunks=self.vuln_hunks)
+            if self.no_patch:
+                self.challenge.remove_patches(self.source)
+            self.status(f"Checked out {self.challenge.name}", ok=True)
+            return None, None
+        except Exception as e:
+            self.status(str(e), err=True)
+            return None, str(e)
 
     def _mkdir(self):
         if self.working_dir.exists():
             if any(self.working_dir.iterdir()):
                 raise NotEmptyDirectory(f"Working directory {self.working_dir} exists and is not empty.")
         else:
-            self.status("Creating working directory.\n")
+            self.status("\tCreating working directory.")
             self.working_dir.mkdir()
 
     def _checkout_files(self):
-        self.status(f"Copying files to {self.working_dir}.")
+        self.status(f"\tCopying files to {self.working_dir}.")
         # Copy challenge source files
         self.source.mkdir()
         copy_tree(src=str(self.challenge.paths.source), dst=str(self.source))
@@ -66,8 +68,6 @@ class Checkout(Context):
 def checkout_args(input_parser):
     input_parser.add_argument('-rp', '--remove_patches', action='store_true',
                               help='Remove the patches and respective definitions from the source code.')
-    input_parser.add_argument('-vh', '--vuln_hunks', action='store_true',
-                              help='Adds the vulnerable hunks to the manifest.')
 
 
 co_parser = add_operation("checkout", Checkout, 'Checks out challenge to working directory.')

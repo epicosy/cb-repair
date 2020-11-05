@@ -22,25 +22,22 @@ def parse_results(output: str):
     """
 
     if 'timed out' in output:
-        print('\nWARNING: test(s) timed out')
-        return '3', '3'
+        return None, '3', output, "WARNING: test(s) timed out"
 
     elif 'not ok - pov did not negotiate' in output:
-        print('\nWARNING: there was an error running a test')
-        return '2', '2'
+        return None, '2', output, "WARNING: there was an error running a test"
 
     # If the test failed to run, consider it failed
     elif 'TOTAL TESTS' not in output:
-        print('\nWARNING: there was an error running a test')
         for line in output.splitlines():
             match = re.match(pid_pattern, line)
             if match:
                 kill_process(match.group(1), f"Killed process {match.group(1)}")
 
-        return '2', '2'
+        return None, '2', output, "WARNING: there was an error running a test"
 
     # Parse out results
     total = output.split('TOTAL TESTS: ')[1].split('\n')[0]
     passed = output.split('TOTAL PASSED: ')[1].split('\n')[0]
 
-    return total, passed
+    return total, passed, output, None

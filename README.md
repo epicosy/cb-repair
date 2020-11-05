@@ -305,8 +305,9 @@ working have been removed as well.
 
 ### Challenges with POVs removed
 The timeout used was 60 seconds and most of the removed POVs did not core.
+The remaining POVs were renamed in contiguous order.
 
-| challenge name           | POVs removed |
+| Challenge name           | POVs removed |
 |--------------------------|--------------|
 | ASL6Parse                | 1,3          |
 | Diary_Parser             | 2            |

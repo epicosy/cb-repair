@@ -92,16 +92,19 @@ class SourceFile:
 			new_file.writelines(filter(None, aux_lines))
 		self.removed = True
 
-	def get_patches(self):
-		patches = []
+	def get_patch(self) -> dict:
+		patch = {}
 
 		for snippet in self.snippets:
-			if snippet.change is not None:
-				patches.append(''.join(self.lines[snippet.start+1:snippet.change]))
-			else:
-				patches.append(''.join(self.lines[snippet.start+1:snippet.end]))
 
-		return ''.join(patches)
+			if snippet.change is not None:
+				fix = self.lines[snippet.start+1:snippet.change]
+			else:
+				fix = self.lines[snippet.start+1:snippet.end]
+
+			patch[snippet.start+1] = fix if fix else [' ']
+
+		return patch
 
 	def get_vuln_hunks(self) -> str:
 		vuln_hunks = ""
@@ -119,3 +122,16 @@ class SourceFile:
 					vuln_hunks += f"{snippet.start+1},{snippet.end};"
 
 		return vuln_hunks
+
+	def get_vuln(self) -> dict:
+		vuln = {}
+
+		for snippet in self.snippets:
+
+			if snippet.change is not None:
+				lines = self.lines[snippet.change+1:snippet.end]
+				vuln[snippet.change+1] = lines if lines else [' ']
+			else:
+				vuln[snippet.end+1] = [' ']
+
+		return vuln

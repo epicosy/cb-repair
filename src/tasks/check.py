@@ -1,120 +1,186 @@
 #!/usr/bin/env python3
-import json
-import os
-from pathlib import Path
-from typing import List, AnyStr
 
-from base import Base
-from input_parser import add_base
-from .genpolls import GenPolls
+import os
+import time
+import traceback
+
+from pathlib import Path
+from typing import List, AnyStr, Dict
+
 import operations.checkout as checkout
 import operations.compile as compile
 import operations.test as test
 
+from base import Base
+from input_parser import add_base
+from .genpolls import GenPolls
+from utils.ui.tasks.check import CheckUI
+
 
 class Check(Base):
-    def __init__(self,
-                 challenges: List[AnyStr],
-                 timeouts: List[AnyStr],
-                 count: int,
-                 **kwargs):
+    def __init__(self, challenges: List[AnyStr], timeout: int, genpolls: bool, sanity: bool, count: int, **kwargs):
         super().__init__(**kwargs)
         self.challenges = challenges
-        self.results = {}
+        self.current = None
+        self.working_dir = None
+        self.genpolls = genpolls
+        self.sanity = sanity
         self.count = count
-        self.timeouts = timeouts
-        self.tests_map = {"0": "failed", "1": "passed", "2": "error", "3": "timeout"}
+        self.timeout = timeout
+        self.ui = CheckUI()
+        self.metadata = self.configuration.get_metadata()
 
     def __call__(self):
         if not self.challenges:
             self.challenges = self.get_challenges()
             self.challenges.sort()
 
-        lib_paths = self.get_lib_paths()
+        self.lib_paths = self.get_lib_paths()
 
         try:
             for challenge in self.challenges:
-                self.results[challenge] = {"passed": [], "failed": [], "timeout": [], "error": []}
-                self.status(f"Checking {challenge}")
-                self.check(challenge)
-                challenge_paths = lib_paths.get_challenge_paths(challenge)
-                out_path = challenge_paths.source / Path("checks.txt")
-                pos_out_path = challenge_paths.source / Path("pos_checks.txt")
-                neg_out_path = challenge_paths.source / Path("neg_checks.txt")
-
-                with out_path.open("w+") as res, pos_out_path.open("w+") as pos_res, \
-                        neg_out_path.open("w+") as neg_res:
-
-                    for test in self.results[challenge]["passed"]:
-                        res.write(f"{test} ")
-
-                        if test.startswith("p"):
-                            pos_res.write(f"{test} ")
-                        else:
-                            neg_res.write(f"{test} ")
-
+                self.current = challenge
+                self.ui(challenge)
+                self.working_dir = f"/tmp/check_{self.current}"
+                self.check()
+                os.system('clear')
+                self.ui.print()
         except Exception as e:
+            self.dispose()
             self.log_file = Path("check_exception.log")
-            self.log(str(e))
-            print(e)
+            self.status(traceback.format_exc(), err=True)
+        finally:
+            if self.sanity:
+                self.configuration.save_metadata(self.metadata)
 
-        out_path = lib_paths.root / Path("checks.json")
+    def dispose(self):
+        os.system(f"rm -rf {self.working_dir}")
+        self.status("Deleted temporary files generated", bold=True)
+        # os.system('clear')
 
-        if out_path.exists():
-            with out_path.open(mode="r") as op:
-                old = json.loads(op.read())
-                for k, v in old.items():
-                    if k not in self.results:
-                        self.results[k] = v
+    def check(self):
+        operations = [self.check_checkout, self.check_compile, self.check_test]
 
-        with out_path.open("w+") as res:
-            json.dump(self.results, res, indent=2)
+        if self.genpolls:
+            operations.insert(0, self.check_genpolls)
 
-    def check(self, challenge_name):
-        working_dir = f"/tmp/check_{challenge_name}"
-        genpolls = GenPolls(name="genpolls", configs=self.configuration, challenge_name=challenge_name,
-                            count=self.count)
-        genpolls()
-
-        checkout_cmd = checkout.Checkout(name="checkout", configs=self.configuration, working_directory=working_dir,
-                                         challenge_name=challenge_name)
-        checkout_cmd()
-        compile_cmd = compile.Compile(name="compile", configs=self.configuration, working_directory=working_dir,
-                                      challenge_name=challenge_name, inst_files=None, fix_files=None)
-        compile_cmd()
-        tests = None
-
-        for timeout in self.timeouts:
-            self.status(f"Testing with timeout {timeout}.\n")
-            self.configuration.tests_timeout = timeout
-            self.results[challenge_name]["timeout"] = []
-
-            test_cmd = test.Test(name="test", configs=self.configuration, working_directory=working_dir,
-                                 challenge_name=challenge_name, tests=tests, write_fail=True, neg_pov=False)
-
-            results = test_cmd(save=True)
-
-            for key, value in results.items():
-                self.results[challenge_name][self.tests_map[value]].append(key)
-
-            tests = self.results[challenge_name]["timeout"]
-
-            if not tests:
+        for operation in operations:
+            if not operation():
+                self.ui.failed()
                 break
+            self.ui.header()
+        else:
+            self.ui.passed()
 
-        # os.system(f"rm -rf {working_dir}")
+        self.dispose()
+
+    def check_genpolls(self):
+        genpolls = GenPolls(name="genpolls", configs=self.configuration, challenge_name=self.current,
+                            count=self.count)
+        out, err = genpolls()
+
+        if err:
+            self.ui.fail(operation="Genpolls", msg=err)
+
+            if self.sanity:
+                self.exclude_challenge(msg="generating polls failed")
+
+            return False
+
+        self.ui.ok(operation="Genpolls", msg=f"(generated {genpolls.count} polls)")
+        return True
+
+    def check_checkout(self):
+        checkout_cmd = checkout.Checkout(name="checkout", configs=self.configuration, working_directory=self.working_dir,
+                                         challenge_name=self.current)
+        out, err = checkout_cmd()
+
+        if err:
+            self.ui.fail(operation="Checkout", msg=err)
+            return False
+
+        self.ui.ok(operation="Checkout")
+        return True
+
+    def check_compile(self):
+        compile_cmd = compile.Compile(name="compile", configs=self.configuration, working_directory=self.working_dir,
+                                      challenge_name=self.current, inst_files=None, fix_files=None, exit_err=False)
+        compile_cmd.verbose = True
+        out, err = compile_cmd()
+
+        if err:
+            self.ui.fail(operation="Compile", msg=err)
+
+            return False
+
+        self.ui.ok(operation="Compile")
+        return True
+
+    def check_test(self):
+        self.status(f"Testing with timeout {self.timeout}.")
+        test_cmd = test.Test(name="test", configs=self.configuration, working_directory=self.working_dir,
+                             challenge_name=self.current, write_fail=True, neg_pov=False, timeout=self.timeout)
+
+        test_outcome = test_cmd(save=True)
+        neg_fails, passing, fails = [], [], []
+
+        for test_name, outcome in test_outcome.items():
+            if outcome != '1':
+                fails.append(f"{test_name} {outcome}")
+                if test_name.starts_with('n'):
+                    neg_fails.append(test_name)
+            else:
+                passing.append(f"{test_name} {outcome}")
+
+        if not test_outcome or fails:
+            self.ui.fail(operation="Test", msg=fails)
+            self.ui.ok(operation="Test", msg=passing)
+
+            if self.sanity and neg_fails:
+                self.test_sanity({True if k in neg_fails else False: Path(v) for k, v in test_cmd.challenge.neg_tests.items()})
+
+            return False
+
+        self.ui.ok(operation="Test")
+        return True
+
+    def test_sanity(self, povs_outcome: Dict[bool, Path]):
+        if list(povs_outcome.keys()).count(False) == 0:
+            self.exclude_challenge(msg="POVs not working properly")
+        else:
+            for failed, path in povs_outcome.items():
+                if failed:
+                    print(path.stem)
+                    self.metadata[self.current]["excluded_neg_tests"].append(path.stem)
+                    self.ui.warn(operation="Test", msg=f"POV {path.stem} excluded")
+
+    def exclude_challenge(self, msg: AnyStr):
+        self.metadata[self.current]["excluded"] = True
+        self.status(f"Challenge {self.current} excluded: {msg}", warn=True)
 
     def __str__(self):
-        pass
+        check_cmd_str = " --challenges " + ' '.join(self.challenges)
+        check_cmd_str += f" --timeout {self.timeout}"
+        check_cmd_str += f" --count {self.count}"
+
+        if self.sanity:
+            check_cmd_str += f" --sanity"
+
+        if self.genpolls:
+            check_cmd_str += f" --genpolls"
+
+        return super().__str__() + check_cmd_str + "\n"
 
 
 def check_args(input_parser):
     input_parser.add_argument('--challenges', type=str, nargs='+', required=False,
                               help='The challenges to be checked.')
-    input_parser.add_argument('--timeouts', type=str, nargs='+', required=True,
-                              help='The timeouts for tests in seconds.')
-    input_parser.add_argument('--count', type=int, required=True, help='The timeouts for tests in seconds.')
+    input_parser.add_argument('--timeout', type=int, default=60, help='The timeout for tests in seconds.')
+    input_parser.add_argument('--count', type=int, default=10, help='Number of polls to generate.')
+    input_parser.add_argument('--genpolls', action='store_true', help='Flag for enabling polls generation.')
+    input_parser.add_argument('--sanity', action='store_true',
+                              help="Flag for removing challenges that fail generating polls or POVs that don't work.")
 
 
-info_parser = add_base("check", Check, description="Checks if tests fail or timeout.")
+info_parser = add_base("check", Check, description="Sanity checks for challenges.")
 check_args(info_parser)

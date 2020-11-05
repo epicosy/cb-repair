@@ -5,8 +5,6 @@ from sys import stderr
 from typing import IO, Union, AnyStr, Tuple
 from pathlib import Path
 
-from .streams import print_err
-
 
 class Command:
     def __init__(self, command, cwd: str = None):

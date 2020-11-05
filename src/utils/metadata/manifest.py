@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import json
 from functools import lru_cache
 from typing import Dict, List, NoReturn
 from pathlib import Path
@@ -41,29 +41,20 @@ class Manifest:
             if folder.name not in IGNORE and folder.is_dir():
                 recurse_walk(folder, Path(folder.name))
 
-    def remove_patches(self) -> NoReturn:
-        for file in self.vuln_files.values():
-            file.remove_patch()
-
     def get_patches(self):
-        patches = []
+        return {f_name: src_file.get_patch() for f_name, src_file in self.vuln_files.items()}
 
-        for file in self.vuln_files.values():
-            patches.append(file.get_patches())
+    def get_vulns(self):
+        return {f_name: src_file.get_vuln() for f_name, src_file in self.vuln_files.items()}
 
-        return ''.join(patches)
+    def write(self, out_file: Path = None) -> NoReturn:
+        out = out_file if out_file else self.root / Path("manifest")
+        vuln_out = out_file if out_file else self.root / Path("vuln")
 
-    def write(self, out_file: Path = None, hunks: bool = False) -> NoReturn:
-        out = out_file if out_file else self.root / Path("manifest.txt")
-
-        with out.open(mode="w") as of:
-            for short_file_path, vuln_file in self.vuln_files.items():
-                if hunks:
-                    # file_path:hunk_start,hunk_end;hunk_start,hunk_end;
-                    vuln_hunks = vuln_file.get_vuln_hunks()
-                    of.write(f"{short_file_path}:{vuln_hunks}\n")
-                else:
-                    of.write(short_file_path + "\n")
+        with out.open(mode="w") as of, vuln_out.open(mode="w") as vf:
+            of.writelines(list(self.vuln_files.keys()))
+            vulns = self.get_vulns()
+            json.dump(vulns, vf, indent=2)
 
 
 # TODO: this might fail in cases where the header files have files associated

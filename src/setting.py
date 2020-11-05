@@ -43,7 +43,14 @@ class Setting(Base):
         challenges = self.get_challenges()
 
         if challenge_name not in challenges:
-            raise ChallengeNotFound("No such challenge")
+            self.status("No such challenge", err=True)
+            exit(1)
+
+        self.metadata = self.configuration.get_metadata(challenge_name)
+
+        if self.metadata['excluded']:
+            self.status(f"Challenge {challenge_name} was excluded.", warn=True)
+            exit(1)
 
         challenge_paths = self.configuration.lib_paths.get_challenge_paths(challenge_name)
 

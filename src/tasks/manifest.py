@@ -9,9 +9,8 @@ class Manifest(Setting):
         super().__init__(**kwargs)
 
     def __call__(self):
-        manifest = self.challenge.get_manifest()
-        vuln_files = manifest.vuln_files.keys()
-        print('\n'.join(vuln_files))
+        manifest_file = self.challenge.get_manifest_file()
+        print(str(manifest_file))
 
 
 def manifest_args(input_parser):
