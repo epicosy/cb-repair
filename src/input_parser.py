@@ -89,12 +89,12 @@ def run(kernel: Kernel, **kwargs):
 
 import tasks.catalog
 import tasks.check
-import tasks.manifest
 import tasks.score
-import tasks.patch
 import tasks.clean
 import operations.info
 import operations.compile
 import operations.checkout
-import operations.genpolls
+import operations.simple.genpolls
+import operations.simple.manifest
+import operations.simple.patch
 import operations.test

@@ -4,7 +4,7 @@ import os
 import traceback
 
 from pathlib import Path
-from typing import List, AnyStr, Dict
+from typing import AnyStr, Dict
 
 import operations.checkout as checkout
 import operations.compile as compile
@@ -13,7 +13,7 @@ import operations.test as test
 from core.task import Task
 from input_parser import add_task
 from utils.ui.tasks.check import CheckUI
-from operations.genpolls import GenPolls
+from operations.simple.genpolls import GenPolls
 
 
 class Check(Task):
