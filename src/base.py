@@ -25,7 +25,7 @@ class Base:
             self.log(f"Unknown arguments: {kwargs}\n")
 
     def get_challenges(self):
-        return self.configuration.lib_paths.get_challenges()
+        return self.configuration.get_challenges()
 
     def get_lib_paths(self):
         return self.configuration.lib_paths

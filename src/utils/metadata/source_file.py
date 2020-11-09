@@ -67,13 +67,15 @@ class SourceFile:
 			return
 
 		aux_lines = self.lines.copy()
+		# this shift is used to keep track of where patches started after removing them from code
 		shift = 0
 
+		# plus one because list starts at 0 and line number starts with 1
 		for snippet in self.snippets:
 			if snippet.change is not None:
 				patch_size = snippet.change - (snippet.start + 1)
 				aux_lines[snippet.change] = None
-				snippet.change -= (patch_size + 1 + shift)
+				snippet.change -= (patch_size + shift + 1)
 			else:
 				patch_size = snippet.end - (snippet.start + 1)
 
@@ -86,11 +88,13 @@ class SourceFile:
 			aux_lines[snippet.end] = None
 			snippet.start -= shift
 			snippet.end -= (shift + patch_size + 1)
-			shift += (patch_size + 1)
+			shift += patch_size
+
+		self.lines = list(filter(None, aux_lines))
+		self.removed = True
 
 		with self.path.open(mode="w") as new_file:
-			new_file.writelines(filter(None, aux_lines))
-		self.removed = True
+			new_file.writelines(self.lines)
 
 	def get_patch(self) -> dict:
 		patch = {}
@@ -129,8 +133,7 @@ class SourceFile:
 		for snippet in self.snippets:
 
 			if snippet.change is not None:
-				lines = self.lines[snippet.change+1:snippet.end]
-				vuln[snippet.change+1] = lines if lines else [' ']
+				vuln[snippet.change] = self.lines[snippet.change:snippet.end-1]
 			else:
 				vuln[snippet.end+1] = [' ']
 

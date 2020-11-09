@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import json
 import re
 
 from pathlib import Path
@@ -34,6 +34,8 @@ class Challenge:
 
     def remove_patches(self, source: Path):
         manifest_file = self.get_manifest_file()
+        vuln_file = source / Path("vuln")
+        new_vuln = {}
 
         with manifest_file.open(mode='r') as mf:
             files = mf.read().splitlines()
@@ -41,6 +43,10 @@ class Challenge:
             for file in files:
                 src_file = SourceFile(source / Path(file))
                 src_file.remove_patch()
+                new_vuln.update({file: src_file.get_vuln()})
+
+        with vuln_file.open(mode='w') as vf:
+            json.dump(new_vuln, vf, indent=2)
 
     def get_test(self, test: str):
         match = re.search(TEST_NAME_FORMAT, test)

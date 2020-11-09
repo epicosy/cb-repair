@@ -37,6 +37,11 @@ class Configuration:
         with self.metadata.open(mode="w") as m:
             json.dump(new_metadata, m, indent=2)
 
+    def get_challenges(self, excluded: bool = False):
+        if not excluded:
+            return [challenge for challenge, _metadata in self.get_metadata().items() if not _metadata["excluded"]]
+        return [challenge for challenge, _metadata in self.get_metadata().items()]
+
 
 lib_path = Path(ROOT_DIR) / Path("lib")
 tools_path = Path(ROOT_DIR) / Path("tools")

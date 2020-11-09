@@ -11,7 +11,7 @@ import tasks.genpolls
 
 WORKING_DIRECTORY = "/tmp/test"
 
-challlenges = configuration.lib_paths.get_challenges()
+challlenges = configuration.get_challenges()
 configuration.tests_timeout = "10"
 
 
@@ -22,7 +22,7 @@ class TestOperations(unittest.TestCase):
     def setUpClass(cls):
         cls.working_dir = WORKING_DIRECTORY + cls.challenge
         print(f"Testing Challenge {cls.challenge}\n:")
-    '''
+
     def test_agenpolls(self):
         self.opr = tasks.genpolls.GenPolls(name="genpolls",
                                            configs=configuration,
@@ -32,7 +32,7 @@ class TestOperations(unittest.TestCase):
         self.opr()
         self.assertTrue(self.opr.challenge.paths.polls.exists())
         self.assertTrue(self.opr.out_dir.exists())
-    '''
+
     def test_checkout(self):
         self.opr = Checkout(name="checkout",
                             configs=configuration,
@@ -60,7 +60,7 @@ class TestOperations(unittest.TestCase):
         self.assertTrue((self.opr.build / Path(f"{self.challenge}")).exists())
         self.assertTrue((self.opr.build / Path(f"{self.challenge}_patched")).exists())
         self.assertTrue((self.opr.build / Path("pov_1.pov")).exists())
-    '''
+
     def test_poll(self):
         self.opr = Test(name="test",
                         configs=configuration,
@@ -85,7 +85,7 @@ class TestOperations(unittest.TestCase):
             result = of.readline().split("\n")[0]
             self.assertEqual(result, "p1 1")
         self.opr.out_file.unlink()
-    '''
+
     def test_pov(self):
         self.opr = Test(name="test",
                         configs=configuration,
@@ -103,7 +103,7 @@ class TestOperations(unittest.TestCase):
         with self.assertRaises(SystemExit) as se:
             self.opr()
 
-        #self.assertEqual(se.exception.code, 1)
+        self.assertEqual(se.exception.code, 1)
         self.assertTrue(self.opr.out_file.exists())
 
         with self.opr.out_file.open(mode="r") as of:
