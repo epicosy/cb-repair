@@ -3,11 +3,11 @@
 import shutil
 from pathlib import Path
 
-from setting import Setting
-from input_parser import add_task
+from core.simple_operation import SimpleOperation
+from input_parser import add_simple_operation
 
 
-class GenPolls(Setting):
+class GenPolls(SimpleOperation):
     def __init__(self, count: int, **kwargs):
         super().__init__(**kwargs)
         self.count = count
@@ -73,7 +73,7 @@ def gen_polls_args(input_parser):
                               help='Number of traversals through the state graph per round')
 
 
-info_parser = add_task("genpolls", GenPolls, description='For a given challenge, generates polls which are'
+info_parser = add_simple_operation("genpolls", GenPolls, description='For a given challenge, generates polls which are'
                                                          'deterministic iterations of a non-deterministic state '
                                                          'graph. These are used as positive tests.')
 gen_polls_args(info_parser)

@@ -1,27 +1,21 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
-from typing import List, AnyStr
 
-from base import Base
-from input_parser import add_base
+from core.task import Task
+from input_parser import add_task
 
 
-class Clean(Base):
-    def __init__(self, challenges: List[AnyStr], **kwargs):
+class Clean(Task):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.challenges = challenges
-
-        if not self.challenges:
-            self.challenges = self.get_challenges()
-            self.challenges.sort()
 
     def __call__(self):
-        self.configuration.metadata.unlink()
+        self.configs.metadata.unlink()
 
         for challenge in self.challenges:
             self.status(f"Cleaning {challenge}\n")
-            challenge_paths = self.configuration.lib_paths.get_challenge_paths(challenge)
+            challenge_paths = self.configs.lib_paths.get_challenge_paths(challenge)
             for name in ['patch', 'vuln', 'manifest']:
                 file = challenge_paths.source / Path(name)
 
@@ -35,9 +29,8 @@ class Clean(Base):
 
 
 def clean_args(input_parser):
-    input_parser.add_argument('--challenges', type=str, nargs='+', required=False,
-                              help='The challenges to be cleaned.')
+    pass
 
 
-clean_parser = add_base("clean", Clean, description="Cleans all cache files.")
+clean_parser = add_task("clean", Clean, description="Cleans all cache files.")
 clean_args(clean_parser)

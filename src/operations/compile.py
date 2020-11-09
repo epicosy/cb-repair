@@ -4,12 +4,12 @@ from json import loads
 from pathlib import Path
 from typing import List
 
-from context import Context
+from core.operation import Operation
 from input_parser import add_operation
 from utils.metadata.manifest import map_instrumented_files
 
 
-class Compile(Context):
+class Compile(Operation):
     def __init__(self,
                  inst_files: List[str] = None,
                  fix_files: List[str] = None,

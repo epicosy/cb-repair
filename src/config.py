@@ -23,25 +23,6 @@ class Configuration:
         return self.src.exists() and self.lib_paths.validate() and self.metadata.exists() \
                and self.tools.validate() and int(self.tests_timeout) > 0
 
-    def get_metadata(self, challenge_name: str = None) -> dict:
-        with self.metadata.open(mode="r") as m:
-            md = json.load(m)
-
-            if challenge_name:
-                if challenge_name in md:
-                    return md[challenge_name]
-                return {}
-            return md
-
-    def save_metadata(self, new_metadata: dict):
-        with self.metadata.open(mode="w") as m:
-            json.dump(new_metadata, m, indent=2)
-
-    def get_challenges(self, excluded: bool = False):
-        if not excluded:
-            return [challenge for challenge, _metadata in self.get_metadata().items() if not _metadata["excluded"]]
-        return [challenge for challenge, _metadata in self.get_metadata().items()]
-
 
 lib_path = Path(ROOT_DIR) / Path("lib")
 tools_path = Path(ROOT_DIR) / Path("tools")

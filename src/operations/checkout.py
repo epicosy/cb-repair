@@ -4,12 +4,12 @@ import shutil
 from pathlib import Path
 
 from input_parser import add_operation
-from context import Context
+from core.operation import Operation
 from utils.exceptions import NotEmptyDirectory
 from distutils.dir_util import copy_tree
 
 
-class Checkout(Context):
+class Checkout(Operation):
     def __init__(self,
                  remove_patches: bool = False,
                  **kwargs):

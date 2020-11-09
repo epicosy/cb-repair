@@ -6,14 +6,14 @@ from os import listdir
 from pathlib import Path
 from typing import List, AnyStr
 
-from context import Context
+from core.operation import Operation
 from utils.parse import parse_results, kill_process
 from utils.coverage import Coverage
 from input_parser import add_operation
 import binascii
 
 
-class Test(Context):
+class Test(Operation):
     def __init__(self,
                  tests: List[AnyStr] = None, out_file: str = None, port: str = None, pos_tests: bool = False,
                  neg_tests: bool = False, exit_fail: bool = False, write_fail: bool = False, neg_pov: bool = True,
@@ -27,7 +27,7 @@ class Test(Context):
         self.write_fail = write_fail
         self.out_file = Path(out_file) if out_file else out_file
         self.coverage = Coverage(cov_dir if cov_dir else self.cmake, cov_out_dir, cov_suffix, rename_suffix)
-        self.test_timeout = timeout if timeout else int(self.configuration.tests_timeout)
+        self.test_timeout = timeout if timeout else int(self.configs.tests_timeout)
         self.challenge.load_pos_tests()
         self.challenge.load_neg_tests(self.build, excluded=self.metadata['excluded_neg_tests'])
         self.stats = self.working_dir / Path("stats", "tests.txt")

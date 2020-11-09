@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import time
 import traceback
 
 from pathlib import Path
@@ -11,16 +10,15 @@ import operations.checkout as checkout
 import operations.compile as compile
 import operations.test as test
 
-from base import Base
-from input_parser import add_base
-from .genpolls import GenPolls
+from core.task import Task
+from input_parser import add_task
 from utils.ui.tasks.check import CheckUI
+from operations.genpolls import GenPolls
 
 
-class Check(Base):
-    def __init__(self, challenges: List[AnyStr], timeout: int, genpolls: bool, sanity: bool, count: int, **kwargs):
+class Check(Task):
+    def __init__(self, timeout: int, genpolls: bool, sanity: bool, count: int, **kwargs):
         super().__init__(**kwargs)
-        self.challenges = challenges
         self.current = None
         self.working_dir = None
         self.genpolls = genpolls
@@ -28,7 +26,6 @@ class Check(Base):
         self.count = count
         self.timeout = timeout
         self.ui = CheckUI()
-        self.metadata = self.configuration.get_metadata()
 
     def __call__(self):
         if not self.challenges:
@@ -51,7 +48,7 @@ class Check(Base):
             self.status(traceback.format_exc(), err=True)
         finally:
             if self.sanity:
-                self.configuration.save_metadata(self.metadata)
+                self.save_metadata(self.global_metadata)
 
     def dispose(self):
         os.system(f"rm -rf {self.working_dir}")
@@ -75,8 +72,7 @@ class Check(Base):
         self.dispose()
 
     def check_genpolls(self):
-        genpolls = GenPolls(name="genpolls", configs=self.configuration, challenge_name=self.current,
-                            count=self.count)
+        genpolls = GenPolls(name="genpolls", configs=self.configs, challenge=self.current, count=self.count)
         out, err = genpolls()
 
         if err:
@@ -91,8 +87,8 @@ class Check(Base):
         return True
 
     def check_checkout(self):
-        checkout_cmd = checkout.Checkout(name="checkout", configs=self.configuration, working_directory=self.working_dir,
-                                         challenge_name=self.current)
+        checkout_cmd = checkout.Checkout(name="checkout", configs=self.configs, working_directory=self.working_dir,
+                                         challenge=self.current)
         out, err = checkout_cmd()
 
         if err:
@@ -103,8 +99,8 @@ class Check(Base):
         return True
 
     def check_compile(self):
-        compile_cmd = compile.Compile(name="compile", configs=self.configuration, working_directory=self.working_dir,
-                                      challenge_name=self.current, inst_files=None, fix_files=None, exit_err=False)
+        compile_cmd = compile.Compile(name="compile", configs=self.configs, working_directory=self.working_dir,
+                                      challenge=self.current, inst_files=None, fix_files=None, exit_err=False)
         compile_cmd.verbose = True
         out, err = compile_cmd()
 
@@ -118,8 +114,8 @@ class Check(Base):
 
     def check_test(self):
         self.status(f"Testing with timeout {self.timeout}.")
-        test_cmd = test.Test(name="test", configs=self.configuration, working_directory=self.working_dir,
-                             challenge_name=self.current, write_fail=True, neg_pov=False, timeout=self.timeout)
+        test_cmd = test.Test(name="test", configs=self.configs, working_directory=self.working_dir,
+                             challenge=self.current, write_fail=True, neg_pov=False, timeout=self.timeout)
 
         test_outcome = test_cmd(save=True)
         neg_fails, passing, fails = [], [], []
@@ -151,11 +147,11 @@ class Check(Base):
             for failed, path in povs_outcome.items():
                 if failed:
                     print(path.stem)
-                    self.metadata[self.current]["excluded_neg_tests"].append(path.stem)
+                    self.global_metadata[self.current]["excluded_neg_tests"].append(path.stem)
                     self.ui.warn(operation="Test", msg=f"POV {path.stem} excluded")
 
     def exclude_challenge(self, msg: AnyStr):
-        self.metadata[self.current]["excluded"] = True
+        self.global_metadata[self.current]["excluded"] = True
         self.status(f"Challenge {self.current} excluded: {msg}", warn=True)
 
     def __str__(self):
@@ -173,8 +169,6 @@ class Check(Base):
 
 
 def check_args(input_parser):
-    input_parser.add_argument('--challenges', type=str, nargs='+', required=False,
-                              help='The challenges to be checked.')
     input_parser.add_argument('--timeout', type=int, default=60, help='The timeout for tests in seconds.')
     input_parser.add_argument('--count', type=int, default=10, help='Number of polls to generate.')
     input_parser.add_argument('--genpolls', action='store_true', help='Flag for enabling polls generation.')
@@ -182,5 +176,5 @@ def check_args(input_parser):
                               help="Flag for removing challenges that fail generating polls or POVs that don't work.")
 
 
-info_parser = add_base("check", Check, description="Sanity checks for challenges.")
+info_parser = add_task("check", Check, description="Sanity checks for challenges.")
 check_args(info_parser)

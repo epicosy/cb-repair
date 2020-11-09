@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from context import Context
+from core.operation import Operation
 from input_parser import add_operation
 
 
-class Info(Context):
+class Info(Operation):
     def __init__(self, task: str, **kwargs):
         super().__init__(**kwargs)
         self.task = task

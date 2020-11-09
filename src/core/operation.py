@@ -2,16 +2,15 @@
 
 from pathlib import Path
 
-from setting import Setting
+from .simple_operation import SimpleOperation
 
 
-class Context(Setting):
+class Operation(SimpleOperation):
     def __init__(self,
                  working_directory: str,
                  prefix: str = None,
                  **kwargs):
         super().__init__(**kwargs)
-
         self.working_dir = Path(working_directory)
         self.source = self.working_dir / Path(self.challenge.name)
         self.prefix = Path(prefix) if prefix else prefix
@@ -28,4 +27,4 @@ class Context(Setting):
 
     def __str__(self):
         prefix_cmd = f' -pf  {self.prefix}' if self.prefix is not None else ""
-        return f"{self.name} -wd {self.working_dir} -cn {self.challenge.name}" + prefix_cmd
+        return super().__str__() + f" -wd {self.working_dir} -cn {self.challenge.name}" + prefix_cmd
