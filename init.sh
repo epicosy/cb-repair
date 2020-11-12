@@ -52,3 +52,8 @@ echo "Dependencies successfully installed"
 
 echo "Enabling core dump generated when a process crashes for type 1 POVs."
 ulimit -c unlimited
+
+echo "Initializing benchmark"
+
+./src/init.py
+[[ $? -eq 1 ]] && echo "[Error] Benchmark initialization failed" && exit 1 ;

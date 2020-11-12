@@ -10,13 +10,15 @@ class Manifest(SimpleOperation):
         self.show = show
 
     def __call__(self):
-        manifest_file = self.challenge.get_manifest_file()
+        manifest_file, manifest = self.challenge.get_manifest()
 
         if self.show:
             with manifest_file.open(mode="r") as m:
                 print(m.read())
         else:
             print(str(manifest_file))
+
+        return manifest_file, manifest
 
 
 def manifest_args(input_parser):

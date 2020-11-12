@@ -91,6 +91,7 @@ import tasks.catalog
 import tasks.check
 import tasks.score
 import tasks.clean
+import tasks.stats
 import operations.info
 import operations.compile
 import operations.checkout

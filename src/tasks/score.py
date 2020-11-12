@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 
-import re
 import pandas
 
 from core.task import Task
 from input_parser import add_task
-
-
-CWE_REGEX = r'CWE-\d{1,4}'
+from utils.parse import cwe_from_info
 
 
 class Score(Task):
@@ -15,13 +12,13 @@ class Score(Task):
         super().__init__(**kwargs)
 
     def __call__(self):
+        cwe_scores = pandas.read_pickle(str(self.configs.tools.scores))
         for challenge in self.challenges:
             challenge_paths = self.configs.lib_paths.get_challenge_paths(challenge)
 
             with challenge_paths.info.open(mode="r") as ci:
                 description = ci.read()
-                cwes = re.findall(CWE_REGEX, description)
-                cwe_scores = pandas.read_pickle(str(self.configs.tools.scores))
+                cwes = cwe_from_info(description)
                 scores = [round(cwe_scores.loc[cwe_scores['cwe_id'] == cwe]['score'].values[0], 3) for cwe in cwes if cwe in list(cwe_scores['cwe_id'])]
                 print(sum(scores)/len(scores))
 

@@ -21,19 +21,18 @@ class Challenge:
         self.neg_tests = {}
 
     def get_manifest(self, source_path: Path = None):
-        return Manifest(source_path if source_path else self.paths.source)
-
-    def get_manifest_file(self):
-        manifest_file = self.paths.source / Path('manifest')
+        path = source_path if source_path else self.paths.source
+        manifest_file = path / Path('manifest')
 
         if not manifest_file.exists():
-            manifest = self.get_manifest()
+            manifest = Manifest(path)
             manifest.write()
+            return manifest_file, manifest
 
-        return manifest_file
+        return manifest_file, None
 
     def remove_patches(self, source: Path):
-        manifest_file = self.get_manifest_file()
+        manifest_file, _ = self.get_manifest()
         vuln_file = source / Path("vuln")
         new_vuln = {}
 

@@ -6,7 +6,7 @@ from pathlib import Path
 from utils.metadata.snippet import Snippet
 
 START = "^#(if|ifndef|ifdef) PATCHED"
-CHANGE = "#else"
+CHANGE = "#(else|elseif|elif)"
 END = "#endif"
 
 
@@ -47,7 +47,8 @@ class SourceFile:
 					snippet(state="patch")
 					self.snippets.append(snippet)
 			else:
-				if stripped.startswith(CHANGE):
+				match = re.search(CHANGE, stripped)
+				if match:
 					snippet.change = i
 					snippet(state="vuln")
 				elif stripped.startswith(END):
@@ -133,7 +134,7 @@ class SourceFile:
 		for snippet in self.snippets:
 
 			if snippet.change is not None:
-				vuln[snippet.change] = self.lines[snippet.change:snippet.end-1]
+				vuln[snippet.change+1] = self.lines[snippet.change+1:snippet.end]
 			else:
 				vuln[snippet.end+1] = [' ']
 

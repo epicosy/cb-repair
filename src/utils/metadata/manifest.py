@@ -6,7 +6,7 @@ from pathlib import Path
 from utils.metadata.source_file import SourceFile
 
 EXTENSIONS = (".c", ".cc", ".h")
-IGNORE = ("polls", "pov", "support")
+IGNORE = ("polls", "poller", "support")
 
 
 class Manifest:
@@ -37,7 +37,7 @@ class Manifest:
                         self.source_files[short_path] = src_file
 
         for folder in self.root.iterdir():
-            if folder.name not in IGNORE and folder.is_dir():
+            if folder.name not in IGNORE and not folder.name.startswith('pov') and folder.is_dir():
                 recurse_walk(folder, Path(folder.name))
 
     def get_patches(self):

@@ -3,6 +3,7 @@ import re
 import os
 
 pid_pattern = r"^# pid (\d{4,7})$"
+CWE_REGEX = r'CWE-\d{1,4}'
 
 
 def kill_process(pid: str, msg: str = None):
@@ -41,3 +42,7 @@ def parse_results(output: str):
     passed = output.split('TOTAL PASSED: ')[1].split('\n')[0]
 
     return total, passed, output, None
+
+
+def cwe_from_info(description: str) -> list:
+    return re.findall(CWE_REGEX, description)

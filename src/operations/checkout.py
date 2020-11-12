@@ -23,7 +23,7 @@ class Checkout(Operation):
 
         try:
             self._mkdir()
-            self.challenge.get_manifest_file()
+            self.challenge.get_manifest()
             self._checkout_files()
 
             if self.no_patch:

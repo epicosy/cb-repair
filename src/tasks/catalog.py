@@ -20,5 +20,5 @@ def catalog_args(input_parser):
     pass
 
 
-info_parser = add_task("catalog", Catalog, description="List's benchmark challenges.")
-catalog_args(info_parser)
+catalog_parser = add_task("catalog", Catalog, description="List's benchmark challenges.")
+catalog_args(catalog_parser)
