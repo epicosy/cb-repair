@@ -9,6 +9,8 @@ from .metadata.manifest import Manifest
 from .metadata.source_file import SourceFile
 from .exceptions import TestNotFound, IncorrectTestNameFormat
 from .paths import ChallengePaths
+from .parse import cwe_from_info
+from .cwe_dictionary import main_cwe, get_name
 
 TEST_NAME_FORMAT = "(^(p|n)\d{1,4}$)"
 
@@ -20,7 +22,7 @@ class Challenge:
         self.pos_tests = {}
         self.neg_tests = {}
 
-    def get_manifest(self, source_path: Path = None):
+    def get_manifest(self, source_path: Path = None, force: bool = False):
         path = source_path if source_path else self.paths.source
         manifest_file = path / Path('manifest')
 
@@ -29,7 +31,7 @@ class Challenge:
             manifest.write()
             return manifest_file, manifest
 
-        return manifest_file, None
+        return manifest_file, Manifest(path) if force else None
 
     def remove_patches(self, source: Path):
         manifest_file, _ = self.get_manifest()
@@ -84,3 +86,10 @@ class Challenge:
     def info(self):
         with self.paths.info.open(mode="r") as f:
             return f.read()
+
+    def cwe_type(self):
+        description = self.info()
+        cwes = cwe_from_info(description)
+        main = main_cwe([int(cwe.split('-')[1]) for cwe in cwes], count=3)
+
+        return f"CWE-{main}: {get_name(main)}"

@@ -8,7 +8,6 @@ from core.task import Task
 from input_parser import add_task
 from utils.cwe_dictionary import top_parent, get_name
 from utils.parse import cwe_from_info
-from math import gcd
 
 plt.style.use('seaborn')
 
@@ -24,10 +23,12 @@ class Stats(Task):
         lines_per_challenge = []
         vuln_lines_per_challenge = []
         patch_lines_per_challenge = []
+        povs_per_challenge = []
         total = 0
         unique = set()
         for challenge in self.challenges:
             challenge_paths = self.configs.lib_paths.get_challenge_paths(challenge)
+            povs_per_challenge.append(len(challenge_paths.get_povs()))
             lines_per_challenge.append(self.global_metadata[challenge]['lines'])
             vuln_lines_per_challenge.append(self.global_metadata[challenge]['vuln_lines'])
             patch_lines_per_challenge.append(self.global_metadata[challenge]['patch_lines'])
@@ -55,12 +56,14 @@ class Stats(Task):
         #self.pie({labels[k]: v for k, v in mapping.items()})
         #self.histogram(cwes_counts, title="Histogram of number of CWEs per Challenges", x_label='CWE count',
         #                y_label='Challenges', cmap='plasma')
-        self.histogram(lines_per_challenge, binwidth=500, title="Histogram of the number of code lines per Challenge",
-                       x_label="Lines", y_label="Challenges", cmap='RdYlGn')
-        self.histogram(vuln_lines_per_challenge, x_label="Lines", y_label="Challenges", cmap='autumn',
-                       title="Histogram of the number of vulnerable lines per Challenge")
-        self.histogram(patch_lines_per_challenge, x_label="Lines", y_label="Challenges", cmap='winter',
-                       title="Histogram of the number of patch lines per Challenge")
+        #self.histogram(lines_per_challenge, binwidth=500, title="Histogram of the number of code lines per Challenge",
+        #               x_label="Lines", y_label="Challenges", cmap='RdYlGn')
+        #self.histogram(vuln_lines_per_challenge, x_label="Lines", y_label="Challenges", cmap='autumn',
+        #               title="Histogram of the number of vulnerable lines per Challenge")
+        #self.histogram(patch_lines_per_challenge, x_label="Lines", y_label="Challenges", cmap='winter',
+        #               title="Histogram of the number of patch lines per Challenge")
+        self.histogram(povs_per_challenge, x_label="POVs", y_label="Challenges", cmap='Set1',
+                       title="Histogram of the number of POVs across Challenges")
 
     def pie(self, data: dict, cmap: str = 'viridis'):
         l = list(data.items())

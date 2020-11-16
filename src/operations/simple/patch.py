@@ -15,7 +15,7 @@ class Patch(SimpleOperation):
         patch_file = self.challenge.paths.source / Path('patch')
 
         if not patch_file.exists():
-            manifest = self.challenge.get_manifest()
+            _, manifest = self.challenge.get_manifest(force=True)
 
             with patch_file.open(mode="w") as pf:
                 patches = manifest.get_patches()

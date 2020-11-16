@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+from pathlib import Path
 
 from utils.ui.terminal import progress, TermPrint
 from config import configuration as configs
@@ -16,10 +17,19 @@ else:
     for i, challenge_name in enumerate(challenges):
         challenge_paths = configs.lib_paths.get_challenge_paths(challenge_name)
         challenge = Challenge(challenge_paths)
+        main_cwe = challenge.cwe_type()
         _, manifest = challenge.get_manifest()
+        patch_file = challenge.paths.source / Path('patch')
+
+        with patch_file.open(mode="w") as pf:
+            patches = manifest.get_patches()
+            json.dump(patches, pf, indent=2)
+
         metadata[challenge_name] = {'excluded': False, "excluded_neg_tests": [], 'lines': manifest.total_lines,
-                                    'vuln_lines': manifest.vuln_lines, 'patch_lines': manifest.patch_lines}
+                                    'vuln_lines': manifest.vuln_lines, 'patch_lines': manifest.patch_lines,
+                                    'main_cwe': main_cwe}
         progress(i, challenges_count, challenge_name)
+
     with configs.metadata.open(mode='w') as mf:
         json.dump(metadata, mf, indent=2)
 

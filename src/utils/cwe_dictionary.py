@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-
+import itertools
 from os.path import dirname, abspath
-from typing import Union
+from typing import Union, List
 
 import pandas as pd
 import re
@@ -16,6 +16,10 @@ cwe_dict.rename(columns={'CWE-ID': 'cwe_id', 'Name': 'name', 'Related Weaknesses
 no_null_relatives = cwe_dict[cwe_dict.relatives.notnull()]
 cwe_alias = {}
 cwe_precedents = {}
+
+
+def most_common(lst: list):
+    return max(itertools.groupby(sorted(lst)), key=lambda tup: (len(list(tup[1])), -lst.index(tup[0])))[0]
 
 
 def populate_relatives():
@@ -67,7 +71,7 @@ def get_parent(cwe_id: int) -> Union[int, None]:
     return match_parent_cwe(cwe_row.relatives.values[0])
 
 
-def top_parent(cwe_id: int, previous: int, count: int = 2, depth: int = 0) -> int:
+def top_parent(cwe_id: int, previous: int = None, count: int = 2, depth: int = 0) -> int:
     if not cwe_id:
         return previous
 
@@ -80,9 +84,9 @@ def top_parent(cwe_id: int, previous: int, count: int = 2, depth: int = 0) -> in
     alias = cwe_alias.get(cwe_id)
 
     if parent:
-        return top_parent(parent, cwe_id, count, depth+1)
+        return top_parent(parent, cwe_id, count, depth + 1)
     elif alias:
-        return top_parent(alias, cwe_id, count, depth+1)
+        return top_parent(alias, cwe_id, count, depth + 1)
     else:
         return cwe_id
 
@@ -97,6 +101,18 @@ def get_name(cwe_id: int):
         return None
 
     return cwe_row.name.values[0]
+
+
+def main_cwe(cwe_ids: List[int], count: int):
+    if not cwe_ids:
+        return None
+
+    parents = [top_parent(cwe_id, count=count) for cwe_id in cwe_ids]
+
+    if len(parents) > 1:
+        return most_common(parents)
+
+    return parents[0]
 
 
 populate_relatives()

@@ -7,11 +7,13 @@ from config import configuration
 from operations.checkout import Checkout
 from operations.compile import Compile
 from operations.test import Test
-import tasks.genpolls
+from operations.simple.genpolls import GenPolls
+from core.kernel import Kernel
 
 WORKING_DIRECTORY = "/tmp/test"
 
-challlenges = configuration.get_challenges()
+kernel = Kernel(name='unit_test', configs=configuration)
+challlenges = kernel.challenges
 configuration.tests_timeout = "10"
 
 
@@ -24,11 +26,11 @@ class TestOperations(unittest.TestCase):
         print(f"Testing Challenge {cls.challenge}\n:")
 
     def test_agenpolls(self):
-        self.opr = tasks.genpolls.GenPolls(name="genpolls",
-                                           configs=configuration,
-                                           challenge_name=self.challenge,
-                                           count=5,
-                                           verbose=True)
+        self.opr = GenPolls(name="genpolls",
+                            configs=configuration,
+                            challenge=self.challenge,
+                            count=50,
+                            verbose=True)
         self.opr()
         self.assertTrue(self.opr.challenge.paths.polls.exists())
         self.assertTrue(self.opr.out_dir.exists())
@@ -37,7 +39,7 @@ class TestOperations(unittest.TestCase):
         self.opr = Checkout(name="checkout",
                             configs=configuration,
                             working_directory=self.working_dir,
-                            challenge_name=self.challenge,
+                            challenge=self.challenge,
                             verbose=True)
         self.opr()
         self.assertTrue(self.opr.working_dir.exists())
@@ -50,7 +52,7 @@ class TestOperations(unittest.TestCase):
         self.opr = Compile(name="compile",
                            configs=configuration,
                            working_directory=self.working_dir,
-                           challenge_name=self.challenge,
+                           challenge=self.challenge,
                            inst_files=None,
                            fix_files=None)
 
@@ -65,7 +67,7 @@ class TestOperations(unittest.TestCase):
         self.opr = Test(name="test",
                         configs=configuration,
                         working_directory=self.working_dir,
-                        challenge_name=self.challenge,
+                        challenge=self.challenge,
                         port=None,
                         exit_fail=True,
                         write_fail=True,
@@ -90,9 +92,10 @@ class TestOperations(unittest.TestCase):
         self.opr = Test(name="test",
                         configs=configuration,
                         working_directory=self.working_dir,
-                        challenge_name=self.challenge,
+                        challenge=self.challenge,
                         port=None,
-                        exit_fail=False,
+                        exit_fail=True,
+                        neg_pov=True,
                         tests=None,
                         out_file=self.working_dir + "/result_neg.txt",
                         write_fail=True,
@@ -110,7 +113,7 @@ class TestOperations(unittest.TestCase):
             results = of.read().splitlines()
 
             for i, result in enumerate(results):
-                self.assertEqual(result, f"n{i+1} 0")
+                self.assertEqual(result, f"n{i + 1} 0")
 
 
 if __name__ == "__main__":

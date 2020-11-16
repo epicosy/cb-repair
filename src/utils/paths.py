@@ -40,6 +40,9 @@ class ChallengePaths:
 
         return polls
 
+    def get_povs(self):
+        return [f.name for f in self.source.iterdir() if f.is_dir() and f.name.startswith('pov')]
+
 
 @dataclass
 class LibPaths:

@@ -61,11 +61,11 @@ This section gives the steps, explanations and examples for getting the project 
 $ git clone https://github.com/epicosy/cb-repair.git
 ```
 
-#### 2) Install Prerequisites
+#### 2) Install Prerequisites and initialize benchmark
 
 Run the ```init.sh``` script in the root folder.
 
-#### 3) Configure the project
+#### 3) Configure the project (Optional)
 In case you find necessary, some configurations can be changed in the ```src/config.py``` script.
 
 #### 4) Generating polls (Optional)
