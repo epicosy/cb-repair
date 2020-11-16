@@ -3,7 +3,6 @@
 
 # modified to accept equal major version
 do_version_check() {
-
     [ "$1" == "$2" ] && return 10
 
     ver1front=$(echo "$1" | cut -d "." -f -1)
@@ -12,7 +11,7 @@ do_version_check() {
     ver2back=$(echo "$2" | cut -d "." -f 2-)
 
     if [ "$ver1front" != "$1" ] || [ "$ver2front" != "$2" ]; then
-        [ "$ver1front" -ne "$ver2front" ] && return 9
+        [ "$ver1front" -lt "$ver2front" ] && return 9
 
         [ "$ver1front" == "$1" ] || [ -z "$ver1back" ] && ver1back=0
         [ "$ver2front" == "$2" ] || [ -z "$ver2back" ] && ver2back=0
@@ -24,7 +23,12 @@ do_version_check() {
 }
 
 echo "Installing cb-repair dependencies"
-apt-get install libc6-dev libc6-dev-i386 gcc-multilib g++-multilib gdb clang cmake python python3.7
+apt-get install libc6-dev libc6-dev-i386 gcc-multilib g++-multilib gdb clang cmake python \
+        python-dev python3 python3-pip python3-dev -y
+
+# Installing Python 2 pip
+curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py
+python get-pip.py
 
 command -v clang > /dev/null
 [[ $? -eq 1 ]] && echo "[Error] clang not installed" && exit 1 ;
@@ -49,6 +53,10 @@ do_version_check "$python3_version" "3.7"
 [[ $? -eq 9 ]] && echo "[Error] python3 version >= 3.7" && exit 1 ;
 
 echo "Dependencies successfully installed"
+
+echo "Installing python3 packages"
+pip3 install pandas psutil matplotlib
+pip install xlsxwriter pycrypto
 
 echo "Enabling core dump generated when a process crashes for type 1 POVs."
 ulimit -c unlimited
