@@ -71,6 +71,25 @@ In case you find necessary, some configurations can be changed in the ```src/con
 #### 4) Generating polls (Optional)
 Generate polls for all challenges by running the script ```genpolls.sh``` 
 
+## From Docker
+
+### Setup
+
+1. First, install Docker ([doc](https://docs.docker.com/)).
+
+2. Then, execute the command to build the image from the Docker file where the project 
+has been pre-configured and is ready to be used:
+
+```
+docker build --force-rm --tag cb-repair:1.0 .
+```
+
+### Execute
+
+To run the project:
+```
+docker run -it cb-repair:1.0 catalog
+```
 
 ## Usage
 

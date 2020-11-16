@@ -54,9 +54,9 @@ do_version_check "$python3_version" "3.7"
 
 echo "Dependencies successfully installed"
 
-echo "Installing python3 packages"
-pip3 install pandas psutil matplotlib
-pip install xlsxwriter pycrypto
+echo "Installing python packages"
+pip3 -r python3_requirements.txt
+pip -r python2_requirements.txt
 
 echo "Enabling core dump generated when a process crashes for type 1 POVs."
 ulimit -c unlimited
