@@ -3,24 +3,28 @@ import json
 import re
 
 from pathlib import Path
-from typing import List, AnyStr
+from typing import List, AnyStr, Union
 
 from .metadata.manifest import Manifest
 from .metadata.source_file import SourceFile
 from .exceptions import TestNotFound, IncorrectTestNameFormat
 from .paths import ChallengePaths
 from .parse import cwe_from_info
-from .cwe_dictionary import main_cwe, get_name
+from .cwe_dictionary import main_cwe, get_name, top_parent
 
 TEST_NAME_FORMAT = "(^(p|n)\d{1,4}$)"
 
 
 class Challenge:
-    def __init__(self, paths: ChallengePaths):
+    def __init__(self, paths: ChallengePaths, metadata: dict):
         self.paths = paths
         self.name = paths.name
+        self.metadata = metadata
         self.pos_tests = {}
         self.neg_tests = {}
+
+    def excluded(self):
+        return self.metadata['excluded_povs']
 
     def get_manifest(self, source_path: Path = None, force: bool = False):
         path = source_path if source_path else self.paths.source
@@ -74,9 +78,9 @@ class Challenge:
             tests_id = [f"p{n}" for n in range(1, len_tests + 1)]
             self.pos_tests = dict(zip(tests_id, tests))
 
-    def load_neg_tests(self, povs_path: Path, excluded: List[AnyStr]):
+    def load_neg_tests(self, povs_path: Path):
         if self.neg_tests == {}:
-            neg_tests = [str(file) for file in povs_path.iterdir() if file.suffix == ".pov" and file.stem not in excluded]
+            neg_tests = [str(file) for file in povs_path.iterdir() if file.suffix == ".pov" and file.stem not in self.excluded()]
             len_tests = len(neg_tests)
             neg_tests.sort()
             # Map cases to tests names where p is for positive test cases
@@ -87,9 +91,36 @@ class Challenge:
         with self.paths.info.open(mode="r") as f:
             return f.read()
 
-    def cwe_type(self):
+    def cwe_ids(self, number: bool = True) -> List[Union[int, str]]:
         description = self.info()
-        cwes = cwe_from_info(description)
-        main = main_cwe([int(cwe.split('-')[1]) for cwe in cwes], count=3)
+
+        if number:
+            return [int(cwe.split('-')[1]) for cwe in cwe_from_info(description)]
+        else:
+            return [cwe for cwe in cwe_from_info(description)]
+
+    def cwe_type(self):
+        ids = self.cwe_ids()
+        main = main_cwe(ids, count=3)
 
         return f"CWE-{main}: {get_name(main)}"
+
+    def get_cwes(self, parent: bool = False, name: bool = False) -> List[Union[str, int]]:
+        ids = self.cwe_ids()
+
+        if parent:
+            ids = [top_parent(id, None, count=3) for id in ids]
+
+        if name:
+            ids = [f"CWE-{id} {get_name(id)}" for id in ids]
+
+        return ids
+
+    def stats(self):
+        return {
+            'povs': len(self.paths.get_povs()),
+            'lines': self.metadata['lines'],
+            'vuln_lines': self.metadata['vuln_lines'],
+            'patch_lines': self.metadata['patch_lines'],
+            'cwes': self.get_cwes(parent=True, name=True)
+        }

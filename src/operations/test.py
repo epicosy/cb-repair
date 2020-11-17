@@ -29,7 +29,7 @@ class Test(Operation):
         self.coverage = Coverage(cov_dir if cov_dir else self.cmake, cov_out_dir, cov_suffix, rename_suffix)
         self.test_timeout = timeout if timeout else int(self.configs.tests_timeout)
         self.challenge.load_pos_tests()
-        self.challenge.load_neg_tests(self.build, excluded=self.metadata['excluded_neg_tests'])
+        self.challenge.load_neg_tests(self.build)
         self.stats = self.working_dir / Path("stats", "tests.txt")
         self.stats.parent.mkdir(parents=True, exist_ok=True)
 

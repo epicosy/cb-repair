@@ -67,3 +67,4 @@ class LibPaths:
         poller = self.challenges / Path(challenge_name, 'poller')
 
         return ChallengePaths(challenge_name, source, readme, polls, poller)
+

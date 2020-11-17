@@ -155,6 +155,18 @@ problematic reasons, which can be found in the file '''gen_polls-result.txt'''. 
 vulnerabilities spawn across multiple files (header files are included) and challenges that don't have any POVs 
 working have been removed as well. 
 
+### Descriptive Statistics
+
+The plots can be found in the ```plots``` folder.
+
+![Distribution of CWEs types across Challenges](./plots/cwes_pie.png)
+![Number of CWEs across Challenges](./plots/hist.png)
+![Number lines of code across Challenges](./plots/lines_hist.png)
+![Number of vulnerable lines across Challenges](./plots/vuln_lines_hist.png)
+![Number of patch lines across Challenges](./plots/patch_lines_hist.png)
+![Number of POVs across Challenges](./plots/povs_hist.png)
+
+
 <table>
 <thead>
 	<tr>

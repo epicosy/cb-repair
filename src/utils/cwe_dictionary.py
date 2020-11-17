@@ -91,14 +91,14 @@ def top_parent(cwe_id: int, previous: int = None, count: int = 2, depth: int = 0
         return cwe_id
 
 
-def get_name(cwe_id: int):
+def get_name(cwe_id: int) -> str:
     if not cwe_id:
-        return None
+        return ""
 
     cwe_row = cwe_dict[cwe_dict.cwe_id == cwe_id]
 
     if cwe_row.empty:
-        return None
+        return ""
 
     return cwe_row.name.values[0]
 

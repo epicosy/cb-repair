@@ -6,6 +6,7 @@ from typing import Tuple, Union
 from config import Configuration
 from utils.ui.terminal import TermPrint
 from utils.command import Command
+from utils.challenge import Challenge
 
 
 class Kernel:
@@ -67,6 +68,18 @@ class Kernel:
 
             if not self.excl:
                 exit(1)
+
+    def get_challenge(self, challenge_name: str):
+        # Check if challenge is valid
+        self.has_challenge(challenge_name)
+        self.is_excluded(challenge_name)
+        # Generate Paths
+        paths = self.get_challenge_paths(challenge_name)
+
+        return Challenge(paths, metadata=self.global_metadata[challenge_name])
+
+    def get_challenge_paths(self, challenge_name: str):
+        return self.configs.lib_paths.get_challenge_paths(challenge_name)
 
     def get_lib_paths(self):
         return self.configs.lib_paths
