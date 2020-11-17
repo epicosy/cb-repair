@@ -126,7 +126,9 @@ Working:
   REMATCH_5--File_Explorer--LNK_Bug
   REMATCH_6--Secure_Server--Heartbleed
   Recipe_Database
+  Rejistar
   Resort_Modeller
+  Sample_Shipgame
   SAuth
   SCUBA_Dive_Logging
   SFTSCBSISS
@@ -149,6 +151,7 @@ Working:
   Street_map_service
   String_Info_Calculator
   TAINTEDLOVE
+  TFTTP
   TVS
   Tennis_Ball_Motion_Calculator
   Terrible_Ticket_Tracker
@@ -189,6 +192,7 @@ Working:
   university_enrollment
   vFilter
   virtual_pet
+  yolodex
 
 
 OSError: 
@@ -290,10 +294,6 @@ AssertionError:
         AssertionError: node bad_password was never executed
     - Pac_for_Edges
         AssertionError: node win was never executed
-    - TFTTP
-        AssertionError: node frag_bad was never executed
-    - yolodex
-        AssertionError: node badcommand was never executed
 
 
   * polls must send data to the server
@@ -353,11 +353,7 @@ AssertionError:
           File "/cb-repair/cb-multios/tools/generate-polls/generator/graph.py", line 359, in plot
             sub_node.func_name)
         AssertionError: EdgesubscribeHigh->subscribeIncremental was not traversed
-    - Rejistar
-        AssertionError: EdgereenrollCert->quit was not traversed
 
-    - Sample_Shipgame
-        AssertionError: Edgesetup_input->end was not traversed
     - Shipgame
         AssertionError: Edgesay_hi_bad->say_bye was not traversed
 

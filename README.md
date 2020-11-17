@@ -118,6 +118,11 @@ For example, the following will generate 50 polls for BitBlaster challenge. Thos
 $ cb_repair.py genpolls -cn BitBlaster -n 50 
 ```
 
+---
+Note: In case of receiving an "AssertionError: node 'node_name' was never executed" for a challenge, raise the number 
+of polls to be generated or re-generate the polls. Same for 'AssertionError: Edge 'edge_name' was not traversed".
+---
+
 #### Checkout
 The following creates a copy of the challenge BitBlaster under ```/tmp/BitBlaster_0``` path with the necessary files for
  compiling.
@@ -143,7 +148,7 @@ $ cb_repair.py compile -cn BitBlaster -wd /tmp/BitBlaster_0 -tn p1 p5 p9 n1
 ```
 
 ## Challenges
-From the 202 original linux working challenges, 70 of them were purposely selected to facilitate the generation of 
+From the 202 original linux working challenges, 73 of them were purposely selected to facilitate the generation of 
 their test suite, composed by polls and POVs. Part of the removed CBs require for the generation of polls, the shared 
 objects created during the build. During the generation of polls, other CBs have been removed for various 
 problematic reasons, which can be found in the file '''gen_polls-result.txt'''. Furthermore, challenges that have 
@@ -153,9 +158,9 @@ working have been removed as well.
 <table>
 <thead>
 	<tr>
-		<th> Raise error during poll generation (52) </th>
-		<th> Multiple files (32) </th>
-		<th> POVs not working (56) </th>
+		<th> Raise error during poll generation (47) </th>
+		<th> Multiple files (33) </th>
+		<th> POVs not working (57) </th>
 	</tr>
 </thead>
 <tbody>
@@ -186,8 +191,6 @@ working have been removed as well.
                 <li>Venture_Calculator</li>
                 <li>CGC_Hangman_Game</li>
                 <li>Pac_for_Edges</li>
-                <li>TFTTP</li>
-                <li>yolodex</li>
                 <li>HeartThrob</li>
                 <li>Palindrome</li>
                 <li>Tick-A-Tack</li>
@@ -207,9 +210,6 @@ working have been removed as well.
                 <li>electronictrading</li>
                 <li>matrices_for_sale</li>
                 <li>simple_integer_calculator</li>
-                <li>Multicast_Chat_Server</li>
-                <li>Rejistar</li>
-                <li>Sample_Shipgame</li>
                 <li>Shipgame</li>
                 <li>Multipass2</li>
                 <li>Multipass3</li>
@@ -240,6 +240,7 @@ working have been removed as well.
                 <li>PKK_Steganography</li>
                 <li>Packet_Receiver</li>
                 <li>REMATCH_1--Hat_Trick--Morris_Worm</li>
+                <li>Rejistar</li>
                 <li>Recipe_Database</li>
                 <li>SCUBA_Dive_Logging</li>
                 <li>Sorter</li>
@@ -281,6 +282,7 @@ working have been removed as well.
                 <li>Mount_Filemore</li>
                 <li>Multi_Arena_Pursuit_Simulator</li>
                 <li>Multi_User_Calendar</li>
+                <li>Multicast_Chat_Server</li>
                 <li>Network_File_System_v3</li>
                 <li>Neural_House</li>
                 <li>OTPSim</li>

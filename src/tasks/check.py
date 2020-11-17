@@ -17,11 +17,12 @@ from operations.simple.genpolls import GenPolls
 
 
 class Check(Task):
-    def __init__(self, timeout: int, genpolls: bool, sanity: bool, count: int, **kwargs):
+    def __init__(self, timeout: int, genpolls: bool, sanity: bool, suppress_assertion:bool, count: int, **kwargs):
         super().__init__(**kwargs)
         self.current = None
         self.working_dir = None
         self.genpolls = genpolls
+        self.suppress_assertion = suppress_assertion
         self.sanity = sanity
         self.count = count
         self.timeout = timeout
@@ -76,6 +77,9 @@ class Check(Task):
         out, err = genpolls()
 
         if err:
+            if self.suppress_assertion and 'AssertionError' in err:
+                self.ui.warn(operation="Genpolls", msg=err)
+                return True
             self.ui.fail(operation="Genpolls", msg=err)
 
             if self.sanity:
@@ -172,6 +176,8 @@ def check_args(input_parser):
     input_parser.add_argument('--timeout', type=int, default=60, help='The timeout for tests in seconds.')
     input_parser.add_argument('--count', type=int, default=10, help='Number of polls to generate.')
     input_parser.add_argument('--genpolls', action='store_true', help='Flag for enabling polls generation.')
+    input_parser.add_argument('-sa', '--suppress_assertion', action='store_true',
+                              help='Flag for suppressing assertion errors during polls generation.')
     input_parser.add_argument('--sanity', action='store_true',
                               help="Flag for removing challenges that fail generating polls or POVs that don't work.")
 

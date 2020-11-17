@@ -46,12 +46,12 @@ class Manifest:
     def get_vulns(self):
         return {f_name: src_file.get_vuln() for f_name, src_file in self.vuln_files.items()}
 
-    def write(self, out_file: Path = None) -> NoReturn:
-        out = out_file if out_file else self.root / Path("manifest")
-        vuln_out = out_file if out_file else self.root / Path("vuln")
+    def write(self) -> NoReturn:
+        out = self.root / Path("manifest")
+        vuln_out = self.root / Path("vuln")
 
         with out.open(mode="w") as of, vuln_out.open(mode="w") as vf:
-            of.writelines(list(self.vuln_files.keys()))
+            of.writelines('\n'.join(list(self.vuln_files.keys())))
             vulns = self.get_vulns()
             json.dump(vulns, vf, indent=2)
 
