@@ -123,7 +123,7 @@ class Check(Task):
         for test_name, outcome in test_outcome.items():
             if outcome != '1':
                 fails.append(f"{test_name} {outcome}")
-                if test_name.starts_with('n'):
+                if test_name.startswith('n'):
                     neg_fails.append(test_name)
             else:
                 passing.append(f"{test_name} {outcome}")
