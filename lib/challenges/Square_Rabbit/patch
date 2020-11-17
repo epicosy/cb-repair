@@ -1,0 +1,9 @@
+{
+  "src/squarerabbit.c": {
+    "371": [
+      "    if (g_srabbit->split_len >= MAX_SPLIT)\n",
+      "        return -1;\n",
+      "    g_srabbit->split_len++;\n"
+    ]
+  }
+}

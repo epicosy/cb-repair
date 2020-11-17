@@ -1,0 +1,7 @@
+{
+  "src/cgcf.c": {
+    "122": [
+      "  if (idx < shnum && idx >= 0 && !(ehdr.e_shoff > buf_len || ehdr.e_shentsize * idx > buf_len))\n"
+    ]
+  }
+}

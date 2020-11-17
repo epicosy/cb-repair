@@ -1,0 +1,554 @@
+{
+  "CGC_File_System": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2252,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "SLUR_reference_implementation": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2580,
+    "vuln_lines": 2,
+    "patch_lines": 2,
+    "main_cwe": "CWE-710: Improper Adherence to Coding Standards"
+  },
+  "FUN": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 14812,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "simplenote": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2595,
+    "vuln_lines": 1,
+    "patch_lines": 3,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "SPIFFS": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 4031,
+    "vuln_lines": 0,
+    "patch_lines": 13,
+    "main_cwe": "CWE-710: Improper Adherence to Coding Standards"
+  },
+  "SFTSCBSISS": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2255,
+    "vuln_lines": 0,
+    "patch_lines": 4,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "ValveChecks": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 991,
+    "vuln_lines": 1,
+    "patch_lines": 28,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "root64_and_parcour": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1883,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "hawaii_sets": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2532,
+    "vuln_lines": 3,
+    "patch_lines": 17,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Square_Rabbit": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2614,
+    "vuln_lines": 2,
+    "patch_lines": 3,
+    "main_cwe": "CWE-682: Incorrect Calculation"
+  },
+  "FileSys": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3517,
+    "vuln_lines": 0,
+    "patch_lines": 9,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Particle_Simulator": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1769,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "CGC_Video_Format_Parser_and_Viewer": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2338,
+    "vuln_lines": 0,
+    "patch_lines": 5,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "expression_database": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2693,
+    "vuln_lines": 0,
+    "patch_lines": 5,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "stream_vm2": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2119,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Street_map_service": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2382,
+    "vuln_lines": 0,
+    "patch_lines": 9,
+    "main_cwe": "CWE-682: Incorrect Calculation"
+  },
+  "Single-Sign-On": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1401,
+    "vuln_lines": 1,
+    "patch_lines": 3,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "BudgIT": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1357,
+    "vuln_lines": 4,
+    "patch_lines": 5,
+    "main_cwe": "CWE-682: Incorrect Calculation"
+  },
+  "Gridder": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3497,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "stream_vm": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1648,
+    "vuln_lines": 2,
+    "patch_lines": 2,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "SOLFEDGE": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 730,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-707: Improper Neutralization"
+  },
+  "HackMan": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1750,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Grit": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 5114,
+    "vuln_lines": 0,
+    "patch_lines": 1,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Casino_Games": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2622,
+    "vuln_lines": 2,
+    "patch_lines": 3,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "BitBlaster": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 212,
+    "vuln_lines": 1,
+    "patch_lines": 0,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Filesystem_Command_Shell": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 5290,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-682: Incorrect Calculation"
+  },
+  "TextSearch": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2714,
+    "vuln_lines": 1,
+    "patch_lines": 2,
+    "main_cwe": "CWE-682: Incorrect Calculation"
+  },
+  "cotton_swab_arithmetic": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1755,
+    "vuln_lines": 2,
+    "patch_lines": 2,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "middleware_handshake": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 5317,
+    "vuln_lines": 1,
+    "patch_lines": 3,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "netstorage": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2418,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Griswold": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2545,
+    "vuln_lines": 2,
+    "patch_lines": 4,
+    "main_cwe": "CWE-707: Improper Neutralization"
+  },
+  "Diophantine_Password_Wallet": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 770,
+    "vuln_lines": 4,
+    "patch_lines": 8,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "RAM_based_filesystem": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3336,
+    "vuln_lines": 6,
+    "patch_lines": 6,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "WordCompletion": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 470,
+    "vuln_lines": 0,
+    "patch_lines": 5,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Message_Service": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1067,
+    "vuln_lines": 6,
+    "patch_lines": 6,
+    "main_cwe": "CWE-284: Improper Access Control"
+  },
+  "FablesReport": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1316,
+    "vuln_lines": 1,
+    "patch_lines": 21,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Movie_Rental_Service_Redux": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2794,
+    "vuln_lines": 1,
+    "patch_lines": 2,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "chess_mimic": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1578,
+    "vuln_lines": 0,
+    "patch_lines": 52,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "CGC_Symbol_Viewer_CSV": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2505,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-697: Incorrect Comparison"
+  },
+  "FSK_BBS": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3466,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "ShoutCTF": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 4192,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "QuadtreeConways": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3059,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-690: Unchecked Return Value to NULL Pointer Dereference"
+  },
+  "Divelogger2": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3857,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Loud_Square_Instant_Messaging_Protocol_LSIMP": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2417,
+    "vuln_lines": 0,
+    "patch_lines": 1,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "LMS": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1291,
+    "vuln_lines": 1,
+    "patch_lines": 4,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "FSK_Messaging_Service": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3480,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Simple_Stack_Machine": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 298,
+    "vuln_lines": 0,
+    "patch_lines": 10,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Mathematical_Solver": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3394,
+    "vuln_lines": 3,
+    "patch_lines": 3,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Sad_Face_Template_Engine_SFTE": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2885,
+    "vuln_lines": 0,
+    "patch_lines": 4,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "ASL6parse": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2170,
+    "vuln_lines": 1,
+    "patch_lines": 5,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "router_simulator": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2120,
+    "vuln_lines": 2,
+    "patch_lines": 2,
+    "main_cwe": "CWE-707: Improper Neutralization"
+  },
+  "Diary_Parser": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2859,
+    "vuln_lines": 10,
+    "patch_lines": 24,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "XStore": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 4258,
+    "vuln_lines": 0,
+    "patch_lines": 4,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Email_System_2": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2820,
+    "vuln_lines": 1,
+    "patch_lines": 6,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "PCM_Message_decoder": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2130,
+    "vuln_lines": 8,
+    "patch_lines": 5,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "The_Longest_Road": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2914,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Stock_Exchange_Simulator": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3576,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-388: None"
+  },
+  "online_job_application2": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2638,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Movie_Rental_Service": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2280,
+    "vuln_lines": 2,
+    "patch_lines": 2,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "humaninterface": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2357,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Space_Attackers": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3312,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "HIGHCOO": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1189,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-682: Incorrect Calculation"
+  },
+  "AIS-Lite": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3310,
+    "vuln_lines": 0,
+    "patch_lines": 3,
+    "main_cwe": "CWE-707: Improper Neutralization"
+  },
+  "basic_emulator": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3208,
+    "vuln_lines": 0,
+    "patch_lines": 2,
+    "main_cwe": "CWE-707: Improper Neutralization"
+  },
+  "basic_messaging": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1523,
+    "vuln_lines": 1,
+    "patch_lines": 1,
+    "main_cwe": "CWE-682: Incorrect Calculation"
+  },
+  "Audio_Visualizer": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2310,
+    "vuln_lines": 2,
+    "patch_lines": 2,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "Dive_Logger": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 2894,
+    "vuln_lines": 0,
+    "patch_lines": 24,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  },
+  "Scrum_Database": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 3924,
+    "vuln_lines": 0,
+    "patch_lines": 8,
+    "main_cwe": "CWE-118: Incorrect Access of Indexable Resource ('Range Error')"
+  },
+  "TAINTEDLOVE": {
+    "excluded": false,
+    "excluded_neg_tests": [],
+    "lines": 1960,
+    "vuln_lines": 5,
+    "patch_lines": 5,
+    "main_cwe": "CWE-664: Improper Control of a Resource Through its Lifetime"
+  }
+}

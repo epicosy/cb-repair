@@ -1,0 +1,10 @@
+{
+  "src/trex.c": {
+    "72": [
+      "    if (g_epsilon_loop[state->id] >= cgc_strlen(str))\n"
+    ],
+    "168": [
+      " "
+    ]
+  }
+}

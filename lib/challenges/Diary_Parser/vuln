@@ -1,0 +1,25 @@
+{
+  "src/service.c": {
+    "437": [
+      "\t\t\tcgc_memcpy(entry_info,sub_entry_info_list[title][entry], sizeof(Entry_Info));\n"
+    ],
+    "448": [
+      "\t\t\tcgc_memcpy(entry_info,entry_info_table[title][entry], sizeof(Entry_Info));\n"
+    ],
+    "557": [
+      " "
+    ],
+    "586": [
+      "\t\t}\n",
+      "\t\t\n",
+      "\t\tif ((t = cgc_verify_chapter(chapter)) != 0)\n",
+      "\t\t{\n",
+      "\t\t\tcgc_printf(\"Malformed chapter found! @d Exiting.\\n\", t);\n",
+      "\t\t\tcgc__terminate(-2);\n",
+      "\t\t}\n"
+    ],
+    "831": [
+      "\t\tint max_len = 9;\n"
+    ]
+  }
+}

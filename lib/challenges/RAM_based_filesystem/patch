@@ -1,0 +1,18 @@
+{
+  "src/fs.c": {
+    "167": [
+      "\t\tfor (j = 0; j < MAX_DIR_INODES; j++) {\n"
+    ],
+    "643": [
+      "\tfor (i = 0; i < MAX_DIR_INODES; i++) {\n"
+    ],
+    "657": [
+      "\tif (i == MAX_DIR_INODES) {\n"
+    ],
+    "1089": [
+      "\tif ( b == NULL) {\n",
+      "\t\treturn (0);\n",
+      "\t}\n"
+    ]
+  }
+}

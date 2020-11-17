@@ -1,0 +1,11 @@
+{
+  "src/parseCVF.c": {
+    "203": [
+      "\t/// Ensure that we have not passed the specified number of frames\n",
+      "\tif ( pNewImage->frameCount <= pNewImage->rCount ) {\n",
+      "\t\tcgc_printf(\"[ERROR] Too many frames\\n\");\n",
+      "\t\treturn 0;\n",
+      "\t}\n"
+    ]
+  }
+}

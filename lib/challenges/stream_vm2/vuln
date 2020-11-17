@@ -1,0 +1,7 @@
+{
+  "src/main.c": {
+    "154": [
+      "    len = machine->registers[8];\n"
+    ]
+  }
+}

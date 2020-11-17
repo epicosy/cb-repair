@@ -1,0 +1,7 @@
+{
+  "src/gld.c": {
+    "125": [
+      "                    if (dead_cell->is_alive) {\n"
+    ]
+  }
+}

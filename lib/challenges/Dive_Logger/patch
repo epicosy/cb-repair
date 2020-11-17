@@ -1,0 +1,38 @@
+{
+  "src/ui.c": {
+    "377": [
+      "\t//sanity check time\n",
+      "\tif (  ( hour >= 0 )&&( hour <= 23 )  ){\n",
+      "\t\tif (  ( minute >= 0 )&&( minute <= 59 )  ){\n",
+      "\t\t\tif (  ( second >= 0)&&( second <= 59 )  ){\n",
+      "\t\t\t\tvalidTime = 1;\n",
+      "\t\t\t}\n",
+      "\t\t}\n",
+      "\t}\n"
+    ],
+    "387": [
+      "\t//sanity check time\n",
+      "\t//CWE-839\n",
+      "\tif ( hour <= 23 )  {\n",
+      "\t\tif ( minute <= 59 ){\n",
+      "\t\t\tif ( second <= 59 ){\n",
+      "\t\t\t\tvalidTime = 1;\n",
+      "\t\t\t}\n",
+      "\t\t}\n",
+      "\t}\n"
+    ],
+    "446": [
+      "\t//although technically not a bug, it enables the bug. CWE-787\n",
+      "\tif ( DiverInfo->DiveEntryCount >= MAXDIVECOUNT ){\n",
+      "\t\treturn;\n",
+      "\t}\n"
+    ],
+    "520": [
+      "\twhile (  ( DiveEntryListThis != NULL )&&( count < MAXDIVECOUNT )  ){\n"
+    ],
+    "523": [
+      "\t//CWE-787 \n",
+      "\twhile (  ( DiveEntryListThis != NULL )&&( count <= MAXDIVECOUNT )  ){\n"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "src/casino.c": {
+    "258": [
+      "    // Provide additional stack space for decoded data to overflow to\n",
+      "    int new_payouts[NUMBER_OF_PAYOUTS * 2];\n"
+    ],
+    "275": [
+      "    char name[84];\n"
+    ]
+  }
+}

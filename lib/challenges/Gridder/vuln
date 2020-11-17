@@ -1,0 +1,7 @@
+{
+  "src/service.cc": {
+    "95": [
+      "unsigned short G_GRIDDER_SIZE = (NUM_CELLS) * sizeof(unsigned int);\n"
+    ]
+  }
+}

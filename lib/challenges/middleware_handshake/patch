@@ -1,0 +1,9 @@
+{
+  "src/main.c": {
+    "143": [
+      "        cgc_fdprintf(STDERR, \"WARNING text is too long: \");\n",
+      "        cgc_fdprintf(STDERR, text);\n",
+      "        cgc_fdprintf(STDERR, \"\\n\");\n"
+    ]
+  }
+}

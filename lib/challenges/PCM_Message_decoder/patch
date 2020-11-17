@@ -1,0 +1,11 @@
+{
+  "src/service.c": {
+    "184": [
+      "  // make sure the SampleSize value is valid\n",
+      "  if (p->DataSize*8.0 / p->NumSamples != 16.0) {\n",
+      "    cgc_puts(\"Invalid PCM length\\n\");\n",
+      "    cgc__terminate(INVALID_PCM_LEN);\n",
+      "  }\n"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "src/service.c": {
+    "190": [
+      "  // make sure the SampleSize value is valid\n",
+      "  // BUG. Check is done with integer division instead of\n",
+      "  // floating point which leads to an incorrectly\n",
+      "  // checked DataSize\n",
+      "  if (p->DataSize*8/p->NumSamples != 16) {\n",
+      "    cgc_puts(\"Invalid PCM length\\n\");\n",
+      "    cgc__terminate(INVALID_PCM_LEN);\n",
+      "  }\n"
+    ]
+  }
+}

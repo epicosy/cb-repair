@@ -1,0 +1,8 @@
+{
+  "src/main.c": {
+    "438": [
+      "    if (i >= sizeof(words) / sizeof(words[0]))\n",
+      "        return 0;\n"
+    ]
+  }
+}

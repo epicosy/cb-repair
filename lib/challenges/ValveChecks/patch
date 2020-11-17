@@ -1,0 +1,44 @@
+{
+  "src/service.c": {
+    "73": [
+      "    cgc_memcpy(&valvepos,req->data.data+4,*(uint32_t*)(req->data.data));\n"
+    ],
+    "87": [
+      "    if (idx > 127)\n"
+    ],
+    "102": [
+      "    //for your protection\n",
+      "    char buf[5] = {0};\n",
+      "    if (cgc_startswith((char *)req->data.data,\"robots only\")) {\n",
+      "        cgc_strcpy(buf,(char *)req->data.data);\n",
+      "    }\n"
+    ],
+    "117": [
+      "    char buf[64] = {0};\n",
+      "    uint8_t len = req->data.data[0];\n",
+      "    uint8_t i;\n",
+      "    if (len > 64)\n",
+      "        return REDACTED;\n",
+      "    len = len-4;\n",
+      "    for (i=0; i < len; i++)\n",
+      "        buf[i] = req->data.data[i];\n"
+    ],
+    "135": [
+      "    double storage[10];\n",
+      "    int j = 0;\n",
+      "    double i,max;\n",
+      "\n",
+      "    max = *((double*)(req->data.data+8));\n",
+      "    if (max > 1.10001)\n",
+      "        return REDACTED;\n",
+      "    for (i = 0.0; i < max; i+=0.1, j++)\n",
+      "        storage[j] = *(((double*)(req->data.data))+j);\n"
+    ],
+    "154": [
+      "    uint8_t i;\n",
+      "    uint32_t buf[32];\n",
+      "    for (i = 0; i < req->data.data[5]; i++)\n",
+      "        buf[i] = *(((uint32_t*)(req->data.data+6))+i);\n"
+    ]
+  }
+}

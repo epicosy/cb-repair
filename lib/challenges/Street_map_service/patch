@@ -1,0 +1,17 @@
+{
+  "src/map.c": {
+    "367": [
+      "\t//32\n",
+      "\tif (  (turnList->listRoot->count) > ( 3800/(sizeof(routeList)) )  ){\n",
+      "\t\treturn NULL;\n",
+      "\t}\n"
+    ],
+    "374": [
+      "\t//CWE-467 use of sizeof() on pointer type\n",
+      "\t//1020\n",
+      "\tif (  (turnList->listRoot->count) > ( 3800/(sizeof(prouteList)) )  ){\n",
+      "\t\treturn NULL;\n",
+      "\t}\n"
+    ]
+  }
+}

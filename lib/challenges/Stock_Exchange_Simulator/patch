@@ -1,0 +1,7 @@
+{
+  "src/service.c": {
+    "56": [
+      "\t\tcgc_memcpy(\"FAIL\", (void *) (&p->op_data), sizeof(uint32_t));\n"
+    ]
+  }
+}

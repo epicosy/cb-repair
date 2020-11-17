@@ -1,0 +1,8 @@
+{
+  "src/main.c": {
+    "702": [
+      "    if (asn > MAX_ROUTERS)\n",
+      "        goto bad_arguments;\n"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "src/memcpy_fast.c": {
+    "36": [
+      "    if (length == 0)\n",
+      "        return dst;\n"
+    ]
+  }
+}

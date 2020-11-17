@@ -1,0 +1,10 @@
+{
+  "src/packet.c": {
+    "175": [
+      "\tif (name_len > MAX_NAME_LEN-1) {\n",
+      "\t\tcgc_SendError(request_id, ERROR_BADLEN);\n",
+      "\t\treturn(0);\n",
+      "\t}\n"
+    ]
+  }
+}

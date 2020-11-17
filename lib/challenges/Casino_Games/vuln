@@ -1,0 +1,10 @@
+{
+  "src/casino.c": {
+    "261": [
+      "    int new_payouts[NUMBER_OF_PAYOUTS];\n"
+    ],
+    "277": [
+      "    char name[64];\n"
+    ]
+  }
+}

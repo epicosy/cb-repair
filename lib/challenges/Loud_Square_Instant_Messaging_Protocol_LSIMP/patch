@@ -1,0 +1,7 @@
+{
+  "src/lsimp.c": {
+    "74": [
+      "    if (msg->type) break;\n"
+    ]
+  }
+}

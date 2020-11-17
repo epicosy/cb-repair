@@ -1,0 +1,7 @@
+{
+  "src/operation.c": {
+    "332": [
+      "\twhile (0 < bytes_remaining) {\n"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "src/cmdb_backend.c": {
+    "286": [
+      "        cgc_printf(\"\\n %d. \", i+1);\n",
+      "        cgc_printf(g_all_genres[i]);\n"
+    ]
+  }
+}

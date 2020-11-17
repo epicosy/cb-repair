@@ -1,0 +1,15 @@
+{
+  "src/asl6.c": {
+    "185": [
+      "  else if (((bu + length) < st || (bu + length) > sp) || bu + length < bu)\n",
+      "    return -1;\n"
+    ],
+    "408": [
+      "    ret = cgc_read_octet_int(&e->data[i], e->length - i, &v);\n"
+    ],
+    "419": [
+      "    if (i >= e->length)\n",
+      "      return;\n"
+    ]
+  }
+}

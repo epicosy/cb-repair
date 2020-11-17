@@ -1,0 +1,14 @@
+{
+  "src/message.c": {
+    "87": [
+      "\t\tif (cgc_current_user->msg_count >= MAX_MESSAGES)\n",
+      "\t\t{\n",
+      "\t\t\ttarget = cgc_current_user->msg_count; // a naive person might assume this is zero...that's the problem\n",
+      "\t\t\tgoto label;\n",
+      "\t\t}\n"
+    ],
+    "97": [
+      "\tfor (int i = 0; i < MAX_MESSAGES; i++) \n"
+    ]
+  }
+}

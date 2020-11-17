@@ -18,6 +18,7 @@ challenge_parser.add_argument('-l', '--log_file', type=str, default=None,
                               help='Log file to write the results to.')
 
 subparsers = parser.add_subparsers()
+subparsers.required = True
 
 
 def add_operation(name: str, operation: Operation, description: str):

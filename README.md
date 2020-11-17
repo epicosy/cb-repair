@@ -30,8 +30,7 @@ More about [CGC corpus](http://www.lungetech.com/cgc-corpus/about/),
 * The benchmark was tested on Linux OS with kernel release 5.3.0-64-generic, version #58-Ubuntu SMP and x86_64
 architecture.
 * The benchmark is supposed to work on other Linux distributions.
-* Make sure the scripts ```src/cb-repair.py, src/operations/checkout.py, src/operations/compile.py, 
-src/operations/test.py, tools/generate-polls/generate-polls, tools/compile.sh``` are executable.
+* Make sure the scripts ```src/cb-repair.py, tools/generate-polls/generate-polls, tools/compile.sh``` are executable.
 * To run on Docker, core dumps need to be enabled. 
 * Polls generation needs to be performed only once.
 
@@ -77,19 +76,24 @@ Generate polls for all challenges by running the script ```genpolls.sh```
 
 1. First, install Docker ([doc](https://docs.docker.com/)).
 
-2. Then, execute the command to build the image from the Docker file where the project 
-has been pre-configured and is ready to be used:
+2. Then, execute the command to build the image from the Docker file where the project has been pre-configured and is 
+ready to be used:
 
 ```
 docker build --force-rm --tag cb-repair:1.0 .
 ```
 
 ### Execute
-
-To run the project:
+The entrypoint for the image is the main script ```cb-repair.py```, with the default command ```catalog```.
+Run the image with ```cb-repair.py```'s commands, for example: 
 ```
-docker run -it cb-repair:1.0 catalog
+docker run -it cb-repair:1.0 check --challenges BitBlaster --genpolls --count 10 --timeout 10 -v
 ```
+---
+Note: After executing a command the associated container is no longer running and the files generated will not be 
+available. Some commands have file dependencies from previous commands. For those you will need to start the associated 
+stopped container with a different command.
+---
 
 ## Usage
 

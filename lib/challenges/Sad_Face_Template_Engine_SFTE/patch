@@ -1,0 +1,12 @@
+{
+  "src/sadface.c": {
+    "332": [
+      "        if (total_len + cur->len > *out_len)\n",
+      "          goto fail;\n"
+    ],
+    "347": [
+      "            if (total_len + cgc_strlen(var_s) > *out_len)\n",
+      "              goto fail;\n"
+    ]
+  }
+}

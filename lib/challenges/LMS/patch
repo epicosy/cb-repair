@@ -1,0 +1,14 @@
+{
+  "src/service.c": {
+    "78": [
+      "            if (cur == cgc_head) \n",
+      "                cgc_head = cur->next;\n"
+    ],
+    "101": [
+      "        last = cur;\n"
+    ],
+    "114": [
+      "    if (msg->mid > sess->count || sess->received[msg->mid]) {\n"
+    ]
+  }
+}

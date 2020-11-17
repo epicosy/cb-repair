@@ -1,0 +1,25 @@
+{
+  "src/service.c": {
+    "134": [
+      "\tif (temp->prev == NULL) {//first perm in list\n",
+      "\t\tnode->perms = temp->next;\n",
+      "\t}\t\n"
+    ],
+    "141": [
+      "\t\tif (temp->prev ==NULL){\n",
+      "\t\t\tnode->perms = temp->next;\n",
+      "\t\t}\n"
+    ],
+    "661": [
+      "\tunsigned int size = cgc_strlen(newPath);\n",
+      "\tif (size >= MAXPATH){\n",
+      "\t\tsize = MAXPATH-1;\n",
+      "\t\tcgc_puts(\"Path exceeds max path size and has been truncated\");\n",
+      "\t}\n",
+      "\tstrncpy(path, newPath, size );\n"
+    ],
+    "669": [
+      "\tcgc_strcpy(path, newPath );\t\n"
+    ]
+  }
+}

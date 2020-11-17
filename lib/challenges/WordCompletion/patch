@@ -1,0 +1,13 @@
+{
+  "src/main.c": {
+    "306": [
+      "  if ( (dst == NULL) || (src == NULL) )\n",
+      "  {\n",
+      "    return;\n",
+      "  }\n"
+    ],
+    "393": [
+      "  i = i % NUM_WORDS;\n"
+    ]
+  }
+}

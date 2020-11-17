@@ -1,0 +1,7 @@
+{
+  "src/service.c": {
+    "717": [
+      "                    cgc_strncpy(targetBuffer, srcBuffer, counter);\n"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "src/map.c": {
+    "60": [
+      "\t\tif(cgc_getSize(*map) == 129) {\n"
+    ],
+    "101": [
+      "\tfor(last=map; last->next!=NULL; last=last->next);\n",
+      "\n",
+      "\treturn ((void *) last - (void *)map) / sizeof(Map) + 1;\n"
+    ]
+  }
+}

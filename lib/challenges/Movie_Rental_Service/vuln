@@ -1,0 +1,10 @@
+{
+  "src/main.c": {
+    "300": [
+      "  cgc_readuntil(STDIN, buf, sizeof(buf) + 4, '\\n');\n"
+    ],
+    "474": [
+      "  if (cgc_movie_delete(&movies_full, movie_id) != 0)\n"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "src/service.c": {
+    "93": [
+      "\tcgc_free(message_buf);\n"
+    ],
+    "102": [
+      "\tchar* message_buf = NULL;\n"
+    ],
+    "132": [
+      "\tcgc_free(message_buf);\n"
+    ]
+  }
+}

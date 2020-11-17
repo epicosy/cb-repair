@@ -1,0 +1,7 @@
+{
+  "src/filesystem.c": {
+    "106": [
+      "\tmasterBlocks->mblock0.dirEntriesPerBlock = blockSize /sizeof(directoryEntryType);\n"
+    ]
+  }
+}

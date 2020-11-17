@@ -1,0 +1,17 @@
+{
+  "src/service.c": {
+    "91": [
+      "    len = sz_alloc_align;\n"
+    ],
+    "163": [
+      "        // The vulnerability is the failure to sanitize some (SKIP_PRIME indices).\n",
+      "        if (0 != i % SKIP_PRIME) { rx_buf[i] = rx_buf[i] % SZ_VULN_BUF; } \n"
+    ],
+    "435": [
+      "        *ptr = 0x42;\n"
+    ],
+    "556": [
+      "        offset = rx_buf[VULN_OFF] * 1000;\n"
+    ]
+  }
+}

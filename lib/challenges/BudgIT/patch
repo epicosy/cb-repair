@@ -1,0 +1,13 @@
+{
+  "src/map.c": {
+    "58": [
+      "\t\tif(cgc_getSize(*map) == 128) {\n"
+    ],
+    "96": [
+      "\tint size = 1;\n",
+      "\tfor(last=map; last->next!=NULL; last=last->next, size++);\n",
+      "\n",
+      "\treturn size;\n"
+    ]
+  }
+}

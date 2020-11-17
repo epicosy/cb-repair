@@ -1,0 +1,8 @@
+{
+  "src/session.c": {
+    "251": [
+      "        if (req_offset + length > cmd->hdr.length - sizeof(struct configuration_request))\n",
+      "            break;\n"
+    ]
+  }
+}

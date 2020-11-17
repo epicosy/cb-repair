@@ -1,0 +1,10 @@
+{
+  "src/uwfc.c": {
+    "122": [
+      "    return header->chunk_size + 8; //returns file size\n"
+    ],
+    "143": [
+      "    track_size = cgc_validate_header(track) - UWFC_HEADER_SIZE; //size of file\n"
+    ]
+  }
+}
