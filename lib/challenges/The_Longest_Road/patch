@@ -1,7 +1,0 @@
-{
-  "src/packet.c": {
-    "841": [
-      "\t\tint len = cgc_receive_until(buff, '\\n', 25);\n"
-    ]
-  }
-}

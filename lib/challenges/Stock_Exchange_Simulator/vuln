@@ -1,7 +1,0 @@
-{
-  "src/service.c": {
-    "58": [
-      "\t\tcgc_memcpy((void *) req->bank_id, (void *) (&p->op_data), req->data_l);\n"
-    ]
-  }
-}

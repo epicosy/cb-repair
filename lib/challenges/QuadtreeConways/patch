@@ -1,7 +1,0 @@
-{
-  "src/gld.c": {
-    "123": [
-      "                    if (dead_cell != NULL && dead_cell->is_alive) {\n"
-    ]
-  }
-}

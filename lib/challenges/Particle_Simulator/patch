@@ -1,8 +1,0 @@
-{
-  "src/render.c": {
-    "101": [
-      "    if ( render_grid_x >= RENDER_GRID_X_SIZE || render_grid_y >= RENDER_GRID_Y_SIZE )\n",
-      "        return;\n"
-    ]
-  }
-}

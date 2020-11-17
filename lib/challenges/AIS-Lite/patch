@@ -1,9 +1,0 @@
-{
-  "src/sentence.c": {
-    "96": [
-      "\tif (MAX_SENTENCE_LEN < (end-p_buf+cgc_strlen(ss->ais_msg))) {\n",
-      "\t\treturn ERR_INVALID_SENTENCE;\n",
-      "\t}\n"
-    ]
-  }
-}

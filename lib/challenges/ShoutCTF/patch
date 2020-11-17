@@ -1,7 +1,0 @@
-{
-  "src/service.c": {
-    "119": [
-      "        if (cgc_freaduntil(shout, sizeof(shout), '\\n', cgc_stdin) <= 0)\n"
-    ]
-  }
-}

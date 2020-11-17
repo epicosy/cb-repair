@@ -1,8 +1,0 @@
-{
-  "src/main.c": {
-    "699": [
-      "    if (asn == INVALID_ASN || asn > MAX_ROUTERS)\n",
-      "        goto bad_arguments;\n"
-    ]
-  }
-}

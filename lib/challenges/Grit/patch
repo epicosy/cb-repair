@@ -1,7 +1,0 @@
-{
-  "src/interface.cc": {
-    "385": [
-      "            if (size - hdr->offset >= comp->getMaxBufferSize(*track))\n"
-    ]
-  }
-}

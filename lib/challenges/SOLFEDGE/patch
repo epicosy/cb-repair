@@ -1,7 +1,0 @@
-{
-  "src/operation.c": {
-    "293": [
-      "\twhile ((0 < ret) && ((MAX_SYLLABLES_BYTES - 2) > total_bytes_written) && (0 < bytes_count)) {\n"
-    ]
-  }
-}

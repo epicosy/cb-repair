@@ -1,7 +1,0 @@
-{
-  "src/service.c": {
-    "403": [
-      "\tunsigned char count = 0;\n"
-    ]
-  }
-}

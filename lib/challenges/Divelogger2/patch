@@ -1,8 +1,0 @@
-{
-  "src/dive.cc": {
-    "32": [
-      "    if ( index >= DIVE_BIN_COUNT )\n",
-      "        return (-1);\n"
-    ]
-  }
-}

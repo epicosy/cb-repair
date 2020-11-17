@@ -1,7 +1,0 @@
-{
-  "src/cgcf.c": {
-    "124": [
-      "  if (idx < shnum)\n"
-    ]
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "src/main.c": {
-    "283": [
-      "        if (cgc_strlen(data) / 3 * 4 <= sizeof(buf))\n"
-    ]
-  }
-}

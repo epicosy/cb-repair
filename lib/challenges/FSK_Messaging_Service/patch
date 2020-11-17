@@ -1,8 +1,0 @@
-{
-  "src/packet.c": {
-    "109": [
-      "\tif ( dataLen > MAX_PACKET_LENGTH+1 )\n",
-      "\t\treturn;\n"
-    ]
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "src/bbs.c": {
-    "344": [
-      "    if (count > sizeof(str)-1)\n",
-      "        count = sizeof(str)-1;\n"
-    ]
-  }
-}

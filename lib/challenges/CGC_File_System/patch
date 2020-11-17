@@ -1,8 +1,0 @@
-{
-  "src/file.c": {
-    "78": [
-      "        /// Update the correct length\n",
-      "        parent->length = outer_index;\n"
-    ]
-  }
-}

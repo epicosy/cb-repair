@@ -1,7 +1,0 @@
-{
-  "src/main.c": {
-    "184": [
-      "  hackman_state_t h_state;\n"
-    ]
-  }
-}

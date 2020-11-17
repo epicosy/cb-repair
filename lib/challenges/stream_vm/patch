@@ -1,8 +1,0 @@
-{
-  "src/main.c": {
-    "103": [
-      "    if ((unsigned)opc < NUM_OPCODES)\n",
-      "        goto *opcode_table[(unsigned)opc];\n"
-    ]
-  }
-}
