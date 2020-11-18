@@ -16,7 +16,7 @@ else:
 
     for i, challenge_name in enumerate(challenges):
         challenge_paths = configs.lib_paths.get_challenge_paths(challenge_name)
-        challenge = Challenge(challenge_paths)
+        challenge = Challenge(challenge_paths, {})
         main_cwe = challenge.cwe_type()
         _, manifest = challenge.get_manifest()
         patch_file = challenge.paths.source / Path('patch')
