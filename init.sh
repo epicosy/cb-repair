@@ -55,8 +55,8 @@ do_version_check "$python3_version" "3.7"
 echo "Dependencies successfully installed"
 
 echo "Installing python packages"
-pip3 -r python3_requirements.txt
-pip -r python2_requirements.txt
+pip3 install -r python3_requirements.txt
+pip install -r python2_requirements.txt
 
 echo "Enabling core dump generated when a process crashes for type 1 POVs."
 ulimit -c unlimited
