@@ -34,6 +34,30 @@ architecture.
 * To run on Docker, core dumps need to be enabled. 
 * Polls generation needs to be performed only once.
 
+
+## Table of Contents
+
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+     * [Software](#software)
+     * [Linux Packages](#linux-packages)
+  * [Setup](#setup)
+  * [From Docker](#from-docker)
+     * [Build](#build)
+     * [Execute](#execute)
+* [Usage](#usage)
+    * [Baseline](#baseline)
+        * [Generating Polls](#generating-polls)
+        * [Checkout](#checkout)
+        * [Compile](#Compile)
+        * [Test](#Test)
+* [Challenges](#Roadmap)
+    * [Descriptive Statistics](#descriptive-statistics)
+* [Roadmap](#Roadmap)
+* [Authors](#Authors)
+* [License](#license)
+* [Contact](#contact)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine.
@@ -70,9 +94,9 @@ In case you find necessary, some configurations can be changed in the ```src/con
 #### 4) Generating polls (Optional)
 Generate polls for all challenges by running the script ```genpolls.sh``` 
 
-## From Docker
+### From Docker
 
-### Setup
+#### Build
 
 1. First, install Docker ([doc](https://docs.docker.com/)).
 
@@ -83,7 +107,7 @@ ready to be used:
 docker build --force-rm --tag cb-repair:1.0 .
 ```
 
-### Execute
+#### Execute
 The entrypoint for the image is the main script ```cb-repair.py```, with the default command ```catalog```.
 Run the image with ```cb-repair.py```'s commands, for example: 
 ```
