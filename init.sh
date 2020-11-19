@@ -60,8 +60,8 @@ pip install -r ./python2_requirements.txt
 
 echo "Enabling core dump generated when a process crashes for type 1 POVs."
 ulimit -c unlimited
+[[ $? -eq 1 ]] && echo "[Error] Benchmark initialization failed" && exit 1 ;
 
 echo "Initializing benchmark"
-
 ./src/init.py
 [[ $? -eq 1 ]] && echo "[Error] Benchmark initialization failed" && exit 1 ;
