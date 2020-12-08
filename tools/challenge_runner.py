@@ -16,7 +16,7 @@ if IS_WINDOWS:
     CDB_PATH = 'C:/Program Files (x86)/Windows Kits/10/Debuggers/x64/cdb.exe'
 
 
-def run(challenges, timeout, seed, logfunc):
+def run(challenges, timeout, seed, logfunc, cores_path):
     """ Challenge launcher for replay services
 
     This will setup fds for all challenges according to:
@@ -27,7 +27,7 @@ def run(challenges, timeout, seed, logfunc):
         timeout (int): Maximum time in seconds a challenge is allowed to run for
         seed (str): Hex encoded seed for libcgc random
         logfunc ((str) -> None): Replayer log function used for reporting results
-
+        cores_path (bool): stores cores under /cores path for Linux
     Returns:
         (list): all processes that were started
     """
@@ -88,14 +88,14 @@ def run(challenges, timeout, seed, logfunc):
                            stdout=main.stdout, stderr=main.stderr) for c in otherchals]
 
     # Start a watcher to report results when the challenges exit
-    watcher = threading.Thread(target=chal_watcher, args=(challenges, procs, timeout, logfunc))
+    watcher = threading.Thread(target=chal_watcher, args=(challenges, procs, timeout, logfunc, cores_path))
     watcher.setDaemon(True)
     watcher.start()
 
     return procs, watcher
 
 
-def chal_watcher(paths, procs, timeout, log):
+def chal_watcher(paths, procs, timeout, log, cores_path):
     # Continue until any of the processes die
 
     # Wait until any process exits
@@ -127,7 +127,7 @@ def chal_watcher(paths, procs, timeout, log):
             log('[DEBUG] pid: {}, sig: {}'.format(pid, sig))
 
             # Attempt to get register values
-            regs = get_core_dump_regs(path, pid, log)
+            regs = get_core_dump_regs(path, pid, log, cores_path)
             if regs is not None:
                 # If a core dump was generated, report this as a crash
                 # log('Process generated signal (pid: {}, signal: {}) - {}\n'.format(pid, sig, testpath))
@@ -138,10 +138,10 @@ def chal_watcher(paths, procs, timeout, log):
                 log('register states - {}'.format(reg_str))
 
     # Final cleanup
-    clean_cores(paths, procs)
+    clean_cores(paths, procs, cores_path)
 
 
-def get_core_dump_regs(path, pid, log):
+def get_core_dump_regs(path, pid, log, cores_path):
     """ Read all register values from a core dump
     MacOS:   all core dumps are stored as /cores/core.[pid]
     Linux:   the core dump is stored as a 'core' file in the cwd
@@ -151,6 +151,7 @@ def get_core_dump_regs(path, pid, log):
         path (str): path to the executable that generated the dump
         pid (int): pid of the process that generated the core dump
         log ((str) -> None): logging function used to report information
+        cores_path (bool): stores cores under /cores path for Linux
     Returns:
         (dict): Registers and their values
     """
@@ -162,9 +163,14 @@ def get_core_dump_regs(path, pid, log):
             '--batch', '--one-line', 'register read'
         ]
     elif IS_LINUX:
+        core = 'core'
+
+        if cores_path:
+            core = '/cores/core.{}.{}'.format(pid, path.replace('/', '!'))
+
         cmd = [
             'gdb',
-            '--core', 'core',
+            '--core', core,
             '--batch', '-ex', 'info registers'
         ]
     elif IS_WINDOWS:
@@ -207,17 +213,21 @@ def get_core_dump_regs(path, pid, log):
     return regs
 
 
-def clean_cores(paths, procs):
+def clean_cores(paths, procs, cores_path):
     """ Delete all generated core dumps
 
     Args:
         paths (list): paths to all challenges that were launched
         procs (list): List of all processes that may have generated core dumps
+        cores_path (bool): removes the stored cores under /cores path for Linux
     """
     if IS_DARWIN:
         map(try_delete, ['/cores/core.{}'.format(p.pid) for p in procs])
     elif IS_LINUX:
-        try_delete('core')
+        if cores_path:
+            map(try_delete, ['/cores/core.{}.{}'.format(proc.pid, path.replace('/', '!')) for proc, path in zip(procs, paths)])
+        else:
+            try_delete('core')
     elif IS_WINDOWS:
         for path, proc in zip(paths, procs):
             dmp_name = '{}.{}.dmp'.format(os.path.basename(path), proc.pid)

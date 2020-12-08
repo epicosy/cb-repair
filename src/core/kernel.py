@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+from os import environ
 from pathlib import Path
 from typing import Tuple, Union
 
@@ -15,13 +16,17 @@ class Kernel:
                  configs: Configuration,
                  log_file: str = None,
                  verbose: bool = False,
+                 no_status: bool = False,
                  excl: bool = False,
                  **kwargs):
         self.name = name
         self.configs = configs
         self.verbose = verbose
+        self.no_status = no_status
+        self.env = None
         self.excl = excl
         self.log_file = Path(log_file) if log_file else log_file
+        self.output, self.error = None, None
 
         if not self.configs.metadata.exists():
             self.status(f"Not initialized: run ./init.py", warn=True)
@@ -29,7 +34,8 @@ class Kernel:
 
         self.global_metadata = {}
         self.load_metadata()
-        self.challenges = [challenge for challenge, metadata in self.global_metadata.items() if not (metadata["excluded"] and not excl)]
+        self.challenges = [challenge for challenge, metadata in self.global_metadata.items() if
+                           not (metadata["excluded"] and not excl)]
         self.challenges.sort()
 
         if kwargs:
@@ -42,7 +48,8 @@ class Kernel:
                  cmd_cwd: str = None,
                  msg: str = None) -> Tuple[Union[str, None], Union[str, None]]:
         if msg:
-            print(msg)
+            if not self.no_status:
+                print(msg)
             if self.verbose:
                 print(cmd_str)
 
@@ -51,11 +58,12 @@ class Kernel:
 
         cmd = Command(cmd_str, cwd=cmd_cwd)
 
-        out, err = cmd(verbose=self.verbose,
-                       timeout=timeout,
-                       exit_err=exit_err,
-                       file=self.log_file)
-        return out, err
+        self.output, self.error = cmd(verbose=self.verbose, timeout=timeout, env=self.env, exit_err=exit_err,
+                                      file=self.log_file)
+        return self.output, self.error
+
+    def set_env(self):
+        self.env = environ.copy()
 
     def has_challenge(self, challenge_name: str):
         if challenge_name not in self.global_metadata:
@@ -102,6 +110,11 @@ class Kernel:
 
     def status(self, message: str, err: bool = False, bold: bool = False, ok: bool = False, warn: bool = False,
                nan: bool = False):
+        self.log(message)
+
+        if self.no_status:
+            return
+
         if ok:
             TermPrint.print_pass(message)
         elif err:
@@ -114,8 +127,6 @@ class Kernel:
             print(message)
         else:
             TermPrint.print_info(message)
-
-        self.log(message)
 
     def __str__(self):
         return self.name

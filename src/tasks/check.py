@@ -118,19 +118,19 @@ class Check(Task):
 
     def check_test(self):
         self.status(f"Testing with timeout {self.timeout}.")
-        test_cmd = test.Test(name="test", configs=self.configs, working_directory=self.working_dir,
-                             challenge=self.current, write_fail=True, neg_pov=False, timeout=self.timeout)
+        test_cmd = test.Test(name="test", configs=self.configs, working_directory=self.working_dir, cores_path=True,
+                             challenge=self.current, write_fail=True, timeout=self.timeout)
 
         test_outcome = test_cmd(save=True)
         neg_fails, passing, fails = [], [], []
 
-        for test_name, outcome in test_outcome.items():
-            if outcome != '1':
-                fails.append(f"{test_name} {outcome}")
+        for test_name, test_result in test_outcome.items():
+            if not test_result.passed:
+                fails.append(f"{test_name} {test_result.passed}")
                 if test_name.startswith('n'):
                     neg_fails.append(test_name)
             else:
-                passing.append(f"{test_name} {outcome}")
+                passing.append(f"{test_name} {test_result.passed}")
 
         if not test_outcome or fails:
             self.ui.fail(operation="Test", msg=fails)

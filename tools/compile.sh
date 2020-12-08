@@ -25,7 +25,7 @@ mkdir -p "build"
 cd "${DIR}/build"
 
 echo "Creating Makefiles"
-CMAKE_OPTS="${CMAKE_OPTS} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+CMAKE_OPTS="${CMAKE_OPTS} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_OUTPUT_EXTENSION_REPLACE=ON"
 
 # Honor CC and CXX environment variables, default to clang otherwise
 CC=${CC:-clang}

@@ -6,8 +6,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Installing dependencies
 RUN apt update \
   && apt -y upgrade \
-  && apt install -y build-essential libc6-dev libc6-dev-i386 curl gcc-multilib g++-multilib clang \
-  python python-dev python3-pip python3-dev gdb cmake git
+  && apt install -y -q build-essential libc6-dev libc6-dev-i386 curl gcc-multilib g++-multilib clang \
+  python python-dev python3-pip python3-dev gdb cmake ssh apport
+
+# Setup & Enable Password-less SSH Logon
+RUN service ssh start && mkdir -p /var/run/sshd/ && mkdir /root/.ssh && chmod 700 /root/.ssh
 
 # Installing Python 2 pip
 RUN curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py && python get-pip.py
@@ -18,10 +21,11 @@ RUN pip3 install pandas psutil matplotlib
 WORKDIR /cb-repair
 COPY . ./
 
-RUN python3 "./src/init.py";
-#RUN python3 "./src/cb_repair.py -cn BitBlaster"; exit 0
-# Fails because core dumps need to be eanbled
-#RUN python3 "./src/unit_test.py"
+# Enable code dumps
+RUN mkdir /cores && ulimit -c unlimited
+# Init benchmark
+#RUN python3 "./src/init.py" && ./src/cb_repair.py init_polls -v && service ssh restart
+RUN python3 "./src/init.py" && service ssh start
 
-ENTRYPOINT ["./src/cb_repair.py"]
-CMD ["catalog", "-v"]
+#ENTRYPOINT ["./src/cb_repair.py"]
+#CMD ["catalog", "-v"]

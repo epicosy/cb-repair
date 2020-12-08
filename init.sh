@@ -59,7 +59,7 @@ pip3 install -r ./python3_requirements.txt
 pip install -r ./python2_requirements.txt
 
 echo "Enabling core dump generated when a process crashes for type 1 POVs."
-ulimit -c unlimited
+ulimit -c unlimited && mdkir -p /cores && chmod 777 /cores
 [[ $? -eq 1 ]] && echo "[Error] Benchmark initialization failed" && exit 1 ;
 
 echo "Initializing benchmark"

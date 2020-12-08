@@ -1,37 +1,41 @@
 #!/usr/bin/env python3
 import os
+import binascii
 
-import psutil
 from os import listdir
 from pathlib import Path
 from typing import List, AnyStr
 
 from core.operation import Operation
-from utils.parse import parse_results, kill_process
-from utils.coverage import Coverage
+from utils.test_result import TestResult
+from utils.process_manager import ProcessManager
 from input_parser import add_operation
-import binascii
 
 
 class Test(Operation):
     def __init__(self,
                  tests: List[AnyStr] = None, out_file: str = None, port: str = None, pos_tests: bool = False,
                  neg_tests: bool = False, exit_fail: bool = False, write_fail: bool = False, neg_pov: bool = True,
-                 cov_dir: str = None, cov_out_dir: str = None, cov_suffix: str = ".path", rename_suffix: str = ".path",
-                 timeout: int = None, **kwargs):
+                 timeout: int = None, print_ids: bool = False, print_class: bool = False, only_numbers: bool = False,
+                 cores_path: bool = False, **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()
         self.port = port
         self.neg_pov = neg_pov
         self.exit_fail = exit_fail
         self.write_fail = write_fail
+        self.print_ids = print_ids
+        self.print_class = print_class
+        self.only_numbers = only_numbers
         self.out_file = Path(out_file) if out_file else out_file
-        self.coverage = Coverage(cov_dir if cov_dir else self.cmake, cov_out_dir, cov_suffix, rename_suffix)
         self.test_timeout = timeout if timeout else int(self.configs.tests_timeout)
-        self.challenge.load_pos_tests()
-        self.challenge.load_neg_tests(self.build)
+        self.challenge.load_pos_tests(only_numbers)
+        self.challenge.load_neg_tests(self.build, only_numbers)
         self.stats = self.working_dir / Path("stats", "tests.txt")
         self.stats.parent.mkdir(parents=True, exist_ok=True)
+        self.cores_path = cores_path
+        self.process_manager = ProcessManager(process_name=self.challenge.name)
+        self.results = {}
 
         if tests:
             self.tests = tests
@@ -45,71 +49,60 @@ class Test(Operation):
         self.log(str(self))
 
     def __call__(self, save: bool = False):
-        failed = False
-        tests_result = {}
-        # TODO: Change this, cb-test.py accepts more challenges at once,
-        #       might influence how results are processed
         self.status(f"Running {len(self.tests)} tests.")
 
         for test in self.tests:
-            try:
-                self.test_file, self.is_pov = self.challenge.get_test(test)
-            except Exception as e:
-                self.status(str(e), err=True)
-                tests_result[test] = str(e)
-
-                if save:
-                    return tests_result
-
-                exit(1)
-
-            out, err = super().__call__(cmd_str=self._cmd_str(),
-                                        msg=f"Testing {self.challenge.name} on {self.test_file.name}\n",
-                                        cmd_cwd=str(self.get_tools().root),
-                                        timeout=self.test_timeout,
-                                        exit_err=False)
-            if err:
-                self.status(err, err=True)
-
-            self.coverage()
-            total, passed, out, err = parse_results(out)
-
-            if err:
-                if passed == '3':
-                    self.status(err, warn=True)
-                else:
-                    self.status(err, err=True)
-
-            self.outcome(test, passed)
-
-            if passed == '2':
-                self._kill_error_process()
-            # Negative tests should fail
-            if self.is_pov and self.neg_pov:
-                if passed == '1':
-                    passed = '0'
-                else:
-                    passed = '1'
-
-            tests_result[test] = passed
-
-            if passed != '1':
-                if not self.write_fail:
-                    tests_result.pop(test)
-
-                if self.exit_fail:
-                    failed = True
-                    break
-
-        if self.out_file is not None:
-            self.write_results(tests_result)
+            self._set_test(test)
+            self._run_test()
+            self._process_result()
+            self._process_flags()
 
         if save:
-            return tests_result
-
-        if failed:
-            exit(1)
+            return self.results
         exit(0)
+
+    def _set_test(self, test: str):
+        try:
+            self.current_test = test
+            self.test_file, self.is_pov = self.challenge.get_test(test, self.only_numbers)
+        except Exception as e:
+            self.error = str(e)
+            self.status(self.error, err=True)
+            exit(1)
+
+    def _run_test(self):
+        super().__call__(cmd_str=self._cmd_str(), cmd_cwd=str(self.get_tools().root), timeout=self.test_timeout,
+                         msg=f"Testing {self.challenge.name} on {self.test_file.name}\n", exit_err=False)
+        if self.error:
+            self.status(self.error, err=True)
+
+    def _process_result(self, total: int = 1):
+        self.results[self.current_test] = TestResult(self.output, total, self.is_pov)
+        error = self.results[self.current_test].error
+
+        if error:
+            self.status(error, err=True)
+            self.status(f"Killing {self.challenge.name} process.", bold=True)
+            self.process_manager.kill(pids=self.results[self.current_test].pids)
+            self.status(f"Killed processes {self.process_manager.pids}.", bold=True)
+
+        self.outcome()
+
+    def _process_flags(self):
+        if self.is_pov and self.neg_pov:
+            # Invert negative test's result
+            self.results[self.current_test].passed ^= 1
+
+        if self.print_ids:
+            self.status(self.current_test, nan=True)
+        if self.print_class:
+            self.status("PASS" if self.results[self.current_test].passed else 'FAIL', nan=True)
+
+        if self.out_file is not None:
+            self.write_result()
+
+        if self.exit_fail and not self.results[self.current_test].passed:
+            exit(1)
 
     def _cmd_str(self):
         # Collect the names of binaries to be tested
@@ -121,16 +114,15 @@ class Test(Operation):
         else:
             bin_names = [self.challenge.name]
 
-        cb_cmd = [str(self.get_tools().test),
-                  '--directory', str(self.build),
-                  '--xml', str(self.test_file),
-                  '--concurrent', '1',
-                  '--debug',
-                  '--timeout', str(self.test_timeout),
-                  '--negotiate_seed', '--cb'] + bin_names
+        cb_cmd = [str(self.get_tools().test), '--directory', str(self.build), '--xml', str(self.test_file),
+                  '--concurrent', '1', '--debug', '--timeout', str(self.test_timeout), '--negotiate_seed',
+                  '--cb'] + bin_names
 
         if self.port is not None:
             cb_cmd += ['--port', self.port]
+
+        if self.cores_path:
+            cb_cmd += ['--cores_path']
 
         if self.is_pov:
             cb_cmd += ['--should_core']
@@ -139,35 +131,16 @@ class Test(Operation):
 
         return cb_cmd
 
-    def write_results(self, results: dict):
+    def write_result(self):
         out_file = self.add_prefix(self.out_file)
+        if not self.write_fail and not self.results[self.current_test].passed:
+            return
+        with out_file.open(mode="a") as of:
+            of.write(f"{self.current_test} {self.results[self.current_test].passed}\n")
 
-        if not out_file.is_dir():
-            with out_file.open(mode="a") as of:
-                for k, v in results.items():
-                    of.write(f"{k} {v}\n")
-
-    def _kill_error_process(self):
-        """
-        Get a list of all the PIDs of a all the running process whose name contains
-        the given string processName and kill the process
-        """
-        # based on https://thispointer.com/python-check-if-a-process-is-running-by-name-and-find-its-process-id-pid/
-        # Iterate over the all the running process
-
-        for proc in psutil.process_iter():
-            try:
-                proc_info = proc.as_dict(attrs=['pid', 'name', 'create_time'])
-                # Check if process name contains the given name string.
-                if self.challenge.name in proc_info['name']:
-                    self.status(f"Killing {self.challenge.name} process with pid {proc_info['pid']}.", bold=True)
-                    kill_process(proc_info['pid'])
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-                pass
-
-    def outcome(self, test: str, result: str):
+    def outcome(self):
         with self.stats.open(mode="a") as s:
-            s.write(f"{test} {result}\n")
+            s.write(f"{self.current_test} {self.results[self.current_test].passed} {self.results[self.current_test].code}\n")
 
     def __str__(self):
         test_cmd_str = " --tests " + ' '.join(self.tests)
@@ -189,15 +162,17 @@ def test_args(input_parser):
     g.add_argument('-nt', '--neg_tests', action='store_true', required=False,
                    help='Run all negative tests against the challenge.')
     g.add_argument('-tn', '--tests', type=str, nargs='+', help='Name of the test', required=False)
-    # Coverage group
-    g = input_parser.add_argument_group(title="coverage", description="None")
-    g.add_argument('-cd', '--cov_dir', type=str, help='The dir where the coverage files are generated.', default=None)
-    g.add_argument('-cod', '--cov_out_dir', type=str, help='The dir where the coverage files are output.', default=None)
-    g.add_argument('-cs', '--cov_suffix', type=str, help='The suffix of the coverage files generated.', default=".path")
-    g.add_argument('-rs', '--rename_suffix', type=str, default=".path",
-                   help='Rename the suffix to a specific one when outputting files')
+
+    # Print group
+    p = input_parser.add_mutually_exclusive_group(required=False)
+    p.add_argument('-PI', '--print_ids', action='store_true', help='Flag for printing the list of passed testcase ids.')
+    p.add_argument('-P', '--print_class', action='store_true', help='Flag for printing testcases outcome as PASS/FAIL.')
 
     input_parser.add_argument('-of', '--out_file', type=str, help='The file where tests results are written to.')
+    input_parser.add_argument('--cores_path', action='store_true',
+                              help='Enables for Linux core storage under the /cores path.')
+    input_parser.add_argument('-on', '--only_numbers', action='store_true',
+                              help='Testcase ids are only numbers. Negative tests are counter after the positive.')
     input_parser.add_argument('-T', '--timeout', type=int, help='Timeout for the tests.', required=False)
     input_parser.add_argument('-wf', '--write_fail', action='store_true',
                               help='Flag for writing the failed test to the specified out_file.')

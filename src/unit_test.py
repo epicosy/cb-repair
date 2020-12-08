@@ -95,13 +95,12 @@ class TestOperations(unittest.TestCase):
                         challenge=self.challenge,
                         port=None,
                         exit_fail=True,
-                        neg_pov=True,
                         tests=None,
                         out_file=self.working_dir + "/result_neg.txt",
                         write_fail=True,
                         verbose=True,
                         pos_tests=None,
-                        neg_tests=True)
+                        neg_tests=True, cores_path=True)
 
         with self.assertRaises(SystemExit) as se:
             self.opr()

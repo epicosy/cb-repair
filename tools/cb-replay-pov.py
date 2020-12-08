@@ -87,12 +87,13 @@ class Throw(object):
 
         timeout: connection timeout
     """
-    def __init__(self, cb_paths, pov, timeout, debug, pov_seed):
+    def __init__(self, cb_paths, pov, timeout, debug, pov_seed, core_paths):
         self.cb_paths = cb_paths
         self.pov = pov
         self.debug = debug
         self.timeout = timeout
         self.pov_seed = pov_seed
+        self.core_paths = core_paths
 
     def log(self, data):
         print "# %s" % data
@@ -256,7 +257,7 @@ class Throw(object):
         seed = self.gen_seed()
 
         # Launch the challenges
-        self.procs, watcher = challenge_runner.run(self.cb_paths, self.timeout, seed, self.log)
+        self.procs, watcher = challenge_runner.run(self.cb_paths, self.timeout, seed, self.log, self.core_paths)
 
         # Setup and run the POV
         pov_pipes = mp.Pipe(duplex=True)
@@ -282,7 +283,7 @@ class Throw(object):
         return self.procs[0].returncode
 
 
-def run_pov(cbs, pov, timeout, debug, pov_seed):
+def run_pov(cbs, pov, timeout, debug, pov_seed, cores_path):
     """
     Parse and Throw a POV/Poll
 
@@ -293,6 +294,7 @@ def run_pov(cbs, pov, timeout, debug, pov_seed):
         debug: Flag to enable debug logs
         negotate: Should PRNG be negotiated with the CB
         pov_seed: the POV seed to use
+        cores_path: should the cores be stored under /cores path
 
     Returns:
         The number of passed tests
@@ -303,7 +305,7 @@ def run_pov(cbs, pov, timeout, debug, pov_seed):
         Exception if parsing the POV times out
     """
 
-    thrower = Throw(cbs, pov, timeout, debug, pov_seed)
+    thrower = Throw(cbs, pov, timeout, debug, pov_seed, cores_path)
     return thrower.run()
 
 
@@ -319,6 +321,8 @@ def main():
                         help='Connect timeout')
     parser.add_argument('--debug', required=False, action='store_true',
                         default=False, help='Enable debugging output')
+    parser.add_argument('--cores_path', required=False, action='store_true',
+                        default=False, help='Enables for Linux core storage under the /cores path.')
     parser.add_argument('--negotiate', required=False, action='store_true',
                         default=False, help='The CB seed should be negotiated')
     parser.add_argument('--pov_seed', required=False, type=str,
@@ -332,7 +336,7 @@ def main():
 
     for pov in args.files:
         status = run_pov(args.cbs, pov, args.timeout,
-                         args.debug, args.pov_seed)
+                         args.debug, args.pov_seed, args.cores_path)
     return status != 0
 
 

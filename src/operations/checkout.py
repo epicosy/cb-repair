@@ -40,7 +40,7 @@ class Checkout(Operation):
                 raise NotEmptyDirectory(f"Working directory {self.working_dir} exists and is not empty.")
         else:
             self.status("\tCreating working directory.")
-            self.working_dir.mkdir()
+            self.working_dir.mkdir(parents=True)
 
     def _checkout_files(self):
         self.status(f"\tCopying files to {self.working_dir}.")

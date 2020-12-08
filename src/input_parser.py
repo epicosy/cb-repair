@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser(prog="cb-repair",
 challenge_parser = argparse.ArgumentParser(add_help=False)
 
 challenge_parser.add_argument('-v', '--verbose', help='Verbose output.', action='store_true')
+challenge_parser.add_argument('-ns', '--no_status', help='No status output.', action='store_true')
 challenge_parser.add_argument('--excl', help='Flag for not skipping excluded challenges.', action='store_true')
 challenge_parser.add_argument('-l', '--log_file', type=str, default=None,
                               help='Log file to write the results to.')
@@ -101,3 +102,4 @@ import operations.simple.genpolls
 import operations.simple.manifest
 import operations.simple.patch
 import operations.test
+import operations.test_coverage

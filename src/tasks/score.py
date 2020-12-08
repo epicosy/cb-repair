@@ -12,15 +12,17 @@ class Score(Task):
         super().__init__(**kwargs)
 
     def __call__(self):
-        cwe_scores = pandas.read_pickle(str(self.configs.tools.scores))
-        for challenge in self.challenges:
-            challenge_paths = self.configs.lib_paths.get_challenge_paths(challenge)
-
-            with challenge_paths.info.open(mode="r") as ci:
-                description = ci.read()
-                cwes = cwe_from_info(description)
-                scores = [round(cwe_scores.loc[cwe_scores['cwe_id'] == cwe]['score'].values[0], 3) for cwe in cwes if cwe in list(cwe_scores['cwe_id'])]
-                print(sum(scores)/len(scores))
+        #cwe_scores = pandas.read_pickle(str(self.configs.tools.scores))
+        cwe_scores = pandas.read_csv(str(self.configs.tools.root) + "/scores.csv")
+        print(cwe_scores)
+        for cn in self.challenges:
+            challenge = self.get_challenge(cn)
+            main_cwe = challenge.metadata['main_cwe']
+            cwes = cwe_from_info(main_cwe)
+            scores = [round(cwe_scores.loc[cwe_scores['CWE'] == cwe]['Avg CVSS'].values[0], 3) for cwe in cwes if
+                      cwe in list(cwe_scores['CWE'])]
+            print(main_cwe, scores)
+            #print(sum(scores) / len(scores))
 
     def __str__(self):
         pass

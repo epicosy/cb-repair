@@ -121,8 +121,10 @@ class Throw(object):
         logs: all of the output from the interactions
 
         negotiate: Should the CB negotiation process happen
+
+        cores_path: Should the cores be stored under /cores path
     """
-    def __init__(self, cb_paths, pov, timeout, debug, negotiate):
+    def __init__(self, cb_paths, pov, timeout, debug, negotiate, cores_path):
         self.cb_paths = cb_paths
         self.count = 0
         self.failed = 0
@@ -134,6 +136,7 @@ class Throw(object):
         self.logs = []
         self._read_buffer = ''
         self.negotiate = negotiate
+        self.cores_path = cores_path
 
         self.procs = None
         self.pipe_raw = []
@@ -598,7 +601,7 @@ class Throw(object):
         seed = self.gen_seed()
 
         # Launch all challenges
-        self.procs, watcher = challenge_runner.run(self.cb_paths, self.timeout, seed, self.log)
+        self.procs, watcher = challenge_runner.run(self.cb_paths, self.timeout, seed, self.log, self.cores_path)
 
         # Start a thread to buffer data from the challenges' stdout
         buf_thread = threading.Thread(target=self.buffer_pipe_data, args=(self.procs[0].stdout,))
@@ -1253,7 +1256,7 @@ class Results(object):
             self.full_passed += 1
 
 
-def run_pov(cbs, pov_info, timeout, debug, negotiate, cb_seed, munge_seed):
+def run_pov(cbs, pov_info, timeout, debug, negotiate, cb_seed, munge_seed, cores_path):
     """
     Parse and Throw a POV/Poll
 
@@ -1265,6 +1268,7 @@ def run_pov(cbs, pov_info, timeout, debug, negotiate, cb_seed, munge_seed):
         negotiate: Should the poller negotiate with cb-server
         cb_seed: specify a seed to use in the pools
         munge_seed: should the seed be xored before use
+        cores_path: should the cores be stored under /cores path
 
     Returns:
         The number of passed tests
@@ -1289,7 +1293,7 @@ def run_pov(cbs, pov_info, timeout, debug, negotiate, cb_seed, munge_seed):
     if munge_seed:
         pov.mutate_seed()
 
-    thrower = Throw(cbs, pov, timeout, debug, negotiate)
+    thrower = Throw(cbs, pov, timeout, debug, negotiate, cores_path)
     if error is not None:
         try:
             thrower.log_fail(error)
@@ -1330,6 +1334,8 @@ def main():
                         help='Failures for this test are accepted')
     parser.add_argument('--debug', required=False, action='store_true',
                         default=False, help='Enable debugging output')
+    parser.add_argument('--cores_path', required=False, action='store_true',
+                        default=False, help='Enables for Linux core storage under the /cores path.')
     parser.add_argument('--negotiate', required=False, action='store_true',
                         default=False, help='The CB seed should be negotiated')
     parser.add_argument('--cb_seed', required=False, type=str,
@@ -1364,7 +1370,7 @@ def main():
     try:
         for pov in povs:
             pov_args = (args.cbs, pov, args.timeout, args.debug,
-                        args.negotiate, args.cb_seed, args.munge_seed)
+                        args.negotiate, args.cb_seed, args.munge_seed, args.cores_path)
             if args.concurrent > 1:
                 pool_response = pool.apply_async(run_pov, args=pov_args,
                                                  callback=result_handler.cb_pov_result)

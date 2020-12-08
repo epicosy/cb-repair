@@ -2,7 +2,7 @@
 import subprocess
 
 from sys import stderr
-from typing import IO, Union, AnyStr, Tuple
+from typing import IO, Union, AnyStr, Tuple, Dict
 from pathlib import Path
 
 
@@ -86,6 +86,7 @@ class Command:
                  verbose: bool = False,
                  timeout: int = None,
                  exit_err: bool = False,
+                 env: Dict[AnyStr, AnyStr] = None,
                  file: Union[IO, Path] = None) -> Tuple[Union[str, None], Union[str, None]]:
 
         self.verbose = verbose
@@ -96,6 +97,7 @@ class Command:
                               shell=self.shell,
                               stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE,
+                              env=env,
                               cwd=self.cwd) as proc:
             if timeout:
                 out, err = self._exec_timeout(proc, timeout)

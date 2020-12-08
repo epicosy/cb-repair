@@ -104,20 +104,36 @@ Generate polls for all challenges by running the script ```genpolls.sh```
 ready to be used:
 
 ```
-docker build --force-rm --tag cb-repair:1.0 .
+docker build --force-rm --tag cb-repair .
+```
+
+#### Enabling core dumps 
+On Ubuntu the core dumps are redirected to the standard input of the Apport program, which writes them to the location 
+where the crashing app was launched. When running the benchmark with Docker image, core dumps need to be stored on 
+specific disk location (by default containers can not write to the file system locations which Apport requires). 
+
+The following is the simplest solution to enable core dumps for Docker containers:
+
+Set the cores generation to the folder ```/cores``` in the host with the specific pattern ```core.pid.path```.
+```
+echo '/cores/core.%p.%E' | sudo tee /proc/sys/kernel/core_pattern
+```
+To reset the pattern to the default execute:
+```
+sudo service apport restart
+```
+Use the flag ```cores_path``` to enable the ```/cores``` path when using test command:
+```
+root@docker_container:/cb-repair# src/cb_repair.py test -wd /tmp/BitBlaster/ -cn BitBlaster -tn n1 -v --cores_path
 ```
 
 #### Execute
-The entrypoint for the image is the main script ```cb-repair.py```, with the default command ```catalog```.
-Run the image with ```cb-repair.py```'s commands, for example: 
+The WORKDIR is ```/cb-repair``` and the main script is ```cb-repair.py```, in the folder ```src```.
+Run the container with and query the benchmark with commands, for example: 
 ```
-docker run -it cb-repair:1.0 check --challenges BitBlaster --genpolls --count 10 --timeout 10 -v
+docker run -it cb-repair 
+root@docker_container:/cb-repair# src/cb_repair.py check --challenges BitBlaster --genpolls --count 10 --timeout 10 -v
 ```
----
-Note: After executing a command the associated container is no longer running and the files generated will not be 
-available. Some commands have file dependencies from previous commands. For those you will need to start the associated 
-stopped container with a different command.
----
 
 ## Usage
 

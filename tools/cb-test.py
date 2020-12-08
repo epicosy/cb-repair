@@ -208,7 +208,7 @@ class Runner(object):
     def __init__(self, port, cb_list, xml_list, pcap, wrapper, directory,
                  should_core, failure_ok, should_debug, timeout, log_fh,
                  cb_seed, cb_seed_skip, max_send, concurrent, negotiate_seed,
-                 pov_seed, cb_no_attach):
+                 pov_seed, cb_no_attach, cores_path):
         self.port = port
         self.cb_list = cb_list
         self.cb_no_attach = cb_no_attach
@@ -228,6 +228,7 @@ class Runner(object):
         self.max_send = max_send
         self.negotiate_seed = negotiate_seed
         self.pov_seed = pov_seed
+        self.cores_path = cores_path
 
         if not IS_WINDOWS:
             resource.setrlimit(resource.RLIMIT_CORE, (resource.RLIM_INFINITY,
@@ -390,6 +391,9 @@ class Runner(object):
 
         if self.max_send is not None and self.max_send > 0:
             replay_cmd += ['--max_send', '%d' % self.max_send]
+
+        if self.cores_path:
+            replay_cmd += ['--cores_path']
 
         replay_cmd += xml
 
@@ -708,6 +712,8 @@ def main():
                         help='Maximum duration for each Poll or POV')
     parser.add_argument('--should_core', required=False, action='store_true',
                         default=False, help='This test should cause a core')
+    parser.add_argument('--cores_path', required=False, action='store_true',
+                        default=False, help='Enables for Linux core storage under the /cores path.')
     parser.add_argument('--wrapper', required=False, type=str,
                         help='Executable to wrap each CB for instrumentation')
     parser.add_argument('--failure_ok', required=False, action='store_true',
@@ -777,7 +783,7 @@ def main():
                     args.directory, args.should_core, args.failure_ok,
                     args.debug, args.timeout, log_fh, args.cb_seed,
                     args.cb_seed_skip, args.max_send, args.concurrent,
-                    args.negotiate_seed, args.pov_seed, args.cb_no_attach)
+                    args.negotiate_seed, args.pov_seed, args.cb_no_attach, args.cores_path)
 
     try:
         ret = runner.run()
