@@ -12,57 +12,82 @@ class GenPolls(SimpleOperation):
         super().__init__(**kwargs)
         self.count = count
         assert self.count > 0
+        self.poller = self.challenge.paths.poller
+        self.polls_dir = self.challenge.paths.polls
+        self.out_dir = None
+        self.polls = []
 
     def __call__(self):
         self.status(f"Creating directories for {self.challenge.name} polls.")
 
-        poller = self.challenge.paths.poller
-        polls_dir = self.challenge.paths.polls
-
-        if polls_dir.exists():
+        if self.polls_dir.exists():
             self.status(f"Deleting existing polls for {self.challenge.name}.", bold=True)
-            shutil.rmtree(str(polls_dir))
+            shutil.rmtree(str(self.polls_dir))
 
-        polls_dir.mkdir(parents=True, exist_ok=True)
+        self.polls_dir.mkdir(parents=True, exist_ok=True)
+        self.state_machine()
 
-        for poll_dir in poller.iterdir():
+        if self.output or self.error:
+            return self.output, self.error
+
+        self.copy_polls()
+        return self.output, self.error
+
+    def state_machine(self):
+        # looks for the state machine scripts used for generating polls and runs it
+        # otherwise sets the directory with the greatest number of polls
+
+        for poll_dir in self.poller.iterdir():
             if poll_dir.is_dir():
-                self.out_dir = polls_dir / Path(poll_dir.name)
+                self.out_dir = self.polls_dir / Path(poll_dir.name)
                 state_machine_script = poll_dir / Path("machine.py")
                 state_graph = poll_dir / Path("state-graph.yaml")
 
                 if state_machine_script.exists() and state_graph.exists():
                     self.out_dir.mkdir(parents=True, exist_ok=True)
+
                     cmd_str = f"python -B {self.get_tools().gen_polls} --count {self.count} " \
                               f"--store_seed --depth 1048575 {state_machine_script} {state_graph} {self.out_dir}"
 
-                    out, err = super().__call__(cmd_str=cmd_str,
-                                                msg=f"Generating polls for {self.challenge.name}.\n")
-                    if err:
-                        self.status(err, err=True)
-                        return out, err
+                    super().__call__(cmd_str=cmd_str, msg=f"Generating polls for {self.challenge.name}.\n")
+
+                    if self.error:
+                        self.status(self.error, err=True)
+                    self.output = f"Generated polls for {self.challenge.name}."
+                    self.status(self.output, ok=True)
                     break
-                elif any(poll_dir.iterdir()):
-                    self.status(f"No scripts for generating polls for {self.challenge.name}.", warn=True)
-                    self.status(f"Coping pre-generated polls for {self.challenge.name}.\n", bold=True)
 
-                    try:
-                        self.out_dir.mkdir(parents=True, exist_ok=True)
+                polls = [poll for poll in poll_dir.iterdir() if poll.suffix == ".xml"]
 
-                        polls = [poll for poll in poll_dir.iterdir() if poll.suffix == ".xml"]
-                        polls.sort()
-                        polls = polls[:self.count] if len(polls) > self.count else polls
+                if len(polls) > len(self.polls):
+                    self.polls = polls
 
-                        for poll in polls:
-                            shutil.copy(str(poll), self.out_dir)
+    def copy_polls(self):
+        if self.polls:
+            self.status(f"No scripts for generating polls for {self.challenge.name}.", warn=True)
+            self.status(f"Coping pre-generated polls for {self.challenge.name}.\n", bold=True)
 
-                        break
-                    except Exception as e:
-                        self.status(str(e), err=True)
-                        return None, str(e)
+            try:
+                self.out_dir.mkdir(parents=True, exist_ok=True)
 
-        self.status(f"Generated polls for {self.challenge.name}.", ok=True)
-        return None, None
+                if len(self.polls) < self.count:
+                    self.status(
+                        f"Number of polls available {len(self.polls)} less than the number specified {self.count}",
+                        warn=True)
+
+                self.polls.sort()
+                polls = self.polls[:self.count] if len(self.polls) > self.count else self.polls
+
+                for poll in polls:
+                    shutil.copy(str(poll), self.out_dir)
+                self.status(f"Copied polls for {self.challenge.name}.", ok=True)
+
+            except Exception as e:
+                self.error = str(e)
+                self.status(self.error, err=True)
+        else:
+            err = f"No pre-generated polls found for {self.challenge.name}."
+            self.status(err, err=True)
 
     def __str__(self):
         return super().__str__() + f" -n {self.count}\n"
