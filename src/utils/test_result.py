@@ -37,10 +37,6 @@ class TestResult:
         if 'timed out' in self.result:
             self.code = 3
 
-        elif self.sig > 0:
-            self.code = 5
-            codes_error[self.code] = codes_error[self.code] + str(self.sig)
-
         elif self.polls_failed > 0:
             self.code = 6
             codes_error[self.code] = codes_error[self.code] + str(self.polls_failed)
