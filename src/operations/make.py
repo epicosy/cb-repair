@@ -89,6 +89,8 @@ class Make(Operation):
             script_commands = ""
 
             for fname, _ in {**manifest.source_files, **manifest.vuln_files}.items():
+                if fname.endswith(".h"):
+                    continue
                 compile_command = self.compile_commands[fname]
                 script_commands += f"cd {compile_command.dir};{compile_command.command}\n"
             link_command = lf.read()
