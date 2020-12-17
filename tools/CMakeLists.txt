@@ -59,8 +59,11 @@ else(WIN32)
         -w
         -g3
         -m32
-        -save-temps=obj
     )
+
+    if(DEFINED ENV{SAVETEMPS})
+        add_compile_options(-save-temps=obj)
+    endif()
 
     # Link everything 32-bit (until we have a 64-bit option)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
@@ -99,6 +102,7 @@ function(build path target)
     add_executable(${target} ${cb_all_src})
     add_executable(${target}_patched ${cb_all_src})
 
+
     target_include_directories(${target} PUBLIC ${path}/lib ${path}/src ${path}/include)
     target_include_directories(${target}_patched PUBLIC ${path}/lib ${path}/src ${path}/include)
 
@@ -114,6 +118,7 @@ function(build path target)
 
     target_link_libraries(${target} LINK_PUBLIC cgc)
     target_link_libraries(${target}_patched LINK_PUBLIC cgc)
+
 
     IF(WIN32)
         # Copy required DLLs post-build
@@ -246,21 +251,3 @@ SET(CB_PATH "" CACHE STRING "challenge path")
 file(GLOB cb_path ${CB_PATH})
 get_filename_component(cb_id ${cb_path} NAME)
 add_subdirectory(${cb_path})
-
-# file(GLOB challenge_binaries challenges/*)
-# foreach(cb_path ${challenge_binaries})
-#     if(IS_DIRECTORY ${cb_path} AND EXISTS ${cb_path}/CMakeLists.txt)
-#         # Get filename
-#         get_filename_component(cb_id ${cb_path} NAME)
-
-#         # Skip the challenge if it's in the exclude list
-#         list(FIND cb_exclude ${cb_id} idx)
-#         list(FIND cb_final ${cb_id} idf)
-#         if(${idx} EQUAL -1 AND ${idf} GREATER_EQUAL 0)
-#             message("${cb_id}")
-#             add_subdirectory(${cb_path})
-#         else()
-#             message(STATUS "EXCLUDE: ${cb_id}")
-#         endif()
-#     endif()
-# endforeach()

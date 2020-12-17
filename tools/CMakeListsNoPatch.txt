@@ -59,8 +59,11 @@ else(WIN32)
         -w
         -g3
         -m32
-        -save-temps=obj
     )
+
+    if(DEFINED ENV{SAVETEMPS})
+        add_compile_options(-save-temps=obj)
+    endif()
 
     # Link everything 32-bit (until we have a 64-bit option)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")

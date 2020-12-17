@@ -1,6 +1,6 @@
 from utils.coverage import Coverage
 from input_parser import add_operation
-from .test import Test
+from .test import Test, test_args
 
 
 class TestCoverage(Test):
@@ -31,9 +31,10 @@ class TestCoverage(Test):
                 _, _ = super(Test, self).__call__(cmd_str=f"gcov *.gcno", cmd_cwd=f, exit_err=False)
 
     def __str__(self):
-        cmd_str = " --gcov" if self.gcov else ""
+        # TODO: FIX THIS - super calls str and doesn't find gcov
+        #cmd_str = " --gcov" if self.gcov else ""
 
-        return super().__str__() + cmd_str
+        return super().__str__()
 
 
 def test_coverage_args(input_parser):
@@ -46,6 +47,7 @@ def test_coverage_args(input_parser):
                    help='Rename the suffix to a specific one when outputting files')
     input_parser.add_argument('--gcov', action='store_true',
                               help='Flag for running gcov on gcno files from compilation.')
+    test_args(input_parser)
 
 
 tc_parser = add_operation("test-coverage", TestCoverage,

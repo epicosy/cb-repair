@@ -132,9 +132,12 @@ class SourceFile:
 		vuln = {}
 
 		for snippet in self.snippets:
-
+			print(snippet.start, snippet.change, snippet.end)
 			if snippet.change is not None:
-				vuln[snippet.change+1] = self.lines[snippet.change+1:snippet.end]
+				if snippet.change + 1 == snippet.end:
+					vuln[snippet.change+1] = self.lines[snippet.change:snippet.end]
+				else:
+					vuln[snippet.change+1] = self.lines[snippet.change+1:snippet.end]
 			else:
 				vuln[snippet.end+1] = [' ']
 

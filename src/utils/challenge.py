@@ -13,7 +13,6 @@ from .parse import cwe_from_info
 from .cwe_dictionary import main_cwe, get_name, top_parent
 
 TEST_NAME_FORMAT = r"(^(p|n)\d{1,4}$)"
-TEST_NUM_FORMAT = r"(^\d{1,4}$)"
 
 
 class Challenge:
@@ -54,13 +53,13 @@ class Challenge:
         with vuln_file.open(mode='w') as vf:
             json.dump(new_vuln, vf, indent=2)
 
-    def get_test(self, test: str, only_numbers: bool = False):
-        match = re.search(TEST_NUM_FORMAT, test) if only_numbers else re.search(TEST_NAME_FORMAT, test)
+    def get_test(self, test: str):
+        match = re.search(TEST_NAME_FORMAT, test)
 
         if not match:
             raise IncorrectTestNameFormat(f"Test {test} doesnt match format.")
 
-        is_pov = int(test) > len(self.pos_tests) if only_numbers else (match.group(2) == 'n')
+        is_pov = match.group(2) == 'n'
         # TODO: fix this, working directory should not used it, povs should be previously compiled
         tests = self.neg_tests if is_pov else self.pos_tests
 
@@ -70,23 +69,23 @@ class Challenge:
 
         return Path(tests[test]), is_pov
 
-    def load_pos_tests(self, only_numbers: bool = False):
+    def load_pos_tests(self):
         if self.pos_tests == {}:
             tests = self.paths.get_polls()
             len_tests = len(tests)
             tests.sort()
             # Map cases to tests names where p is for positive test cases
-            tests_id = [str(n) if only_numbers else f"p{n}" for n in range(1, len_tests + 1)]
+            tests_id = [f"p{n}" for n in range(1, len_tests + 1)]
             self.pos_tests = dict(zip(tests_id, tests))
 
-    def load_neg_tests(self, povs_path: Path, only_numbers: bool = False):
+    def load_neg_tests(self, povs_path: Path):
         if self.neg_tests == {}:
             neg_tests = [str(file) for file in povs_path.iterdir() if file.suffix == ".pov" and file.stem not in self.excluded()]
             len_tests = len(neg_tests)
             len_pos = len(self.pos_tests)
             neg_tests.sort()
             # Map cases to tests names where p is for positive test cases
-            tests_id = [str(n + len_pos) if only_numbers else f"n{n}" for n in range(1, len_tests + 1)]
+            tests_id = [f"n{n}" for n in range(1, len_tests + 1)]
             self.neg_tests = dict(zip(tests_id, neg_tests))
 
     def info(self):

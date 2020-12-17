@@ -15,6 +15,7 @@ class Checkout(Operation):
                  **kwargs):
         super().__init__(**kwargs)
         self.no_patch = remove_patches
+#        self.fl_file = self.working_dir / "__cheat.log" if fl_file else None
         self.compile_script = self.working_dir / Path("compile.sh")
 
     def __call__(self):
@@ -28,6 +29,8 @@ class Checkout(Operation):
 
             if self.no_patch:
                 self.challenge.remove_patches(self.source)
+
+#            self.write_fl_file()
             self.status(f"Checked out {self.challenge.name}", ok=True)
             return None, None
         except Exception as e:
@@ -62,12 +65,25 @@ class Checkout(Operation):
             p_dst_cmake_file.rename(Path(p_dst_cmake_file.parent, "CMakeLists.txt"))
 
         # Copy compile.sh script
-        shutil.copy2(src=tools.compile, dst=self.working_dir)
+        # shutil.copy2(src=tools.compile, dst=self.working_dir)
 
+    def write_fl_file(self):
+        if self.fl_file:
+            _, manifest = self.challenge.get_manifest(force=True)
+
+            with self.fl_file.open(mode="w") as flf:
+                for file, vulns in manifest.get_vulns().items():
+                    for start, vuln in vulns.items():
+                        for i, line in enumerate(vuln):
+                            column = line.find(line.strip()) + 1
+                            full_path = self.source / file
+                            loc = f"{full_path} {start+i} {column}"
+                            flf.write(f"{loc} {loc}\n")
 
 def checkout_args(input_parser):
     input_parser.add_argument('-rp', '--remove_patches', action='store_true',
                               help='Remove the patches and respective definitions from the source code.')
+#    input_parser.add_argument('--fl_file', action='store_true', help='File for fault localization info.')
 
 
 co_parser = add_operation("checkout", Checkout, 'Checks out challenge to working directory.')

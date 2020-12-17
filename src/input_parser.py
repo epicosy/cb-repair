@@ -96,6 +96,7 @@ import tasks.clean
 import tasks.stats
 import tasks.init_polls
 import operations.info
+import operations.make
 import operations.compile
 import operations.checkout
 import operations.simple.genpolls

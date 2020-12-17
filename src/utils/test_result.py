@@ -1,14 +1,17 @@
 import re
 
 pid_pattern = r"^# pid (\d{4,7})$"
+polls_failed_pattern = r"^# polls failed: (\d{1,4})$"
 pid_debug_pattern = r"^# \[DEBUG\] pid: (\d{1,7}), sig: (\d{1,2})$"
-
+## total tests failed: 1
 codes_error = {
     0: None,
     1: "WARNING: there was an error running a test",
     2: "WARNING: pov did not negotiate",
     3: "WARNING: test(s) timed out",
-    4: "WARNING: Unknown behavior"
+    4: "WARNING: Unknown behavior",
+    5: "WARNING: process received signal ",
+    6: "WARNING: polls failed"
 }
 
 
@@ -21,6 +24,8 @@ class TestResult:
         self.code = None
         self.error = None
         self.pids = []
+        self.sig = 0
+        self.polls_failed = 0
         self._get_pids()
         self()
 
@@ -31,6 +36,14 @@ class TestResult:
 
         if 'timed out' in self.result:
             self.code = 3
+
+        elif self.sig > 0:
+            self.code = 5
+            codes_error[self.code] = codes_error[self.code] + str(self.sig)
+
+        elif self.polls_failed > 0:
+            self.code = 6
+            codes_error[self.code] = codes_error[self.code] + str(self.polls_failed)
 
         elif 'not ok - pov did not negotiate' in self.result:
             self.code = 2
@@ -57,7 +70,13 @@ class TestResult:
             match = re.match(pid_debug_pattern, line)
             if match:
                 self.pids.append(match.group(1))
+                self.sig = int(match.group(2))
             else:
                 match = re.match(pid_pattern, line)
                 if match:
                     self.pids.append(match.group(1))
+
+            match = re.match(polls_failed_pattern, line)
+
+            if match:
+                self.polls_failed = int(match.group(1))

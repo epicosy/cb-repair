@@ -29,8 +29,8 @@ class Test(Operation):
         self.only_numbers = only_numbers
         self.out_file = Path(out_file) if out_file else out_file
         self.test_timeout = timeout if timeout else int(self.configs.tests_timeout)
-        self.challenge.load_pos_tests(only_numbers)
-        self.challenge.load_neg_tests(self.build, only_numbers)
+        self.challenge.load_pos_tests()
+        self.challenge.load_neg_tests(self.build)
         self.stats = self.working_dir / Path("stats", "tests.txt")
         self.stats.parent.mkdir(parents=True, exist_ok=True)
         self.cores_path = cores_path
@@ -38,7 +38,7 @@ class Test(Operation):
         self.results = {}
 
         if tests:
-            self.tests = tests
+            self.tests = self.map_only_number_ids(tests) if self.only_numbers else tests
         elif pos_tests:
             self.tests = self.challenge.pos_tests.keys()
         elif neg_tests:
@@ -61,10 +61,28 @@ class Test(Operation):
             return self.results
         exit(0)
 
+    def map_only_number_ids(self, ids: List[AnyStr]):
+        pos_tests = {int(t_id.replace('p', '')): t_id for t_id in self.challenge.pos_tests.keys()}
+        count_pos_tests = len(pos_tests)
+        neg_tests = {int(t_id.replace('n', '')) + count_pos_tests: t_id for t_id in self.challenge.neg_tests.keys()}
+        tests = []
+
+        for test in ids:
+            int_test = int(test)
+            if int_test not in pos_tests and int_test not in neg_tests:
+                self.status(f"Test {test} could not be mapped with available tests.", err=True)
+            else:
+                tests.append(pos_tests[int_test] if int_test in pos_tests else neg_tests[int_test])
+
+        if not tests:
+            self.status(f"Input tests could not be mapped with available tests.", err=True)
+
+        return tests
+
     def _set_test(self, test: str):
         try:
             self.current_test = test
-            self.test_file, self.is_pov = self.challenge.get_test(test, self.only_numbers)
+            self.test_file, self.is_pov = self.challenge.get_test(test)
         except Exception as e:
             self.error = str(e)
             self.status(self.error, err=True)
@@ -93,10 +111,13 @@ class Test(Operation):
             # Invert negative test's result
             self.results[self.current_test].passed ^= 1
 
-        if self.print_ids:
-            self.status(self.current_test, nan=True)
+        if self.print_ids and self.results[self.current_test].passed:
+            if self.only_numbers:
+                print(self.current_test[1:])
+            else:
+                print(self.current_test)
         if self.print_class:
-            self.status("PASS" if self.results[self.current_test].passed else 'FAIL', nan=True)
+            print("PASS" if self.results[self.current_test].passed else 'FAIL')
 
         if self.out_file is not None:
             self.write_result()
@@ -121,10 +142,9 @@ class Test(Operation):
         if self.port is not None:
             cb_cmd += ['--port', self.port]
 
-        if self.cores_path:
-            cb_cmd += ['--cores_path']
-
         if self.is_pov:
+            if self.cores_path:
+                cb_cmd += ['--cores_path']
             cb_cmd += ['--should_core']
             # double check
             cb_cmd += ['--pov_seed', binascii.b2a_hex(os.urandom(48))]
