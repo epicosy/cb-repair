@@ -75,23 +75,22 @@ class SourceFile:
 		for snippet in self.snippets:
 			if snippet.change is not None:
 				patch_size = snippet.change - (snippet.start + 1)
-				aux_lines[snippet.change] = None
-				snippet.change -= (patch_size + shift + 1)
+				aux_lines[snippet.change] = "\n"
+				# snippet.change -= (patch_size + shift + 1)
+				snippet.change += 1
 			else:
 				patch_size = snippet.end - (snippet.start + 1)
 
-			if patch_size != 0:
-				aux_lines[snippet.start] = line_indentation(aux_lines[snippet.start+1])
-			else:
-				aux_lines[snippet.start] = None
-
-			aux_lines[snippet.start+1: snippet.start+1+patch_size] = [None] * patch_size
-			aux_lines[snippet.end] = None
-			snippet.start -= shift
-			snippet.end -= (shift + patch_size + 1)
+			aux_lines[snippet.start: snippet.start+1+patch_size] = ["\n"] * (patch_size + 1)
+			snippet.start += 1
+			aux_lines[snippet.end] = "\n"
+			#snippet.start -= shift
+			#snippet.end -= (shift + patch_size + 1)
+			snippet.end -= 1
 			shift += patch_size
 
-		self.lines = list(filter(None, aux_lines))
+		#self.lines = list(filter(None, aux_lines))
+		self.lines = aux_lines
 		self.removed = True
 
 		with self.path.open(mode="w") as new_file:
@@ -132,10 +131,9 @@ class SourceFile:
 		vuln = {}
 
 		for snippet in self.snippets:
-			print(snippet.start, snippet.change, snippet.end)
 			if snippet.change is not None:
-				if snippet.change + 1 == snippet.end:
-					vuln[snippet.change+1] = self.lines[snippet.change:snippet.end]
+				if snippet.change == snippet.end:
+					vuln[snippet.change+1] = self.lines[snippet.change:snippet.end+1]
 				else:
 					vuln[snippet.change+1] = self.lines[snippet.change+1:snippet.end]
 			else:
