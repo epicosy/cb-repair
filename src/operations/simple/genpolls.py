@@ -50,7 +50,7 @@ class GenPolls(SimpleOperation):
                               f"--store_seed --depth 1048575 {state_machine_script} {state_graph} {self.out_dir}"
 
                     super().__call__(cmd_str=cmd_str, msg=f"Generating polls for {self.challenge.name}.\n",
-                                     cmd_cwd=poll_dir)
+                                     cmd_cwd=str(self.challenge.paths.source))
 
                     if self.error:
                         self.status(self.error, err=True)
