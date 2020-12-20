@@ -11,7 +11,7 @@ codes_error = {
     3: "WARNING: test(s) timed out",
     4: "WARNING: Unknown behavior",
     5: "WARNING: process received signal ",
-    6: "WARNING: polls failed"
+    6: "WARNING: polls failed "
 }
 
 
@@ -40,6 +40,10 @@ class TestResult:
         elif self.polls_failed > 0:
             self.code = 6
             codes_error[self.code] = codes_error[self.code] + str(self.polls_failed)
+
+        elif self.is_pov and not self.is_sig():
+            self.code = 5
+            codes_error[self.code] = codes_error[self.code] + str(self.sig)
 
         elif 'not ok - pov did not negotiate' in self.result:
             self.code = 2
@@ -76,3 +80,7 @@ class TestResult:
 
             if match:
                 self.polls_failed = int(match.group(1))
+
+    def is_sig(self):
+        # checks for the signals SIGSEGV, SIGILL, or SIGBUS
+        return self.sig in [4, 7, 11]
