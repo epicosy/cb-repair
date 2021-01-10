@@ -27,10 +27,10 @@ else:
 
         metadata[challenge_name] = {'excluded': False, "excluded_povs": [], 'lines': manifest.total_lines,
                                     'vuln_lines': manifest.vuln_lines, 'patch_lines': manifest.patch_lines,
-                                    'main_cwe': main_cwe}
+                                    'main_cwe': main_cwe, 'durations': {}}
         progress(i, challenges_count, challenge_name)
 
-    with configs.metadata.open(mode='w') as mf:
-        json.dump(metadata, mf, indent=2)
+        with configs.metadata.open(mode='w') as mf:
+            json.dump(metadata, mf, indent=2)
 
     TermPrint.print_pass('Benchmark initialized')

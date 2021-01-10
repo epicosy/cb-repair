@@ -19,10 +19,11 @@ class Configuration:
     plots: Path
     metadata: Path
     tests_timeout: str  # In seconds
+    margin: int     # In seconds
 
     def validate(self):
         return self.src.exists() and self.plots.exists() and self.lib_paths.validate() and self.metadata.exists() \
-               and self.tools.validate() and int(self.tests_timeout) > 0
+               and self.tools.validate() and int(self.tests_timeout) > 0 and int(self.margin) > 0
 
 
 lib_path = Path(ROOT_DIR) / Path("lib")
@@ -46,4 +47,5 @@ configuration = Configuration(root=Path(ROOT_DIR),
                               tools=tools,
                               plots=Path(ROOT_DIR) / Path('plots'),
                               metadata=metadata,
-                              tests_timeout="10")
+                              tests_timeout="60",
+                              margin=5)

@@ -63,7 +63,7 @@ class Plotter:
                   binwidth: float = 1):
         fig, ax = plt.subplots(figsize=(20, 10))
         bins = np.arange(min(data), max(data) + binwidth, binwidth)
-        n, bins, patches = ax.hist(data, bins=bins, facecolor='#2ab0ff', edgecolor='#e0e0e0', linewidth=1, alpha=0.8)
+        n, bins, patches = ax.hist(data, bins=bins, facecolor='#2ab0ff', edgecolor='#e0e0e0', rwidth=1, linewidth=1, alpha=0.8, align='left')
         colors = color_map(len(patches), cmap)
         # Good old loop. Choose colormap of your taste
         for i, color in enumerate(colors):

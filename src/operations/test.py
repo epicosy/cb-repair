@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import binascii
+import time
 
 from os import listdir
 from pathlib import Path
@@ -53,8 +54,11 @@ class Test(Operation):
 
         for test in self.tests:
             self._set_test(test)
+            start = time.time()
             self._run_test()
-            self._process_result()
+            end = time.time()
+            difference = int(end - start)
+            self._process_result(duration=difference)
             self._process_flags()
 
         if save:
@@ -94,8 +98,8 @@ class Test(Operation):
         if self.error:
             self.status(self.error, err=True)
 
-    def _process_result(self, total: int = 1):
-        self.results[self.current_test] = TestResult(self.output, total, self.is_pov)
+    def _process_result(self, total: int = 1, duration: int = 0):
+        self.results[self.current_test] = TestResult(self.output, total, self.is_pov, duration)
         error = self.results[self.current_test].error
 
         if error:
@@ -134,9 +138,11 @@ class Test(Operation):
             bin_names = ['{}_{}'.format(self.challenge.name, i + 1) for i in range(len(cb_dirs))]
         else:
             bin_names = [self.challenge.name]
-
+        duration = self.get_test_duration()
+        # use timeout or duration from sanity check
+        timeout = str(self.test_timeout) if duration is None else str(duration + self.configs.margin)
         cb_cmd = [str(self.get_tools().test), '--directory', str(self.build), '--xml', str(self.test_file),
-                  '--concurrent', '1', '--debug', '--timeout', str(self.test_timeout), '--negotiate_seed',
+                  '--concurrent', '1', '--debug', '--timeout', timeout, '--negotiate_seed',
                   '--cb'] + bin_names
 
         if self.port is not None:
@@ -151,6 +157,11 @@ class Test(Operation):
 
         return cb_cmd
 
+    def get_test_duration(self):
+        if self.current_test in self.global_metadata[self.challenge.name]["durations"]:
+            return self.global_metadata[self.challenge.name]["durations"][self.current_test]
+        return None
+
     def write_result(self):
         out_file = self.add_prefix(self.out_file)
         if not self.write_fail and not self.results[self.current_test].passed:
@@ -159,8 +170,9 @@ class Test(Operation):
             of.write(f"{self.current_test} {self.results[self.current_test].passed}\n")
 
     def outcome(self):
-        with self.stats.open(mode="a") as s:
-            s.write(f"{self.current_test} {self.results[self.current_test].passed} {self.results[self.current_test].code}\n")
+        with self.stats.open(mode="a") as s, (self.stats.parent / "track.txt").open(mode="r") as tf:
+            cid = tf.read().split()[0]
+            s.write(f"{self.current_test} {self.results[self.current_test].passed} {self.results[self.current_test].code} {cid}\n")
 
     def __str__(self):
         test_cmd_str = " --tests " + ' '.join(self.tests)

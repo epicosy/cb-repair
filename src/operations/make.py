@@ -3,6 +3,8 @@
 from json import loads
 from os import environ
 from pathlib import Path
+from binascii import b2a_hex
+from os import urandom
 
 from utils.structs import CompileCommand
 from core.operation import Operation
@@ -26,6 +28,11 @@ class Make(Operation):
         self.stats = self.working_dir / Path("stats", "compile.txt")
         self.stats.parent.mkdir(parents=True, exist_ok=True)
         self.link_file = self.cmake / Path("link.txt")
+        self.cid = b2a_hex(urandom(4))
+
+        with (self.stats.parent / "track.txt").open(mode="w") as tf:
+            tf.write(self.cid.decode())
+
         #self.log(str(self))
 
     def _set_cmake_opts(self):
@@ -122,7 +129,7 @@ class Make(Operation):
 
     def outcome(self, result: int, msg: str = None):
         with self.stats.open(mode="a") as s:
-            s.write(f"{result}\n")
+            s.write(f"{result} {self.cid.decode()}\n")
 
             if result == 1:
                 self.status(msg, err=True)

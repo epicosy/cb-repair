@@ -17,7 +17,8 @@ from operations.simple.genpolls import GenPolls
 
 
 class Check(Task):
-    def __init__(self, timeout: int, genpolls: bool, sanity: bool, suppress_assertion:bool, count: int, **kwargs):
+    def __init__(self, timeout: int, genpolls: bool, sanity: bool, suppress_assertion: bool, count: int,
+                 keep: bool = False, **kwargs):
         super().__init__(**kwargs)
         self.current = None
         self.working_dir = None
@@ -27,6 +28,7 @@ class Check(Task):
         self.count = count
         self.timeout = timeout
         self.ui = CheckUI()
+        self.keep = keep
 
     def __call__(self):
         if not self.challenges:
@@ -40,19 +42,20 @@ class Check(Task):
                 self.current = challenge
                 self.ui(challenge)
                 self.working_dir = f"/tmp/check_{self.current}"
+                self.log_file = Path(self.working_dir, "check.log")
                 self.check()
                 os.system('clear')
                 self.ui.print()
+                self.save_metadata(self.global_metadata)
         except Exception as e:
-            self.dispose()
+            if not self.keep:
+                self.dispose()
             self.log_file = Path("check_exception.log")
             self.status(traceback.format_exc(), err=True)
-        finally:
-            if self.sanity:
-                self.save_metadata(self.global_metadata)
 
     def dispose(self):
         os.system(f"rm -rf {self.working_dir}")
+        self.log_file = None
         self.status("Deleted temporary files generated", bold=True)
         # os.system('clear')
 
@@ -70,7 +73,8 @@ class Check(Task):
         else:
             self.ui.passed()
 
-        self.dispose()
+        if not self.keep:
+            self.dispose()
 
     def check_genpolls(self):
         genpolls = GenPolls(name="genpolls", configs=self.configs, challenge=self.current, count=self.count)
@@ -104,7 +108,8 @@ class Check(Task):
 
     def check_compile(self):
         compile_cmd = compile.Compile(name="compile", configs=self.configs, working_directory=self.working_dir,
-                                      challenge=self.current, inst_files=None, fix_files=None, exit_err=False)
+                                      challenge=self.current, inst_files=None, fix_files=None, exit_err=False,
+                                      log_file=self.log_file)
         compile_cmd.verbose = True
         out, err = compile_cmd()
 
@@ -118,14 +123,16 @@ class Check(Task):
 
     def check_test(self):
         self.status(f"Testing with timeout {self.timeout}.")
-        test_cmd = test.Test(name="test", configs=self.configs, working_directory=self.working_dir, cores_path=True,
-                             challenge=self.current, write_fail=True, timeout=self.timeout)
+        test_cmd = test.Test(name="test", configs=self.configs, working_directory=self.working_dir,
+                             challenge=self.current, timeout=self.timeout, log_file=self.log_file, neg_pov=False)
 
         test_outcome = test_cmd(save=True)
         neg_fails, passing, fails = [], [], []
 
         for test_name, test_result in test_outcome.items():
-            if not test_result.passed:
+            self.global_metadata[self.current]["durations"][test_name] = test_result.duration
+
+            if test_result.passed == 0 and test_result.code != 0:
                 fails.append(f"{test_name} {test_result.passed}")
                 if test_name.startswith('n'):
                     neg_fails.append(test_name)
@@ -176,6 +183,7 @@ def check_args(input_parser):
     input_parser.add_argument('--timeout', type=int, default=60, help='The timeout for tests in seconds.')
     input_parser.add_argument('--count', type=int, default=10, help='Number of polls to generate.')
     input_parser.add_argument('--genpolls', action='store_true', help='Flag for enabling polls generation.')
+    input_parser.add_argument('--keep', action='store_true', help='Keeps the files generated.')
     input_parser.add_argument('-sa', '--suppress_assertion', action='store_true',
                               help='Flag for suppressing assertion errors during polls generation.')
     input_parser.add_argument('--sanity', action='store_true',
