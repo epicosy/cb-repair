@@ -18,7 +18,7 @@ else:
         challenge_paths = configs.lib_paths.get_challenge_paths(challenge_name)
         challenge = Challenge(challenge_paths, {})
         main_cwe = challenge.cwe_type()
-        _, manifest = challenge.get_manifest()
+        _, manifest = challenge.get_manifest(force=True)
         patch_file = challenge.paths.source / Path('patch')
 
         with patch_file.open(mode="w") as pf:

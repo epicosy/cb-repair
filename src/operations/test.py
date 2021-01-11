@@ -126,8 +126,12 @@ class Test(Operation):
         if self.out_file is not None:
             self.write_result()
 
-        if self.exit_fail and not self.results[self.current_test].passed:
-            exit(1)
+        if self.exit_fail:
+            if self.results[self.current_test].passed == 0:
+                if not self.is_pov:
+                    exit(1)
+                elif not self.neg_pov:
+                    exit(1)
 
     def _cmd_str(self):
         # Collect the names of binaries to be tested
