@@ -11,7 +11,7 @@ from utils.metadata.manifest import map_instrumented_files
 
 class Compile(Make):
     def __init__(self, inst_files: List[str] = None, fix_files: List[str] = None, cpp_files: bool = False,
-                 coverage: bool = False, link: bool = False, **kwargs):
+                 coverage: bool = False, link: bool = False, backup: str = None , **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()
         self.inst_files = inst_files
@@ -19,6 +19,7 @@ class Compile(Make):
         self.cpp_files = cpp_files
         self.coverage = coverage
         self.link = link
+        self.backup = Path(backup) if backup else None
 
         if self.coverage:
             environ["COVERAGE"] = "True"
@@ -36,6 +37,10 @@ class Compile(Make):
 
     def __call__(self):
         try:
+            # Backups manifest files
+            if self.backup:
+                self._backup_manifest_files()
+
             if self.link:
                 self.status(f"Linking into executable {self.challenge.name}.")
                 self.link_executable()
@@ -64,6 +69,21 @@ class Compile(Make):
                 del environ['COVERAGE']
         self.status(f"Compiled {self.challenge.name}.", ok=True)
         return None, None
+
+    def _backup_manifest_files(self):
+        manifest_file, _ = self.challenge.get_manifest(source_path=self.source)
+        with manifest_file.open(mode="r") as mf:
+            files = mf.readlines()
+            for file in files:
+                file_path = Path(file)
+                bckup_path = self.backup / file_path.parent
+                
+                if not bckup_path.exists():
+                    bckup_path.mkdir(parents=True, exist_ok=True)
+
+                bckup_file = bckup_path / f"{file_path.stem}_{self.cid.decode()}{file_path.suffix}"
+                super(Make, self).__call__(cmd_str=f"cp {file} {bckup_file}", msg=f"Backup of manifest file {file} to {self.backup}.\n",
+                                   cmd_cwd=str(self.source))
 
     def _make(self):
         super().__call__()
@@ -143,6 +163,7 @@ def compile_args(input_parser):
                               help='Flag to indicate that instrumented files are preprocessed.')
     input_parser.add_argument('-ffs', '--fix_files', nargs='+', default=None,
                               help='The file with changes applied by the repair tool.')
+    input_parser.add_argument('-B', '--backup', type=str, help='Backups the manifest file to a given path.', default=None)
     make_args(input_parser)
 
 

@@ -81,7 +81,7 @@ class Make(Operation):
             self.load_commands()
 
             if self.script:
-                self.write_script()
+                print(self.write_script())
         finally:
             if self.gcc:
                 del environ["CC"]
@@ -114,7 +114,7 @@ class Make(Operation):
                 link_command = link_command.replace('/usr/bin/', '')
             #script_commands += f"cd {self.build};{link_command.strip()}\n"
             script_commands = f"cd {self.build}\nmake\n"
-            csf.write(f"#!/bin/bash\npython3 /home/fanl/Workspace/SecureThemAll/benchmark/cb-repair/src/cb_repair.py compile -wd {self.working_dir} -cn {self.challenge.name} -B {self.working_dir.parent / 'patches'} --gcc --exit_err -l {self.working_dir}/clog.txt")
+            csf.write(f"#!/bin/bash\npython3 /home/fanl/Workspace/SecureThemAll/benchmark/cb-repair/src/cb_repair.py compile -wd {self.working_dir} -cn {self.challenge.name} --gcc --exit_err -l {self.working_dir}/clog.txt")
             msf.write(f".PHONY: do_script\n\ndo_script:\n\t./build.sh\n\nprerequisites: do_script\n\ntarget: prerequisites\n")
         compile_script_file.chmod(0o777)
 

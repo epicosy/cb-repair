@@ -10,10 +10,17 @@ class Operation(SimpleOperation):
                  working_directory: str,
                  prefix: str = None,
                  **kwargs):
-        super().__init__(**kwargs)
         self.working_dir = Path(working_directory)
-        self.source = self.working_dir / Path(self.challenge.name)
         self.prefix = Path(prefix) if prefix else prefix
+        self.init_file = self.working_dir / ".init"
+        
+        if self.init_file.exists():
+        	with self.init_file.open(mode="r") as f:
+        		challenge = f.read().strip()
+        		kwargs["challenge"] = challenge
+       	
+       	super().__init__(**kwargs)
+       	self.source = self.working_dir / Path(self.challenge.name)
 
     def add_prefix(self, file: Path):
         if self.prefix:

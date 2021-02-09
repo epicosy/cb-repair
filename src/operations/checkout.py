@@ -31,6 +31,9 @@ class Checkout(Operation):
                 self.challenge.remove_patches(self.source)
 
 #            self.write_fl_file()
+            with self.init_file.open(mode="w") as f:
+                f.write(self.challenge.name)
+
             self.status(f"Checked out {self.challenge.name}", ok=True)
             return None, None
         except Exception as e:
