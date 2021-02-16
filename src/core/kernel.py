@@ -23,7 +23,7 @@ class Kernel:
         self.configs = configs
         self.verbose = verbose
         self.no_status = no_status
-        self.env = None
+        self.env = environ
         self.excl = excl
         self.log_file = Path(log_file) if log_file else log_file
         self.output, self.error = None, None

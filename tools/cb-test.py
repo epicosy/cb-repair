@@ -42,6 +42,7 @@ import threading
 import Queue
 import ansi_x931_aes128
 
+from os import environ
 from common import IS_WINDOWS
 if not IS_WINDOWS:
     import resource
@@ -73,7 +74,7 @@ class Background(object):
             self.cmd = command_name
         # print("RUNNING : " + cmd[0])
         self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                                        stderr=subprocess.PIPE)
+                                        stderr=subprocess.PIPE, env=environ)
         self.threads = []
         self.log_queue = Queue.Queue()
         self.log_handle(self.process.stdout, False)
@@ -266,8 +267,9 @@ class Runner(object):
             None
         """
         logging.debug('launching %s', ' '.join(cmd))
+
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
+                                   stderr=subprocess.PIPE, env=environ)
         logging.debug('pid %d', process.pid)
 
         stdout, stderr = process.communicate()

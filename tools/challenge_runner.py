@@ -8,7 +8,8 @@ from time import time, sleep
 import threading
 
 from common import IS_DARWIN, IS_LINUX, IS_WINDOWS, try_delete
-
+from os import environ
+cb_env = environ
 # Path to crash dumps in windows
 if IS_WINDOWS:
     # NOTE: These may need to be changed depending on your setup
@@ -31,7 +32,7 @@ def run(challenges, timeout, seed, logfunc, cores_path):
     Returns:
         (list): all processes that were started
     """
-    cb_env = {'seed': seed}  # Environment variables for all challenges
+    cb_env['seed'] = seed  # Environment variables for all challenges
 
     # This is the first fd after all of the challenges
     last_fd = 2 * len(challenges) + 3

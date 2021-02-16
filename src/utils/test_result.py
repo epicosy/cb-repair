@@ -56,6 +56,12 @@ class TestResult:
             self.total = int(self.result.split('TOTAL TESTS: ')[1].split('\n')[0])
             self.passed = int(self.result.split('TOTAL PASSED: ')[1].split('\n')[0])
 
+            if not self.is_pov:
+                if self.is_sig() and self.passed:
+                    self.passed = 0
+                    self.code = 5
+                    codes_error[self.code] = codes_error[self.code] + str(self.sig) + "\n"
+
             if self.is_pov:
                 self.passed ^= 1
 

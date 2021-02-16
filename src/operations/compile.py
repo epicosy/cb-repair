@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from os import environ
 from pathlib import Path
 from typing import List
 
@@ -22,9 +21,7 @@ class Compile(Make):
         self.backup = Path(backup) if backup else None
 
         if self.coverage:
-            environ["COVERAGE"] = "True"
-
-        self.set_env()
+            self.env["COVERAGE"] = "True"
 
         if self.fixes and not isinstance(self.fixes, list):
             self.fixes = [self.fixes]
@@ -66,7 +63,7 @@ class Compile(Make):
                 self._build()
         finally:
             if self.coverage:
-                del environ['COVERAGE']
+                del self.env['COVERAGE']
         self.status(f"Compiled {self.challenge.name}.", ok=True)
         return None, None
 
