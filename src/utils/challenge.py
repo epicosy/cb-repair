@@ -23,9 +23,6 @@ class Challenge:
         self.pos_tests = {}
         self.neg_tests = {}
 
-    def excluded(self):
-        return self.metadata['excluded_povs']
-
     def get_manifest(self, source_path: Path = None, force: bool = False):
         path = source_path if source_path else self.paths.source
         manifest_file = path / Path('manifest')
@@ -80,7 +77,7 @@ class Challenge:
 
     def load_neg_tests(self, povs_path: Path):
         if self.neg_tests == {}:
-            neg_tests = [str(file) for file in povs_path.iterdir() if file.suffix == ".pov" and file.stem not in self.excluded()]
+            neg_tests = [str(file) for file in povs_path.iterdir() if file.suffix == ".pov"]
             len_tests = len(neg_tests)
             len_pos = len(self.pos_tests)
             neg_tests.sort()

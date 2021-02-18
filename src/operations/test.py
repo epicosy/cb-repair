@@ -18,7 +18,7 @@ class Test(Operation):
                  tests: List[AnyStr] = None, out_file: str = None, port: str = None, pos_tests: bool = False,
                  neg_tests: bool = False, exit_fail: bool = False, write_fail: bool = False, neg_pov: bool = True,
                  timeout: int = None, print_ids: bool = False, print_class: bool = False, only_numbers: bool = False,
-                 cores_path: bool = False, **kwargs):
+                 update: bool = False, **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()
         self.port = port
@@ -34,9 +34,10 @@ class Test(Operation):
         self.challenge.load_neg_tests(self.build)
         self.stats = self.working_dir / Path("stats", "tests.txt")
         self.stats.parent.mkdir(parents=True, exist_ok=True)
-        self.cores_path = cores_path
         self.process_manager = ProcessManager(process_name=self.challenge.name)
         self.results = {}
+        self.update = update
+        self.exec_time = 0
 
         if tests:
             self.tests = self.map_only_number_ids(tests) if self.only_numbers else tests
@@ -54,11 +55,12 @@ class Test(Operation):
 
         for test in self.tests:
             self._set_test(test)
-            start = time.time()
             self._run_test()
-            end = time.time()
-            difference = int(end - start)
-            self._process_result(duration=difference)
+            self._process_result()
+
+            if self.update:
+                self._update()
+
             self._process_flags()
 
         if save:
@@ -93,22 +95,47 @@ class Test(Operation):
             exit(1)
 
     def _run_test(self):
+        self.exec_time = time.time()
+
         super().__call__(cmd_str=self._cmd_str(), cmd_cwd=str(self.get_tools().root), timeout=self.test_timeout,
                          msg=f"Testing {self.challenge.name} on {self.test_file.name}\n", exit_err=False)
+
+        self.exec_time = time.time() - self.exec_time
+
         if self.error:
             self.status(self.error, err=True)
 
-    def _process_result(self, total: int = 1, duration: int = 0):
-        self.results[self.current_test] = TestResult(self.output, total, self.is_pov, duration)
+    def _process_result(self, total: int = 1):
+        self.results[self.current_test] = TestResult(self.output, total, self.is_pov)
         error = self.results[self.current_test].error
+        sig = self.results[self.current_test].sig
 
-        if error:
+        if error and sig != 11:
             self.status(error, err=True)
             self.status(f"Killing {self.challenge.name} process.", bold=True)
             self.process_manager.kill(pids=self.results[self.current_test].pids)
-            self.status(f"Killed processes {self.process_manager.pids}.", bold=True)
+
+            if self.process_manager.pids:
+                self.status(f"Killed processes {self.process_manager.pids}.", bold=True)
 
         self.outcome()
+
+    def _update(self):
+        challenge_metadata = self.global_metadata[self.challenge.name]['sanity']
+
+        challenge_metadata[self.current_test] = {
+            'outcome': self.results[self.current_test].passed,
+            'duration': int(self.exec_time)
+        }
+
+        if self.results[self.current_test].error:
+            challenge_metadata[self.current_test]['error'] = self.results[self.current_test].code
+
+        if self.results[self.current_test].sig != 0 and not self.is_pov:
+            challenge_metadata[self.current_test]['signal'] = self.results[self.current_test].sig
+
+        self.save_metadata()
+        #self.global_metadata[self.challenge.name]['sanity'] = challenge_metadata
 
     def _process_flags(self):
         if self.is_pov and self.neg_pov:
@@ -153,17 +180,18 @@ class Test(Operation):
             cb_cmd += ['--port', self.port]
 
         if self.is_pov:
-            if self.cores_path:
-                cb_cmd += ['--cores_path']
-            cb_cmd += ['--should_core']
+            cb_cmd += ['--cores_path', '--should_core']
             # double check
             cb_cmd += ['--pov_seed', binascii.b2a_hex(os.urandom(48))]
 
         return cb_cmd
 
     def get_test_duration(self):
-        if self.current_test in self.global_metadata[self.challenge.name]["durations"]:
-            return self.global_metadata[self.challenge.name]["durations"][self.current_test]
+        challenge_metadata = self.global_metadata[self.challenge.name]['sanity']
+
+        if self.current_test in challenge_metadata:
+            return challenge_metadata[self.current_test]['duration']
+
         return None
 
     def write_result(self):
@@ -205,8 +233,6 @@ def test_args(input_parser):
     p.add_argument('-P', '--print_class', action='store_true', help='Flag for printing testcases outcome as PASS/FAIL.')
 
     input_parser.add_argument('-of', '--out_file', type=str, help='The file where tests results are written to.')
-    input_parser.add_argument('--cores_path', action='store_true',
-                              help='Enables for Linux core storage under the /cores path.')
     input_parser.add_argument('-on', '--only_numbers', action='store_true',
                               help='Testcase ids are only numbers. Negative tests are counter after the positive.')
     input_parser.add_argument('-T', '--timeout', type=int, help='Timeout for the tests.', required=False)
@@ -216,6 +242,7 @@ def test_args(input_parser):
                               help='Flag for reversing the passed result if is a negative test.')
     input_parser.add_argument('-ef', '--exit_fail', action='store_true',
                               help='Flag that makes program exit with error when a test fails.')
+    input_parser.add_argument('--update', action='store_true', help='Updates metadata with tests execution results.')
     input_parser.add_argument('-pn', '--port', type=str, default=None,
                               help='The TCP port used for testing the CB. \
                                If PORT is not provided, a random port will be used.')

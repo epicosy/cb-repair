@@ -90,7 +90,7 @@ def run(kernel: Kernel, **kwargs):
 
 
 import tasks.catalog
-import tasks.check
+import tasks.sanity
 import tasks.score
 import tasks.clean
 import tasks.stats

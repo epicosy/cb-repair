@@ -7,6 +7,14 @@ from typing import List, AnyStr, Tuple
 
 plt.style.use('seaborn')
 
+medium_font = {'family': 'serif',
+              'name': 'Helvetica',
+              'size': 14}
+
+large_font = {'family': 'serif',
+              'name': 'Helvetica',
+              'weight': 'bold',
+              'size': 16}
 
 def color_map(num: int, cmap: str):
     cm = plt.get_cmap(cmap)
@@ -53,9 +61,9 @@ class Plotter:
             connectionstyle = "angle,angleA=0,angleB={}".format(ang)
             kw["arrowprops"].update({"connectionstyle": connectionstyle})
             ax.annotate(labels[i], xy=(x, y), xytext=(1.15 * np.sign(x), 1.15 * y), rotation_mode="anchor",
-                        horizontalalignment=horizontalalignment, **kw, fontsize=12)
+                        horizontalalignment=horizontalalignment, **kw, fontsize=14)
 
-        ax.set_title("Benchmark's CWEs Composition")
+        ax.set_title("Benchmark's CWEs Composition", )
         self.save(filename)
 
     # source: https://medium.com/@arseniytyurin/how-to-make-your-histogram-shine-69e432be39ca
@@ -71,12 +79,16 @@ class Plotter:
             height = patches[i].get_height()
             if height > 0:
                 ax.annotate(f'{int(height)}', xy=(patches[i].get_x() + patches[i].get_width() / 2, height),
-                            xytext=(0, 5), textcoords='offset points', ha='center', va='bottom')
+                            xytext=(0, 5), textcoords='offset points', ha='center', va='bottom', **medium_font)
 
         # Add title and labels with custom font sizes
-        plt.title(title, fontsize=12)
-        plt.xticks(bins)
-        plt.xlabel(x_label, fontsize=10)
-        plt.ylabel(y_label, fontsize=10)
+        plt.title(title, **large_font)
+        if bins[-1] > 1000:
+            plt.xticks(bins, **medium_font, rotation=-30, ha="right")
+        else:
+            plt.xticks(bins, **medium_font)
+        plt.yticks(**medium_font)
+        plt.xlabel(x_label, fontsize=10, **large_font)
+        plt.ylabel(y_label, fontsize=10, **large_font)
 
         self.save(filename)

@@ -54,7 +54,7 @@ int main(int cgc_argc, char *cgc_argv[]) {
    do {
       //*** writing data
       static unsigned char write_00003_00000[] = 
-         "\x3e\x4e\x00\x00";
+         "\x68\x9c\x00\x00";
       static unsigned int write_00003_00000_len = 4;
       unsigned char *write_00003 = NULL;
       unsigned int write_00003_len = 0;
@@ -172,7 +172,7 @@ int main(int cgc_argc, char *cgc_argv[]) {
    do {
       //*** writing data
       static unsigned char write_00009_00000[] = 
-         "\x96\x58\x0c\x00";
+         "\x9c\x36\x00\x00";
       static unsigned int write_00009_00000_len = 4;
       unsigned char *write_00009 = NULL;
       unsigned int write_00009_len = 0;
@@ -185,7 +185,7 @@ int main(int cgc_argc, char *cgc_argv[]) {
    do {
       //*** writing data
       static unsigned char write_00010_00000[] = 
-         "\x02\x08\x00\x00";
+         "\x1a\x04\x00\x00";
       static unsigned int write_00010_00000_len = 4;
       unsigned char *write_00010 = NULL;
       unsigned int write_00010_len = 0;
@@ -198,7 +198,7 @@ int main(int cgc_argc, char *cgc_argv[]) {
    do {
       //*** writing data
       static unsigned char write_00011_00000[] = 
-         "\x00\x02\x00\x00";
+         "\x0f\x00\x00\x00";
       static unsigned int write_00011_00000_len = 4;
       unsigned char *write_00011 = NULL;
       unsigned int write_00011_len = 0;
@@ -207,5 +207,18 @@ int main(int cgc_argc, char *cgc_argv[]) {
          cgc_transmit_all(1, write_00011, write_00011_len);
       }
       cgc_free(write_00011);
+   } while (0);
+   do {
+      //*** writing data
+      static unsigned char write_00012_00000[] = 
+         "\x00\x02\x00\x00";
+      static unsigned int write_00012_00000_len = 4;
+      unsigned char *write_00012 = NULL;
+      unsigned int write_00012_len = 0;
+      write_00012 = cgc_append_buf(write_00012, &write_00012_len, write_00012_00000, write_00012_00000_len);
+      if (write_00012_len > 0) {
+         cgc_transmit_all(1, write_00012, write_00012_len);
+      }
+      cgc_free(write_00012);
    } while (0);
 }

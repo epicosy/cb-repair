@@ -3,6 +3,7 @@ import json
 from os import environ
 from pathlib import Path
 from typing import Tuple, Union
+from filelock import FileLock
 
 from config import Configuration
 from utils.ui.terminal import TermPrint
@@ -99,9 +100,12 @@ class Kernel:
         with self.configs.metadata.open(mode="r") as m:
             self.global_metadata = json.load(m)
 
-    def save_metadata(self, new_metadata: dict):
-        with self.configs.metadata.open(mode="w") as m:
-            json.dump(new_metadata, m, indent=2)
+    def save_metadata(self, new_metadata: dict = None):
+        lock = FileLock(str(self.configs.metadata) + '.lock')
+
+        with lock:
+            with self.configs.metadata.open(mode="w") as m:
+                json.dump(new_metadata if new_metadata else self.global_metadata, m, indent=2)
 
     def log(self, msg: str):
         if self.log_file and msg:

@@ -19,8 +19,10 @@ class ProcessManager:
         """
         if pids:
             for pid in pids:
-                os.system(f"kill -9 {pid}")
-                self.pids.append(pid)
+                print(int(pid))
+                if psutil.pid_exists(int(pid)):
+                    os.system(f"kill -9 {pid}")
+                    self.pids.append(pid)
 
         # based on https://thispointer.com/python-check-if-a-process-is-running-by-name-and-find-its-process-id-pid/
         # Iterate over the all the running process
@@ -30,7 +32,8 @@ class ProcessManager:
                 proc_info = proc.as_dict(attrs=['pid', 'name', 'create_time'])
                 # Check if process name contains the given name string.
                 if self.process_name in proc_info['name']:
-                    os.system(f"kill -9 {proc_info['pid']}")
-                    self.pids.append(proc_info['pid'])
+                    if psutil.pid_exists(proc_info['pid']):
+                        os.system(f"kill -9 {proc_info['pid']}")
+                        self.pids.append(proc_info['pid'])
             except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as pe:
                 sys.stderr.write(str(pe))

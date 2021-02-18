@@ -56,6 +56,7 @@ else(WIN32)
     # Default flags for everything
     add_compile_options(
         -fno-builtin
+        -fcommon
         -w
         -g3
         -m32

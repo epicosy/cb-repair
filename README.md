@@ -210,7 +210,7 @@ The plots can be found in the ```plots``` folder.
 <table>
 <thead>
 	<tr>
-		<th> Raise error during poll generation (47) </th>
+		<th> Raise error during poll generation (46) </th>
 		<th> Multiple files (33) </th>
 		<th> POVs not working (57) </th>
 	</tr>
@@ -241,7 +241,6 @@ The plots can be found in the ```plots``` folder.
                 <li>Pattern_Finder</li>
                 <li>Snail_Mail</li>
                 <li>Venture_Calculator</li>
-                <li>CGC_Hangman_Game</li>
                 <li>Pac_for_Edges</li>
                 <li>HeartThrob</li>
                 <li>Palindrome</li>
@@ -378,22 +377,6 @@ The plots can be found in the ```plots``` folder.
 * hawaii_sets
 * Message_Service
 * Particle_Simulator
-
-
-### Challenges with POVs removed
-The timeout used was 60 seconds and most of the removed POVs did not core.
-The remaining POVs were renamed in contiguous order.
-
-| Challenge name           | POVs removed |
-|--------------------------|--------------|
-| ASL6Parse                | 1,3          |
-| Diary_Parser             | 2            |
-| FSK_BBS                  | 2,3          |
-| Griswold                 | 3            |
-| TAINTEDLOVE              | 1            |
-| TextSearch               | 2            |
-| ValveChecks              | 1            |
-| router_simulator         | 2            |
 
 ## Roadmap
 

@@ -3,7 +3,8 @@ import re
 pid_pattern = "# pid (\d{4,7})"
 polls_failed_pattern = "# polls failed: (\d{1,4})"
 pid_debug_pattern = "# \[DEBUG\] pid: (\d{1,7}), sig: (\d{1,2})"
-## total tests failed: 1
+pid_process_pattern = "# Process generated signal \(pid: (\d{1,7}), signal: (\d{1,2})\)"
+
 codes_error = {
     0: None,
     1: "WARNING: there was an error running a test",
@@ -17,11 +18,10 @@ codes_error = {
 
 
 class TestResult:
-    def __init__(self, result: str, total: int, is_pov: bool, duration: int):
+    def __init__(self, result: str, total: int, is_pov: bool):
         self.result = result
         self.total = total
         self.is_pov = is_pov
-        self.duration = duration
         self.passed = 0
         self.code = None
         self.error = None
@@ -56,12 +56,6 @@ class TestResult:
             self.total = int(self.result.split('TOTAL TESTS: ')[1].split('\n')[0])
             self.passed = int(self.result.split('TOTAL PASSED: ')[1].split('\n')[0])
 
-            if not self.is_pov:
-                if self.is_sig() and self.passed:
-                    self.passed = 0
-                    self.code = 5
-                    codes_error[self.code] = codes_error[self.code] + str(self.sig) + "\n"
-
             if self.is_pov:
                 self.passed ^= 1
 
@@ -72,7 +66,16 @@ class TestResult:
                         self.code = 7
                     else:
                         self.code = 5
-                        codes_error[self.code] = codes_error[self.code] + str(self.sig) + "\n"
+
+                    codes_error[self.code] = codes_error[self.code] + str(self.sig) + "\n"
+
+            elif self.is_sig():
+                if self.passed:
+                    self.passed = 0
+
+                self.code = 5
+                codes_error[self.code] = codes_error[self.code] + str(self.sig) + "\n"
+
         else:
             self.code = 4
 
@@ -80,10 +83,14 @@ class TestResult:
 
     def _get_pids_sig(self):
         match = re.search(pid_debug_pattern, self.result)
+        match2 = re.search(pid_process_pattern, self.result)
 
         if match:
             self.pids.append(match.group(1))
             self.sig = int(match.group(2))
+        elif match2:
+            self.pids.append(match2.group(1))
+            self.sig = int(match2.group(2))
         else:
             match = re.search(pid_pattern, self.result)
             if match:

@@ -25,9 +25,11 @@ else:
             patches = manifest.get_patches()
             json.dump(patches, pf, indent=2)
 
-        metadata[challenge_name] = {'excluded': False, "excluded_povs": [], 'lines': manifest.total_lines,
+        metadata[challenge_name] = {'excluded': False, 'lines': manifest.total_lines,
                                     'vuln_lines': manifest.vuln_lines, 'patch_lines': manifest.patch_lines,
-                                    'main_cwe': main_cwe, 'durations': {}}
+                                    'vuln_files': len(manifest.vuln_files), 'main_cwe': main_cwe,
+                                    'sanity': {}}
+
         progress(i, challenges_count, challenge_name)
 
         with configs.metadata.open(mode='w') as mf:

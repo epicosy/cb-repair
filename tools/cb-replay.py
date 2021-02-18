@@ -199,6 +199,7 @@ class Throw(object):
         Raises:
             None
         """
+        
         if isinstance(expected, _ValueStr):
             message += ' (expanded from %s)' % repr(expected)
             if expected not in self.values:
