@@ -5,10 +5,12 @@ from input_parser import add_task
 
 
 class Catalog(Task):
-    def __init__(self, count: bool = False, sanity: bool = False, **kwargs):
+    def __init__(self, count: bool = False, sanity: bool = False, errors: bool = False, povs: bool = False, **kwargs):
         super().__init__(**kwargs)
         self.count = count
         self.sanity = sanity
+        self.errors = errors
+        self.povs = povs
 
     def __call__(self):
         count = 0
@@ -36,7 +38,18 @@ class Catalog(Task):
         if self.sanity:
             if sanity:
                 tests = {k: v['outcome'] for k, v in sanity.items()}
-                print_str += f"\n\t{tests}"
+                print_str += f"\n\tOutcomes: {tests}"
+
+                if self.errors:
+                    errors = {k: v['error'] for k, v in sanity.items() if 'error' in v}
+                    if errors:
+                        print_str += f"\n\tErrors: {errors}"
+
+        if self.povs:
+            challenge_paths = self.get_challenge_paths(challenge_name)
+            source = challenge_paths.source
+            povs = [pd.name for pd in source.iterdir() if pd.match("pov*") and pd.is_dir()]
+            print_str += f"\n\tPOVs: {povs}"
 
         print(print_str)
 
@@ -47,6 +60,8 @@ class Catalog(Task):
 def catalog_args(input_parser):
     input_parser.add_argument('--count', action='store_true', help='Prints number of challenges.')
     input_parser.add_argument('--sanity', action='store_true', help='Prints the outcome for the challenges tests.')
+    input_parser.add_argument('--errors', action='store_true', help='Prints the code for the challenges tests.')
+    input_parser.add_argument('--povs', action='store_true', help='Prints the povs for each challenges.')
 
 
 catalog_parser = add_task("catalog", Catalog, description="List's benchmark challenges.")
