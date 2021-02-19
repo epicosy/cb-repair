@@ -155,17 +155,12 @@ class Test(Operation):
             self.write_result()
 
         if self.exit_fail:
-            if self.results[self.current_test].passed == 0:
+            if self.results[self.current_test].passed == 0 or self.results[self.current_test].code != 0:
                 if strict:
                     return strict
                 if not self.is_pov:
                     exit(1)
                 elif not self.neg_pov:
-                    exit(1)
-            else:
-                if self.neg_pov and self.is_pov:
-                    if strict:
-                        return strict
                     exit(1)
 
     def _cmd_str(self):
