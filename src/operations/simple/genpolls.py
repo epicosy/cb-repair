@@ -27,6 +27,10 @@ class GenPolls(SimpleOperation):
         self.polls_dir.mkdir(parents=True, exist_ok=True)
         self.state_machine()
 
+        if self.global_metadata[self.challenge.name]['sanity']:
+            self.global_metadata[self.challenge.name]['sanity'] = {}
+            self.save_metadata()
+
         if self.output or self.error:
             return self.output, self.error
 

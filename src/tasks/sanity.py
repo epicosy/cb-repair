@@ -18,7 +18,7 @@ from operations.simple.genpolls import GenPolls
 
 class Sanity(Task):
     def __init__(self, timeout: int, genpolls: bool, persistent: bool, suppress_assertion: bool, count: int,
-                 keep: bool = False, strict: bool = False, **kwargs):
+                 keep: bool = False, strict: bool = False, lookup: int = None, **kwargs):
         super().__init__(**kwargs)
         self.current = None
         self.working_dir = None
@@ -27,6 +27,7 @@ class Sanity(Task):
         self.persistent = persistent
         self.count = count
         self.strict = strict
+        self.lookup = lookup
         self.timeout = timeout
         self.ui = CheckUI()
         self.keep = keep
@@ -44,7 +45,10 @@ class Sanity(Task):
                 self.ui(challenge)
                 self.working_dir = f"/tmp/check_{self.current}"
                 self.log_file = Path(self.working_dir, "check.log")
-                self.check()
+                if self.genpolls and self.lookup:
+                    self._lookup()
+                else:
+                    self.check()
                 os.system('clear')
                 self.ui.print()
         except Exception as e:
@@ -73,6 +77,36 @@ class Sanity(Task):
             self.ui.header()
         else:
             self.ui.passed()
+
+        if not self.keep:
+            self.dispose()
+
+    def _lookup(self):
+        operations = [self.check_genpolls, self.check_checkout, self.check_compile, self.check_test]
+        init = True
+        pass_tests = False
+        lookup = self.lookup
+
+        for n in range(self.lookup):
+            self.ui.lookup(n+1)
+            for operation in operations:
+                if not operation():
+                    break
+                if init:
+                    init = False
+                    operations = [self.check_genpolls, self.check_test]
+                self.ui.header()
+            else:
+                self.ui.passed()
+                pass_tests = True
+
+            if pass_tests:
+                self.lookup = None
+                break
+            elif n+1 == lookup:
+                self.ui.failed()
+            elif n+1 == (lookup-1):
+                self.lookup = None
 
         if not self.keep:
             self.dispose()
@@ -160,6 +194,8 @@ class Sanity(Task):
         return True
 
     def exclude_challenge(self, msg: AnyStr):
+        if self.lookup and self.genpolls:
+            return None
         self.global_metadata[self.current]["excluded"] = True
         self.status(f"Challenge {self.current} excluded: {msg}", warn=True)
 
@@ -181,6 +217,7 @@ def check_args(input_parser):
     input_parser.add_argument('--timeout', type=int, default=60, help='The timeout for tests in seconds.')
     input_parser.add_argument('--count', type=int, default=10, help='Number of polls to generate.')
     input_parser.add_argument('--genpolls', action='store_true', help='Flag for enabling polls generation.')
+    input_parser.add_argument('--lookup', type=int, default=None, help='Useful for generating polls that pass.')
     input_parser.add_argument('--keep', action='store_true', help='Keeps the files generated.')
     input_parser.add_argument('-sa', '--suppress_assertion', action='store_true',
                               help='Flag for suppressing assertion errors during polls generation.')

@@ -34,6 +34,12 @@ class CheckUI:
             os.system('clear')
             print(Colors.cyan(f"Checking {self.current}") + '\n'.join(self.results[self.current]))
 
+    def lookup(self, n: int):
+        if self.current:
+            os.system('clear')
+            self.results[self.current].append(Colors.cyan(f"Lookup {n}"))
+            print('\n'.join(self.results[self.current]))
+
     def __call__(self, challenge_name: str):
         self.results[challenge_name] = []
         self.current = challenge_name
