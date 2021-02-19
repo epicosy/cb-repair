@@ -7,11 +7,13 @@ from .kernel import Kernel
 class Task(Kernel):
     def __init__(self, challenges: List[AnyStr], **kwargs):
         super().__init__(**kwargs)
+        # self.consider_excluded = consider_excluded
 
         if challenges:
             for challenge in challenges:
                 self.has_challenge(challenge)
-                self.is_excluded(challenge)
+                if not self.excl:
+                    self.is_excluded(challenge)
 
             self.challenges = challenges
             self.challenges.sort()

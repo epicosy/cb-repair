@@ -108,6 +108,8 @@ class Sanity(Task):
             elif n+1 == (lookup-1):
                 self.lookup = None
 
+        self.lookup = lookup
+
         if not self.keep:
             self.dispose()
 
