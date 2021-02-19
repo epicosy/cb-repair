@@ -162,7 +162,7 @@ class Sanity(Task):
         self.status(f"Testing with timeout {self.timeout}.")
         test_cmd = test.Test(name="test", configs=self.configs, working_directory=self.working_dir, update=self.persistent,
                              challenge=self.current, timeout=self.timeout, log_file=self.log_file, neg_pov=True,
-                             exit_fail=True)
+                             exit_fail=self.strict)
 
         test_outcome = test_cmd(save=True, stop=self.strict)
         neg_fails, pos_fails, passing, fails = [], [], [], []
