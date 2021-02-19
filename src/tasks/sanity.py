@@ -18,7 +18,7 @@ from operations.simple.genpolls import GenPolls
 
 class Sanity(Task):
     def __init__(self, timeout: int, genpolls: bool, persistent: bool, suppress_assertion: bool, count: int,
-                 keep: bool = False, **kwargs):
+                 keep: bool = False, strict: bool = False, **kwargs):
         super().__init__(**kwargs)
         self.current = None
         self.working_dir = None
@@ -26,6 +26,7 @@ class Sanity(Task):
         self.suppress_assertion = suppress_assertion
         self.persistent = persistent
         self.count = count
+        self.strict = strict
         self.timeout = timeout
         self.ui = CheckUI()
         self.keep = keep
@@ -124,9 +125,10 @@ class Sanity(Task):
     def check_test(self):
         self.status(f"Testing with timeout {self.timeout}.")
         test_cmd = test.Test(name="test", configs=self.configs, working_directory=self.working_dir, update=self.persistent,
-                             challenge=self.current, timeout=self.timeout, log_file=self.log_file, neg_pov=True)
+                             challenge=self.current, timeout=self.timeout, log_file=self.log_file, neg_pov=True,
+                             exit_fail=True)
 
-        test_outcome = test_cmd(save=True)
+        test_outcome = test_cmd(save=True, stop=self.strict)
         neg_fails, pos_fails, passing, fails = [], [], [], []
 
         for test_name, test_result in test_outcome.items():
@@ -145,10 +147,12 @@ class Sanity(Task):
             self.ui.ok(operation="Test", msg=passing)
 
             if self.persistent:
+                self.load_metadata()
                 if neg_fails:
                     self.exclude_challenge(msg=f"POVs {neg_fails} not working properly")
-                if pos_fails:
+                elif pos_fails:
                     self.exclude_challenge(msg=f"Polls {pos_fails} not working properly")
+                self.save_metadata()
 
             return False
 
@@ -180,6 +184,7 @@ def check_args(input_parser):
     input_parser.add_argument('--keep', action='store_true', help='Keeps the files generated.')
     input_parser.add_argument('-sa', '--suppress_assertion', action='store_true',
                               help='Flag for suppressing assertion errors during polls generation.')
+    input_parser.add_argument('--strict', action='store_true', help='Stops testing at the first fail.')
     input_parser.add_argument('--persistent', action='store_true',
                               help="Flag for excluding challenges that fail and persist results in the metadata.")
 

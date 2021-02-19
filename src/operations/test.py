@@ -50,7 +50,7 @@ class Test(Operation):
 
         self.log(str(self))
 
-    def __call__(self, save: bool = False):
+    def __call__(self, save: bool = False, stop: bool = False):
         self.status(f"Running {len(self.tests)} tests.")
 
         for test in self.tests:
@@ -61,7 +61,8 @@ class Test(Operation):
             if self.update:
                 self._update()
 
-            self._process_flags()
+            if self._process_flags(stop):
+                return self.results
 
         if save:
             return self.results
@@ -137,7 +138,7 @@ class Test(Operation):
         self.save_metadata()
         #self.global_metadata[self.challenge.name]['sanity'] = challenge_metadata
 
-    def _process_flags(self):
+    def _process_flags(self, strict: bool = False):
         if self.is_pov and self.neg_pov:
             # Invert negative test's result
             self.results[self.current_test].passed ^= 1
@@ -155,9 +156,16 @@ class Test(Operation):
 
         if self.exit_fail:
             if self.results[self.current_test].passed == 0:
+                if strict:
+                    return strict
                 if not self.is_pov:
                     exit(1)
                 elif not self.neg_pov:
+                    exit(1)
+            else:
+                if self.neg_pov and self.is_pov:
+                    if strict:
+                        return strict
                     exit(1)
 
     def _cmd_str(self):
