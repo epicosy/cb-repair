@@ -46,7 +46,7 @@ class Test(Operation):
         elif neg_tests:
             self.tests = self.challenge.neg_tests.keys()
         else:
-            self.tests = list(self.challenge.pos_tests.keys()) + list(self.challenge.neg_tests.keys())
+            self.tests = list(self.challenge.neg_tests.keys()) + list(self.challenge.pos_tests.keys())
 
         self.log(str(self))
 
