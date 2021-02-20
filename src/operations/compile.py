@@ -10,7 +10,7 @@ from utils.metadata.manifest import map_instrumented_files
 
 class Compile(Make):
     def __init__(self, inst_files: List[str] = None, fix_files: List[str] = None, cpp_files: bool = False,
-                 coverage: bool = False, link: bool = False, backup: str = None , **kwargs):
+                 coverage: bool = False, link: bool = False, backup: str = None, **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()
         self.inst_files = inst_files

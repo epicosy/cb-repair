@@ -32,12 +32,12 @@ class Test(Operation):
         self.test_timeout = timeout if timeout else int(self.configs.tests_timeout)
         self.challenge.load_pos_tests()
         self.challenge.load_neg_tests(self.build)
-        self.stats = self.working_dir / Path("stats", "tests.txt")
-        self.stats.parent.mkdir(parents=True, exist_ok=True)
         self.process_manager = ProcessManager(process_name=self.challenge.name)
         self.results = {}
         self.update = update
         self.exec_time = 0
+        self.cid = self.tracker['ptr']
+        self._init_tracker_tests()
 
         if tests:
             self.tests = self.map_only_number_ids(tests) if self.only_numbers else tests
@@ -49,6 +49,20 @@ class Test(Operation):
             self.tests = list(self.challenge.neg_tests.keys()) + list(self.challenge.pos_tests.keys())
 
         self.log(str(self))
+
+    def _init_tracker_tests(self):
+        save = False
+
+        if 'pos_tests' not in self.tracker['outcomes'][self.cid]:
+            self.tracker['outcomes'][self.cid]['pos_tests'] = {}
+            save = True
+
+        if 'neg_tests' not in self.tracker['outcomes'][self.cid]:
+            self.tracker['outcomes'][self.cid]['neg_tests'] = {}
+            save = True
+
+        if save:
+            self.save_tracker()
 
     def __call__(self, save: bool = False, stop: bool = False):
         self.status(f"Running {len(self.tests)} tests.")
@@ -90,6 +104,15 @@ class Test(Operation):
         try:
             self.current_test = test
             self.test_file, self.is_pov = self.challenge.get_test(test)
+            self._load_tracker()
+            if self.is_pov:
+                if test not in self.tracker['outcomes'][self.cid]['neg_tests']:
+                    self.tracker['outcomes'][self.cid]['neg_tests'][test] = []
+            else:
+                if test not in self.tracker['outcomes'][self.cid]['pos_tests']:
+                    self.tracker['outcomes'][self.cid]['pos_tests'][test] = []
+
+            self.save_tracker()
         except Exception as e:
             self.error = str(e)
             self.status(self.error, err=True)
@@ -136,7 +159,7 @@ class Test(Operation):
             challenge_metadata[self.current_test]['signal'] = self.results[self.current_test].sig
 
         self.save_metadata()
-        #self.global_metadata[self.challenge.name]['sanity'] = challenge_metadata
+        # self.global_metadata[self.challenge.name]['sanity'] = challenge_metadata
 
     def _process_flags(self, strict: bool = False):
         if self.is_pov and self.neg_pov:
@@ -205,9 +228,17 @@ class Test(Operation):
             of.write(f"{self.current_test} {self.results[self.current_test].passed}\n")
 
     def outcome(self):
-        with self.stats.open(mode="a") as s, (self.stats.parent / "track.txt").open(mode="r") as tf:
-            cid = tf.read().split()[0]
-            s.write(f"{self.current_test} {self.results[self.current_test].passed} {self.results[self.current_test].code} {cid}\n")
+        if self.is_pov:
+            test = self.tracker['outcomes'][self.cid]['neg_tests'][self.current_test]
+        else:
+            test = self.tracker['outcomes'][self.cid]['pos_tests'][self.current_test]
+
+        test.append({'outcome': self.results[self.current_test].passed,
+                     'code': self.results[self.current_test].code,
+                     'duration': int(self.exec_time)
+                     })
+
+        self.save_tracker()
 
     def __str__(self):
         test_cmd_str = " --tests " + ' '.join(self.tests)

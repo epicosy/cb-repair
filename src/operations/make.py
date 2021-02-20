@@ -12,28 +12,42 @@ from input_parser import add_operation
 
 class Make(Operation):
     def __init__(self, gcc: bool = False, replace: bool = False, save_temps: bool = False, exit_err: bool = True,
-                 compiler_trail_path: bool = False, write_build_args: str = None, no_stats: bool = False, **kwargs):
+                 compiler_trail_path: bool = False, write_build_args: str = None, no_track: bool = False,
+                 sanity_check: bool = False, fault_localization: bool = False, **kwargs):
         super().__init__(**kwargs)
         self._set_build_paths()
         self.compile_commands = {}
         self.exit_err = exit_err
         self.trail_path = compiler_trail_path
+        self.sanity_check = sanity_check
+        self.fault_localization = fault_localization
         self.gcc = gcc
-        self.no_stats = no_stats
+        self.no_track = no_track
         self.write_build_args = Path(write_build_args) if write_build_args else None
         self.save_temps = save_temps
         self.replace_ext = "-DCMAKE_CXX_OUTPUT_EXTENSION_REPLACE=ON" if replace else ""
         self._set_cmake_opts()
-        self.stats = self.working_dir / Path("stats", "compile.txt")
-        self.stats.parent.mkdir(parents=True, exist_ok=True)
         self.link_file = self.cmake / Path("link.txt")
-        self.cid = b2a_hex(urandom(4))
-
-        if not self.no_stats:
-            with (self.stats.parent / "track.txt").open(mode="w") as tf:
-                tf.write(self.cid.decode())
+        self.cid = b2a_hex(urandom(4)).decode()
+        self._set_tracker()
 
         #self.log(str(self))
+
+    def _set_tracker(self):
+        if self.sanity_check and 'sanity_check' not in self.tracker['outcomes']:
+            self.tracker['ptr'] = 'sanity_check'
+            self.cid = 'sanity_check'
+            self.tracker['outcomes']['sanity_check'] = {}
+        elif self.fault_localization and 'fault_localization' not in self.tracker['outcomes']:
+            self.tracker['ptr'] = 'fault_localization'
+            self.cid = 'fault_localization'
+            self.tracker['outcomes']['fault_localization'] = {}
+        else:
+            self.tracker['ptr'] = self.cid
+            self.tracker['outcomes'][self.cid] = {}
+
+        if not self.no_track:
+            self.save_tracker()
 
     def _set_cmake_opts(self):
         self.cmake_opts = f"{self.env['CMAKE_OPTS']}" if 'CMAKE_OPTS' in self.env else ""
@@ -125,18 +139,29 @@ class Make(Operation):
                         self.compile_commands[str(short_path)] = compile_command
 
     def outcome(self, result: int, msg: str = None):
-        if self.no_stats:
+        if self.no_track:
             return None, msg
-        with self.stats.open(mode="a") as s:
-            s.write(f"{result} {self.cid.decode()}\n")
 
-            if result == 1:
-                self.status(msg, err=True)
+        if 'compiles' not in self.tracker['outcomes'][self.cid]:
+            self.tracker['outcomes'][self.cid]['compiles'] = [result]
+        else:
+            self.tracker['outcomes'][self.cid]['compiles'].append(result)
 
-                if self.exit_err:
-                    exit(1)
-                else:
-                    return None, msg
+        if msg:
+            if 'msg' not in self.tracker['outcomes'][self.cid]:
+                self.tracker['outcomes'][self.cid]['msg'] = [msg]
+            else:
+                self.tracker['outcomes'][self.cid]['msg'].append(msg)
+
+        self.save_tracker()
+
+        if result == 1:
+            self.status(msg, err=True)
+
+            if self.exit_err:
+                exit(1)
+            else:
+                return None, msg
 
     def __str__(self):
         make_cmd_str = ""
@@ -152,7 +177,7 @@ class Make(Operation):
 
 def make_args(input_parser):
     input_parser.add_argument('--gcc', action='store_true', help='Uses gcc instead of clang to compile.', default=None)
-    input_parser.add_argument('--no_stats', action='store_true', help='Flag for disabling stats.', default=None)
+    input_parser.add_argument('--no_track', action='store_true', help='Flag for disabling tracking.', default=None)
     input_parser.add_argument('--write_build_args', type=str, help='File to output build args.', default=None)
     input_parser.add_argument('--compiler_trail_path', action='store_true', help="Trail's compile commands path to compiler")
     input_parser.add_argument('-S', '--save_temps', action='store_true', default=None,
@@ -160,6 +185,10 @@ def make_args(input_parser):
     input_parser.add_argument('-ee', '--exit_err', action='store_false', required=False,
                               help='Exits when error occurred.')
     input_parser.add_argument('--replace', action='store_true', help='Replaces output extension.')
+    input_parser.add_argument('-sc', '--sanity_check', action='store_true', required=False,
+                              help='Flag for tracking sanity check.')
+    input_parser.add_argument('-fl', '--fault_localization', action='store_true', required=False,
+                              help='Flag for tracking fault localization.')
 
 
 parser = add_operation("make", Make, 'Cmake init of the Makefiles.')

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import json
 from pathlib import Path
 
 from .simple_operation import SimpleOperation
@@ -12,15 +12,20 @@ class Operation(SimpleOperation):
                  **kwargs):
         self.working_dir = Path(working_directory)
         self.prefix = Path(prefix) if prefix else prefix
-        self.init_file = self.working_dir / ".init"
-        
-        if self.init_file.exists():
-        	with self.init_file.open(mode="r") as f:
-        		challenge = f.read().strip()
-        		kwargs["challenge"] = challenge
-       	
-       	super().__init__(**kwargs)
-       	self.source = self.working_dir / Path(self.challenge.name)
+        self.tracker_file = self.working_dir / ".tracker"
+        self._load_tracker()
+        kwargs["challenge"] = self.tracker['name']
+
+        super().__init__(**kwargs)
+        self.source = self.working_dir / Path(self.challenge.name)
+
+    def _load_tracker(self):
+        with self.tracker_file.open(mode="r") as tf:
+            self.tracker = json.load(tf)
+
+    def save_tracker(self):
+        with self.tracker_file.open(mode="w") as tf:
+            json.dump(self.tracker, tf, indent=2)
 
     def add_prefix(self, file: Path):
         if self.prefix:

@@ -6,7 +6,6 @@ import traceback
 from pathlib import Path
 from typing import AnyStr, Dict
 
-import operations.checkout as checkout
 import operations.compile as compile
 import operations.test as test
 
@@ -14,6 +13,7 @@ from core.task import Task
 from input_parser import add_task
 from utils.ui.tasks.check import CheckUI
 from operations.simple.genpolls import GenPolls
+from operations.simple.checkout import Checkout
 
 
 class Sanity(Task):
@@ -132,8 +132,8 @@ class Sanity(Task):
         return True
 
     def check_checkout(self):
-        checkout_cmd = checkout.Checkout(name="checkout", configs=self.configs, working_directory=self.working_dir,
-                                         challenge=self.current)
+        checkout_cmd = Checkout(name="checkout", configs=self.configs, working_directory=self.working_dir,
+                                         challenge=self.current, sanity_check=True)
         out, err = checkout_cmd()
 
         if err:
@@ -146,7 +146,7 @@ class Sanity(Task):
     def check_compile(self):
         compile_cmd = compile.Compile(name="compile", configs=self.configs, working_directory=self.working_dir,
                                       challenge=self.current, inst_files=None, fix_files=None, exit_err=False,
-                                      log_file=self.log_file)
+                                      log_file=self.log_file, sanity_check=True)
         compile_cmd.verbose = True
         out, err = compile_cmd()
 

@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 
 import shutil
+import json
 from pathlib import Path
 
-from input_parser import add_operation
-from core.operation import Operation
+from input_parser import add_simple_operation
+from core.simple_operation import SimpleOperation
 from utils.exceptions import NotEmptyDirectory
 from distutils.dir_util import copy_tree
 
 
-class Checkout(Operation):
-    def __init__(self,
-                 remove_patches: bool = False,
-                 **kwargs):
+class Checkout(SimpleOperation):
+    def __init__(self, working_directory: str, remove_patches: bool = False, **kwargs):
         super().__init__(**kwargs)
         self.no_patch = remove_patches
+        self.working_dir = Path(working_directory)
+        self.source = self.working_dir / Path(self.challenge.name)
+        self.tracker_file = self.working_dir / ".tracker"
 #        self.fl_file = self.working_dir / "__cheat.log" if fl_file else None
         self.compile_script = self.working_dir / Path("compile.sh")
 
@@ -30,15 +32,18 @@ class Checkout(Operation):
             if self.no_patch:
                 self.challenge.remove_patches(self.source)
 
-#            self.write_fl_file()
-            with self.init_file.open(mode="w") as f:
-                f.write(self.challenge.name)
+            self._init_tracker()
 
             self.status(f"Checked out {self.challenge.name}", ok=True)
             return None, None
         except Exception as e:
             self.status(str(e), err=True)
             return None, str(e)
+
+    def _init_tracker(self):
+        with self.tracker_file.open(mode="w") as tf:
+            init_data = {'name': self.challenge.name, 'outcomes': {}}
+            json.dump(init_data, tf, indent=2)
 
     def _mkdir(self):
         if self.working_dir.exists():
@@ -83,11 +88,13 @@ class Checkout(Operation):
                             loc = f"{full_path} {start+i} {column}"
                             flf.write(f"{loc} {loc}\n")
 
+
 def checkout_args(input_parser):
     input_parser.add_argument('-rp', '--remove_patches', action='store_true',
                               help='Remove the patches and respective definitions from the source code.')
+    input_parser.add_argument('-wd', '--working_directory', type=str, help='The working directory.', required=True)
 #    input_parser.add_argument('--fl_file', action='store_true', help='File for fault localization info.')
 
 
-co_parser = add_operation("checkout", Checkout, 'Checks out challenge to working directory.')
+co_parser = add_simple_operation("checkout", Checkout, 'Checks out challenge to working directory.')
 checkout_args(co_parser)

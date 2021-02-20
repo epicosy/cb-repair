@@ -98,7 +98,7 @@ import tasks.init_polls
 import operations.info
 import operations.make
 import operations.compile
-import operations.checkout
+import operations.simple.checkout
 import operations.simple.genpolls
 import operations.simple.manifest
 import operations.simple.patch
