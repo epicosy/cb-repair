@@ -1,5 +1,5 @@
 # cb-repair
-An infrastructure that extends a collection of 70 vulnerable programs in C code into a benchmark for automatic program 
+An infrastructure that extends a collection of 57 vulnerable programs in C code into a benchmark for automatic program 
 repair tools. The programs were selected out of 250 applications initially designed for DARPA's Cyber Grand Challenge 
 (CGC). 
 
