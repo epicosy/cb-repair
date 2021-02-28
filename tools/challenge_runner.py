@@ -28,7 +28,7 @@ def run(challenges, timeout, seed, logfunc, cores_path):
         timeout (int): Maximum time in seconds a challenge is allowed to run for
         seed (str): Hex encoded seed for libcgc random
         logfunc ((str) -> None): Replayer log function used for reporting results
-        cores_path (bool): stores cores under /cores path for Linux
+        cores_path (str): stores cores under specified path for Linux
     Returns:
         (list): all processes that were started
     """
@@ -152,7 +152,7 @@ def get_core_dump_regs(path, pid, log, cores_path):
         path (str): path to the executable that generated the dump
         pid (int): pid of the process that generated the core dump
         log ((str) -> None): logging function used to report information
-        cores_path (bool): stores cores under /cores path for Linux
+        cores_path (str): stores cores under specified path for Linux
     Returns:
         (dict): Registers and their values
     """
@@ -167,7 +167,7 @@ def get_core_dump_regs(path, pid, log, cores_path):
         core = 'core'
 
         if cores_path:
-            core = '/cores/core.{}.{}'.format(pid, path.replace('/', '!'))
+            core = '{}/core.{}.{}'.format(cores_path, pid, path.replace('/', '!'))
 
         cmd = [
             'gdb',
@@ -220,13 +220,13 @@ def clean_cores(paths, procs, cores_path):
     Args:
         paths (list): paths to all challenges that were launched
         procs (list): List of all processes that may have generated core dumps
-        cores_path (bool): removes the stored cores under /cores path for Linux
+        cores_path (str): removes the stored cores under specified path for Linux
     """
     if IS_DARWIN:
         map(try_delete, ['/cores/core.{}'.format(p.pid) for p in procs])
     elif IS_LINUX:
         if cores_path:
-            map(try_delete, ['/cores/core.{}.{}'.format(proc.pid, path.replace('/', '!')) for proc, path in zip(procs, paths)])
+            map(try_delete, ['{}/core.{}.{}'.format(cores_path, proc.pid, path.replace('/', '!')) for proc, path in zip(procs, paths)])
         else:
             try_delete('core')
     elif IS_WINDOWS:

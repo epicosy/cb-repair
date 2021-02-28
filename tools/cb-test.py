@@ -395,7 +395,7 @@ class Runner(object):
             replay_cmd += ['--max_send', '%d' % self.max_send]
 
         if self.cores_path:
-            replay_cmd += ['--cores_path']
+            replay_cmd += ['--cores_path', self.cores_path]
 
         replay_cmd += xml
 
@@ -714,8 +714,8 @@ def main():
                         help='Maximum duration for each Poll or POV')
     parser.add_argument('--should_core', required=False, action='store_true',
                         default=False, help='This test should cause a core')
-    parser.add_argument('--cores_path', required=False, action='store_true',
-                        default=False, help='Enables for Linux core storage under the /cores path.')
+    parser.add_argument('--cores_path', required=False, type=str,
+                        help='Enables for Linux core storage under the specified path.')
     parser.add_argument('--wrapper', required=False, type=str,
                         help='Executable to wrap each CB for instrumentation')
     parser.add_argument('--failure_ok', required=False, action='store_true',

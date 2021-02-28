@@ -206,7 +206,7 @@ class Test(Operation):
             cb_cmd += ['--port', self.port]
 
         if self.is_pov:
-            cb_cmd += ['--cores_path', '--should_core']
+            cb_cmd += ['--cores_path', str(self.configs.cores), '--should_core']
             # double check
             cb_cmd += ['--pov_seed', binascii.b2a_hex(os.urandom(48))]
 

@@ -122,7 +122,7 @@ class Throw(object):
 
         negotiate: Should the CB negotiation process happen
 
-        cores_path: Should the cores be stored under /cores path
+        cores_path: Should the cores be stored under specified path
     """
     def __init__(self, cb_paths, pov, timeout, debug, negotiate, cores_path):
         self.cb_paths = cb_paths
@@ -1269,7 +1269,7 @@ def run_pov(cbs, pov_info, timeout, debug, negotiate, cb_seed, munge_seed, cores
         negotiate: Should the poller negotiate with cb-server
         cb_seed: specify a seed to use in the pools
         munge_seed: should the seed be xored before use
-        cores_path: should the cores be stored under /cores path
+        cores_path: should the cores be stored under specified path
 
     Returns:
         The number of passed tests
@@ -1335,8 +1335,8 @@ def main():
                         help='Failures for this test are accepted')
     parser.add_argument('--debug', required=False, action='store_true',
                         default=False, help='Enable debugging output')
-    parser.add_argument('--cores_path', required=False, action='store_true',
-                        default=False, help='Enables for Linux core storage under the /cores path.')
+    parser.add_argument('--cores_path', required=False, type=str,
+                        help='Enables for Linux core storage under the specified path.')
     parser.add_argument('--negotiate', required=False, action='store_true',
                         default=False, help='The CB seed should be negotiated')
     parser.add_argument('--cb_seed', required=False, type=str,

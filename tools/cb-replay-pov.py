@@ -294,7 +294,7 @@ def run_pov(cbs, pov, timeout, debug, pov_seed, cores_path):
         debug: Flag to enable debug logs
         negotate: Should PRNG be negotiated with the CB
         pov_seed: the POV seed to use
-        cores_path: should the cores be stored under /cores path
+        cores_path: should the cores be stored under the specified path
 
     Returns:
         The number of passed tests
@@ -321,8 +321,8 @@ def main():
                         help='Connect timeout')
     parser.add_argument('--debug', required=False, action='store_true',
                         default=False, help='Enable debugging output')
-    parser.add_argument('--cores_path', required=False, action='store_true',
-                        default=False, help='Enables for Linux core storage under the /cores path.')
+    parser.add_argument('--cores_path', required=False, type=str,
+                        help='Enables for Linux core storage under the /cores path.')
     parser.add_argument('--negotiate', required=False, action='store_true',
                         default=False, help='The CB seed should be negotiated')
     parser.add_argument('--pov_seed', required=False, type=str,
