@@ -60,7 +60,9 @@ pip install -r ./python2_requirements.txt
 
 echo "Enabling core dump generated when a process crashes for type 1 POVs."
 ulimit -c unlimited && mdkir -p /cores && chmod 777 /cores
-[[ $? -eq 1 ]] && echo "[Error] Benchmark initialization failed" && exit 1 ;
+[[ $? -eq 1 ]] && echo "[Error] Enabling cores failed" && exit 1 ;
+echo '/cores/core.%p.%E' | sudo tee /proc/sys/kernel/core_pattern
+[[ $? -eq 1 ]] && echo "[Error] Enabling cores path failed." && exit 1 ;
 
 echo "Initializing benchmark"
 ./src/init.py
