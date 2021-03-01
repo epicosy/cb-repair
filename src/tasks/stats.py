@@ -41,7 +41,7 @@ class Stats(Task):
             plotter = Plotter(out_path=self.configs.plots)
             if 'cwes' in self.plots:
                 print(self.cwes_counts.values())
-                plotter.pie(data=list(self.cwes_counts.values()), labels=list(self.cwes_counts.keys()), cmap='viridis',
+                plotter.pie(data=list(self.cwes_counts.values()), labels=list(self.cwes_counts.keys()), cmap='summer',
                             filename='cwes_pie')
                 plotter.histogram([len(s['cwes']) for s in self.stats.values()], x_label='CWE count', cmap='plasma',
                                   y_label='Challenges', title="Histogram of number of CWEs per Challenges")

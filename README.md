@@ -113,7 +113,8 @@ sudo apt get install -y libc6-dev libc6-dev-i386 gdb python-dev python3-dev gcc-
 ```
 ### Setup
 
-This section gives the steps, explanations and examples for getting the project running.
+This section gives the steps, explanations and examples for getting the project running. You can also set up and run 
+the project on Docker by following these [instructions](SETUP.md). 
 
 #### 1) Clone this repo
 
@@ -130,41 +131,15 @@ In case you find necessary, some configurations can be changed in the ```src/con
 For example, you might want to change the default ```tests_timeout``` or the ```margin``` of the timeouts in case the 
 tests were initialized during sanity check. 
 
-### From Docker
+#### 4) Configure cores path (Optional)
+The default core dump output folder is `/cores`, and is set in the `init.sh` scrip. 
+The output files must have the following pattern ```core.pid.path```. 
+You can change the core dump location by substituting the `/cores` path in the following command:
 
-#### Build
+> **Note**: make sure this change is also made in the configurations.
 
-1. First, install Docker ([doc](https://docs.docker.com/)).
-
-2. Then, execute the command to build the image from the Docker file where the project has been pre-configured and is 
-ready to be used:
-
-```
-docker build --force-rm --tag cb-repair .
-```
-
-#### Enabling core dumps 
-On Ubuntu the core dumps are redirected to the standard input of the Apport program, which writes them to the location 
-where the crashing app was launched. When running the benchmark with Docker image, core dumps need to be stored on 
-specific disk location (by default containers can not write to the file system locations which Apport requires). 
-
-The following is the simplest solution to enable core dumps for Docker containers:
-
-Set the cores generation to the folder ```/cores``` in the host with the specific pattern ```core.pid.path```.
 ```
 echo '/cores/core.%p.%E' | sudo tee /proc/sys/kernel/core_pattern
-```
-To reset the pattern to the default execute:
-```
-sudo service apport restart
-```
-
-#### Execute
-The WORKDIR is ```/cb-repair``` and the main script is ```cb-repair.py```, in the folder ```src```.
-Run the container with and query the benchmark with commands, for example: 
-```
-docker run -it cb-repair 
-root@docker_container:/cb-repair# src/cb_repair.py check --challenges BitBlaster --genpolls --count 10 --timeout 10 -v
 ```
 
 ## Usage
@@ -198,12 +173,12 @@ For this command, the default number of traversals through the state graph per r
 
 The generated polls are stored in the folder: ```cb-repair/lib/polls```.
 
----
-Note: It may happen the generation to raise an "AssertionError: node 'node_name' was never executed" for a challenge. 
-This is just warning that the state machine did not reach that node during the generation of polls. 
-Just raise the number of polls to be generated or re-generate the polls. Same for 'AssertionError: Edge 'edge_name' 
-was not traversed".
----
+
+> **Note**: It may happen the generation to raise an "AssertionError: node 'node_name' was never executed" for a challenge. 
+> This is just warning that the state machine did not reach that node during the generation of polls. 
+> Just raise the number of polls to be generated or re-generate the polls. Same for 'AssertionError: Edge 'edge_name' 
+> was not traversed".
+
 
 #### Checkout
 This command clones a specified challenge under a specified folder.

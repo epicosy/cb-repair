@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import textwrap
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -9,12 +10,13 @@ plt.style.use('seaborn')
 
 medium_font = {'family': 'serif',
               'name': 'Helvetica',
-              'size': 14}
+              'size': 16}
 
 large_font = {'family': 'serif',
               'name': 'Helvetica',
               'weight': 'bold',
-              'size': 16}
+              'size': 18}
+
 
 def color_map(num: int, cmap: str):
     cm = plt.get_cmap(cmap)
@@ -36,6 +38,7 @@ class Plotter:
         plt.clf()
 
     def pie(self, data: List[int], labels: List[AnyStr], cmap: str, filename: str = 'pie'):
+        labels = ['\n'.join(textwrap.wrap(cn, width=25)) if len(cn) > 25 else cn for cn in labels]
         pairs = list(zip(data, labels))
         random.shuffle(pairs)
         data, labels = zip(*pairs)
@@ -48,12 +51,14 @@ class Plotter:
         wedges, texts, autotexts = ax.pie(data, wedgeprops=dict(width=0.4), startangle=-30, explode=explode,
                                           autopct="%.1f%%", pctdistance=0.85)
 
-        plt.setp(autotexts, size=12, weight="bold")
+        plt.setp(autotexts, size=20, weight="bold")
         bbox_props = dict(boxstyle="square,pad=0.2", fc="w", ec="k", lw=0.8)
         kw = dict(arrowprops=dict(arrowstyle="-"),
                   bbox=bbox_props, zorder=0, va="center")
 
         for i, p in enumerate(wedges):
+            if data[i] < 2:
+                continue
             ang = (p.theta2 - p.theta1) / 1.5 + p.theta1
             y = np.sin(np.deg2rad(ang))
             x = np.cos(np.deg2rad(ang))
@@ -61,9 +66,9 @@ class Plotter:
             connectionstyle = "angle,angleA=0,angleB={}".format(ang)
             kw["arrowprops"].update({"connectionstyle": connectionstyle})
             ax.annotate(labels[i], xy=(x, y), xytext=(1.15 * np.sign(x), 1.15 * y), rotation_mode="anchor",
-                        horizontalalignment=horizontalalignment, **kw, fontsize=14)
+                        horizontalalignment=horizontalalignment, **kw, fontsize=22)
 
-        ax.set_title("Benchmark's CWEs Composition", )
+        #ax.set_title("Benchmark's CWEs Composition", fontsize=20, weight="bold")
         self.save(filename)
 
     # source: https://medium.com/@arseniytyurin/how-to-make-your-histogram-shine-69e432be39ca
